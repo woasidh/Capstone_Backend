@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www --exec babel-node",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "babel": "babel-node ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -19,6 +20,8 @@
     "@babel/cli": "^7.13.10",
     "@babel/core": "^7.13.10",
     "@babel/node": "^7.13.10",
-    "@babel/preset-env": "^7.13.10"
+    "@babel/preset-env": "^7.13.10",
+    "swagger-jsdoc": "^6.0.0",
+    "swagger-ui-express": "^4.1.6"
   }
 }

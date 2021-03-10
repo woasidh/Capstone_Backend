@@ -5,6 +5,7 @@ var logger = require('morgan');
 
 const cors = require('cors');
 
+// Mongoose 연결
 const mongoose = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
@@ -22,10 +23,16 @@ connection.once('open', () => {
     console.log('Connected to mongoDB server');
 })
 
+// Router 설정
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// Swagger Setting
+const { swaggerUi, specs } = require('./modules/swagger');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(cors());
 app.options('*', cors());
