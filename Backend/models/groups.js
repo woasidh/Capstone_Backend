@@ -2,7 +2,10 @@ const { Schema, model } = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
 const lectureSchema = new Schema({
-
+    Date: {
+        type: Date,
+        required: true
+    }
 });
 
 const subjectSchema = new Schema({
