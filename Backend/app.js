@@ -7,6 +7,8 @@ const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 
+require('dotenv').config();
+
 // Mongoose 연결
 const mongoose = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
@@ -50,7 +52,7 @@ app.options('*', cors());
 // Session Setting
 app.use(session({
     key: 'sid',
-    secret: 'DISBOARD_CAPSTONE',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
