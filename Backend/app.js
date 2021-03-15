@@ -44,8 +44,10 @@ const authRouter = require('./routes/auth');
 var app = express();
 
 // Swagger Setting
-const { swaggerUi, specs } = require('./config/swagger');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Cors Setting
 app.use(cors());
