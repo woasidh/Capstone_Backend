@@ -37,14 +37,17 @@ const googleCallback = (req, res) => {
 }
 
 router.get('/google',
+    // #swagger.tags = ['Auth']
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 router.get('/google/callback',
+    // #swagger.tags = ['Auth']
     passport.authenticate('google'), googleCallback
 );
 
 router.post('/signup', (req, res) => {
+    // #swagger.tags = ['Auth']
     const userType = (req.body.type === 'professor') ? Professor : Student;
     const user = new userType({
         name: req.body.name,

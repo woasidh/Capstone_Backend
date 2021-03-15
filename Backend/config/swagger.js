@@ -1,24 +1,28 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const swaggerAutogen = require('swagger-autogen')();
 
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Test API with swagger',
-            version: '1.0.0'
-        },
-        servers: [
-            {
-                url: `http://${process.env.IP}:3000`
-            }
-        ]
+const doc = {
+    info: {
+        title: "Test API with swagger",
+        version: '1.0.0'
     },
-    apis: ['./routes/*.js'] 
-};
-const specs = swaggerJsdoc(options);
-
-module.exports = {
-    swaggerUi,
-    specs
+    host: process.env.IP,
+    schemes: ['http'],
+    tags: [
+        {
+            "name": "Auth"
+        },
+        {
+            "name": "User"
+        }
+    ]
 }
+
+const outputFile = './swagger.json';
+const endpointsFiles = ['./routes/auth.js'];
+
+swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{
+    require('../bin/www');
+});
+
+if(process.env.NODE_ENV === 'production')
+    process.exit();
