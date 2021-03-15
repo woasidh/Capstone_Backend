@@ -10,8 +10,7 @@ const options = {
         },
         servers: [
             {
-                //url: 'http://localhost:3000'
-                url: 'http://3.133.119.255:3000'
+                url: `http://${process.env.IP}:3000`
             }
         ]
     },

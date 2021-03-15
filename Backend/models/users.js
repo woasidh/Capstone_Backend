@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const mongooseAutoInc = require('mongoose-auto-increment');
 
 const professorSchema = new Schema({
     name: {
@@ -9,6 +8,10 @@ const professorSchema = new Schema({
     email: {
         type: String,
         required: true,
+    },
+    id: {
+        type: String,
+        required: true
     }
 });
 
@@ -20,11 +23,12 @@ const studentSchema = new Schema({
     email: {
         type: String,
         required: true,
+    },
+    id: {
+        type: String,
+        required: true
     }
 });
-
-professorSchema.plugin(mongooseAutoInc.plugin, 'Professor');
-studentSchema.plugin(mongooseAutoInc.plugin, 'Student');
 
 const professorModel = model('Professor', professorSchema);
 const studentModel = model('Student', studentSchema);

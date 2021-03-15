@@ -7,26 +7,27 @@ const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 
-require('dotenv').config();
+process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
+
+const dotenv = require('dotenv');
+
+dotenv.config({
+    path: path.resolve(
+        process.cwd(),
+        process.env.NODE_ENV == "production" ? ".env" : ".env.dev"
+    )
+});
 
 // Mongoose 연결
 const mongoose = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
-mongoose.connect('mongodb://3.133.119.255:27017/cabstone', {
+mongoose.connect(`mongodb://${process.env.IP}:27017/cabstone`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true
 });
-/*
-mongoose.connect('mongodb://localhost:27017/cabstone', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-});
-*/
 const connection = mongoose.connection;
 mongooseAutoInc.initialize(connection);
 
@@ -36,8 +37,9 @@ connection.once('open', () => {
 })
 
 // Router 설정
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -72,5 +74,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
 
 module.exports = app;

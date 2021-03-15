@@ -7,6 +7,8 @@ RUN npm install
 
 RUN npm install -g pm2
 
+RUN export NODE_ENV = production
+
 COPY . .
 
 EXPOSE 3000
