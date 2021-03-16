@@ -6,6 +6,7 @@ var logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
 
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
 
@@ -22,7 +23,7 @@ dotenv.config({
 const mongoose = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
-mongoose.connect(`mongodb://${process.env.IP}:27017/cabstone`, {
+mongoose.connect('mongodb://mongo:27017/cabstone', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -61,7 +62,10 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 2000 * 60 * 60
-    }
+    },
+    store: new MemoryStore({
+        checkPeriod: 2000 * 60 * 60
+    })
 }));
 
 // Passport for google login
