@@ -9,10 +9,11 @@ const professorSchema = new Schema({
         type: String,
         required: true,
     },
-    id: {
+    _id: {
         type: String,
         required: true
-    }
+    },
+    subjects: [{ type: Number, ref: 'subject' }]
 });
 
 const studentSchema = new Schema({
@@ -24,10 +25,19 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
-    id: {
+    _id: {
         type: String,
         required: true
-    }
+    },
+    major: {
+        type: String,
+        required: true
+    },
+    studentID: {
+        type: String,
+        required: true
+    },
+    subjects: [{ type: Number, ref: 'subject' }]
 });
 
 const professorModel = model('Professor', professorSchema);

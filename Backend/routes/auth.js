@@ -3,13 +3,13 @@ const router = express.Router();
 const passport = require('../config/passport');
 const { Professor, Student } = require('../models/users');
 
-const sendSession = (type) => {
+const sendSession = (req, type) => {
     req.session = {
         name: user.name,
         email: user.email,
         type: type
     }
-    res.status(200).json({session: req.session});
+    res.status(200).json({ session: req.session });
 }
 
 const googleCallback = (req, res) => {
@@ -29,10 +29,10 @@ const googleCallback = (req, res) => {
                         name: req.user.displayName
                     });
                 }
-                else sendSession('professor');
+                else sendSession(req, 'professor');
             });
         }
-        else sendSession('student');
+        else sendSession(req, 'student');
     })
 }
 
@@ -48,12 +48,24 @@ router.get('/google/callback',
 
 router.post('/signup', (req, res) => {
     // #swagger.tags = ['Auth']
+    let user = {};
     const userType = (req.body.type === 'professor') ? Professor : Student;
-    const user = new userType({
-        name: req.body.name,
-        id: req.body.id,
-        email: req.body.email
-    });
+    if(userType === Professor){
+        user = new userType({
+            name: req.body.name,
+            _id: req.body.id,
+            email: req.body.email
+        });
+    }
+    else {
+        user = new userType({
+            name: req.body.name,
+            _id: req.body.id,
+            email: req.body.email,
+            studentID: req.body.studentID,
+            major: req.body.major
+        });
+    }
     user.save((err) => {
         if (err) {
             console.log(err);

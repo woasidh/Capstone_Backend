@@ -13,7 +13,7 @@ const doc = {
         },
         {
             "name": "User"
-        }
+        },
     ]
 }
 
