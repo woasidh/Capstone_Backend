@@ -8,7 +8,8 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Auth"
+      "name": "Auth",
+      "prefix": "/auth"
     },
     {
       "name": "User"
@@ -20,7 +21,7 @@
   "consumes": [],
   "produces": [],
   "paths": {
-    "/google": {
+    "/auth/google": {
       "get": {
         "tags": [
           "Auth"
@@ -30,7 +31,7 @@
         "responses": {}
       }
     },
-    "/google/callback": {
+    "/auth/google/callback": {
       "get": {
         "tags": [
           "Auth"
@@ -44,7 +45,7 @@
         }
       }
     },
-    "/signup": {
+    "/auth/signup": {
       "post": {
         "tags": [
           "Auth"
@@ -84,6 +85,10 @@
                 "studentID": {
                   "type": "string",
                   "example": "any"
+                },
+                "grade": {
+                  "type": "string",
+                  "example": "any"
                 }
               }
             }
@@ -92,6 +97,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -104,6 +112,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

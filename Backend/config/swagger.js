@@ -8,7 +8,7 @@ const doc = {
     host: process.env.IP,
     schemes: ['http'],
     tags: [
-        { "name": "Auth" },
+        { "name": "Auth", "prefix": "/auth" },
         { "name": "User" },
     ]
 }

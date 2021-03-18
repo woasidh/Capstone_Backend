@@ -5,8 +5,6 @@ const { Student, Professor } = require('../models/users');
 
 // 사용자 정보 불러오기
 router.get('/', (req, res) => {
-  if(!req.session.isLogined) res.status(401).json({ success : false });
-
   const userType = (req.session.type === 'student') ? Student : Professor;
   
   userType.findOne({ _id: req.session.id }).populate('subject').exec((err, user)=>{

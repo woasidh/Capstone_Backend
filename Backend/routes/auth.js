@@ -16,6 +16,10 @@ const sendSession = (req, type) => {
 }
 
 const googleCallback = (req, res) => {
+    if(req.user.email.split('@')[1] != 'ajou.ac.kr') {
+        res.status(200).json({ success : false });
+    }
+
     Student.findOne({
         id: req.user.id
     }, (err, user) => {
@@ -41,16 +45,25 @@ const googleCallback = (req, res) => {
 
 router.get('/google',
     // #swagger.tags = ['Auth']
+    // #swagger.path = '/auth/google'
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
 router.get('/google/callback',
     // #swagger.tags = ['Auth']
+    // #swagger.path = '/auth/google/callback'
     passport.authenticate('google'), googleCallback
 );
 
 router.post('/signup', (req, res) => {
-    // #swagger.tags = ['Auth']
+    /*  #swagger.tags = ['Auth']
+        #swagger.path = '/auth/signup'
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            description: 'Grade is Number'
+        }
+    */
     let user = {};
     const userType = (req.body.type === 'professor') ? Professor : Student;
     if(userType === Professor){
@@ -68,13 +81,14 @@ router.post('/signup', (req, res) => {
             _id: req.body.id,
             email: req.body.email,
             studentID: req.body.studentID,
-            major: req.body.major
+            major: req.body.major,
+            grade: req.body.grade
         });
     }
     user.save((err) => {
         if (err) {
             console.log(err);
-            res.json({ success: false });
+            res.status(500).json({ success: false });
         }
         else res.status(200).json({ success: true });
     });
