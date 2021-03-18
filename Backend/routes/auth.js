@@ -54,7 +54,9 @@ router.post('/signup', (req, res) => {
         user = new userType({
             name: req.body.name,
             _id: req.body.id,
-            email: req.body.email
+            email: req.body.email,
+            professorID: req.body.professorID,
+            major: req.body.major
         });
     }
     else {

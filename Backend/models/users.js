@@ -13,6 +13,18 @@ const professorSchema = new Schema({
         type: String,
         required: true
     },
+    university: {
+        type: String,
+        required: true
+    },
+    professorID: {
+        type: String,
+        required: true
+    },
+    major: {
+        type: String,
+        required: true
+    },
     subjects: [{ type: Number, ref: 'subject' }]
 });
 
@@ -35,6 +47,10 @@ const studentSchema = new Schema({
     },
     studentID: {
         type: String,
+        required: true
+    },
+    grade: {
+        type: Number,
         required: true
     },
     subjects: [{ type: Number, ref: 'subject' }]
