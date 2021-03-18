@@ -5,11 +5,14 @@ const { Professor, Student } = require('../models/users');
 
 const sendSession = (req, type) => {
     req.session = {
-        name: user.name,
-        email: user.email,
+        isLogined: true,
+        name: req.user.name,
+        email: req.user.email,
         type: type
     }
-    res.status(200).json({ session: req.session });
+    req.session.save(()=>{
+        res.status(200).json({ session: req.session });
+    });
 }
 
 const googleCallback = (req, res) => {

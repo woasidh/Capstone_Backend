@@ -15,6 +15,7 @@ passport.use(new GoogleStrategy(
         clientID: process.env.GOOGLE_ID,
         clientSecret: process.env.GOOGLE_SECRET,
         callbackURL: '/auth/google/callback',
+        proxy: 'true',
         passReqToCallback: true
     }, (req, accessToken, refreshToken, profile, done) => {
         const user = profile;

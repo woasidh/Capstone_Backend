@@ -55,11 +55,12 @@ app.options('*', cors());
 
 // Session Setting
 app.use(session({
-    key: 'sid',
+    httpOnly: true,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
+        httpOnly: true,
         maxAge: 2000 * 60 * 60
     },
     store: new MemoryStore({

@@ -12,9 +12,6 @@
     },
     {
       "name": "User"
-    },
-    {
-      "name": "Index"
     }
   ],
   "schemes": [
@@ -75,11 +72,35 @@
                 "email": {
                   "type": "string",
                   "example": "any"
+                },
+                "professorID": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "major": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "studentID": {
+                  "type": "string",
+                  "example": "any"
                 }
               }
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
