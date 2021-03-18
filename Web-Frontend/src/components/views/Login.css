@@ -1,0 +1,35 @@
+.Login{
+	text-align: center;
+	display: block;
+	border-radius: 10px;
+	}
+
+img{
+	max-width: 250px;
+}
+
+.labal {
+font-family:serif;
+font-weight:400;
+}
+
+.icon {
+	background-image: url("../../images/g-logo.svg");
+	background-size: cover;	
+	background-repeat: no-repeat;
+	display:inline-block;
+	vertical-align:middle;
+	height: 42px;
+	width: 42px;
+}
+
+.buttonText {
+	display:inline-block;
+	font-size: 10px;
+	font-family:Roboto;
+	font-weight: 500;
+	color: #000000;
+	padding-left: 8px;
+	padding-right: 8px;
+	opacity: 0.54;
+}
