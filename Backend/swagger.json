@@ -13,31 +13,41 @@
     },
     {
       "name": "User"
+    },
+    {
+      "name": "Zoom"
     }
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "consumes": [],
   "produces": [],
   "paths": {
-    "/auth/google": {
-      "get": {
+    "/auth/login": {
+      "post": {
         "tags": [
           "Auth"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/auth/google/callback": {
-      "get": {
-        "tags": [
-          "Auth"
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            },
+            "type": "object",
+            "description": "유저가 없으면 userExist : false 반환"
+          }
         ],
-        "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -62,19 +72,23 @@
                   "type": "string",
                   "example": "any"
                 },
-                "name": {
-                  "type": "string",
-                  "example": "any"
-                },
-                "id": {
-                  "type": "string",
-                  "example": "any"
-                },
                 "email": {
                   "type": "string",
                   "example": "any"
                 },
+                "name": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "photourl": {
+                  "type": "string",
+                  "example": "any"
+                },
                 "professorID": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "school": {
                   "type": "string",
                   "example": "any"
                 },
@@ -91,7 +105,9 @@
                   "example": "any"
                 }
               }
-            }
+            },
+            "type": "object",
+            "description": "Grade is Number"
           }
         ],
         "responses": {
@@ -112,9 +128,104 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/get/student": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
-          "401": {
-            "description": "Unauthorized"
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/get/professor": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/zoom/get": {
+      "get": {
+        "tags": [
+          "Zoom"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/zoom/create/room": {
+      "get": {
+        "tags": [
+          "Zoom"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/zoom/oauth": {
+      "get": {
+        "tags": [
+          "Zoom"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/zoom/oauth/callback": {
+      "get": {
+        "tags": [
+          "Zoom"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

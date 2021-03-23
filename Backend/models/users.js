@@ -8,12 +8,9 @@ const professorSchema = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
-    _id: {
-        type: String,
-        required: true
-    },
-    university: {
+    school: {
         type: String,
         required: true
     },
@@ -36,16 +33,17 @@ const studentSchema = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
-    _id: {
-        type: String,
-        required: true
-    },
-    major: {
+    school: {
         type: String,
         required: true
     },
     studentID: {
+        type: String,
+        required: true
+    },
+    major: {
         type: String,
         required: true
     },

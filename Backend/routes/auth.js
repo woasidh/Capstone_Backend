@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../config/passport');
+// const passport = require('../config/passport');
 const { Professor, Student } = require('../models/users');
 
 const sendSession = (req, type) => {
@@ -15,45 +15,45 @@ const sendSession = (req, type) => {
     });
 }
 
-const googleCallback = (req, res) => {
-    if(req.user.email.split('@')[1] != 'ajou.ac.kr') {
-        res.status(200).json({ success : false });
-    }
-
+router.post('/login', (req, res) => {
+    /*  #swagger.tags = ['Auth']
+        #swagger.path = '/auth/login'
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            description: '유저가 없으면 userExist : false 반환'
+        }
+    */
     Student.findOne({
-        id: req.user.id
-    }, (err, user) => {
+        email: req.body.email
+    }, (err, student) => {
         if (err) console.log(err);
-        else if (user === null) {
+        else if (student === null) {
             Professor.findOne({
-                id: req.user.id
-            }, (err, user) => {
+                email: req.body.email
+            }, (err, professor) => {
                 if (err) console.log(err);
-                else if (user === null) {
-                    res.status(200).json({
-                        id: req.user.id,
-                        email: req.user.email,
-                        name: req.user.displayName
-                    });
+                else if (professor === null) {
+                    res.status(200).json({ userExist : false });
                 }
                 else sendSession(req, 'professor');
             });
         }
         else sendSession(req, 'student');
     })
-}
+});
 
-router.get('/google',
-    // #swagger.tags = ['Auth']
-    // #swagger.path = '/auth/google'
-    passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+// router.get('/google',
+//     // #swagger.tags = ['Auth']
+//     // #swagger.path = '/auth/google'
+//     passport.authenticate('google', { scope: ['profile', 'email'] })
+// );
 
-router.get('/google/callback',
-    // #swagger.tags = ['Auth']
-    // #swagger.path = '/auth/google/callback'
-    passport.authenticate('google'), googleCallback
-);
+// router.get('/google/callback',
+//     // #swagger.tags = ['Auth']
+//     // #swagger.path = '/auth/google/callback'
+//     passport.authenticate('google'), googleCallback
+// );
 
 router.post('/signup', (req, res) => {
     /*  #swagger.tags = ['Auth']
@@ -68,19 +68,21 @@ router.post('/signup', (req, res) => {
     const userType = (req.body.type === 'professor') ? Professor : Student;
     if(userType === Professor){
         user = new userType({
-            name: req.body.name,
-            _id: req.body.id,
             email: req.body.email,
+            name: req.body.name,
+            photourl: req.body.photourl,
             professorID: req.body.professorID,
+            school: req.body.school,
             major: req.body.major
         });
     }
     else {
         user = new userType({
-            name: req.body.name,
-            _id: req.body.id,
             email: req.body.email,
+            name: req.body.name,
+            photourl: req.body.photourl,
             studentID: req.body.studentID,
+            school: req.body.school,
             major: req.body.major,
             grade: req.body.grade
         });

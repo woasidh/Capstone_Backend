@@ -37,15 +37,17 @@ connection.once('open', () => {
     console.log('Connected to mongoDB server');
 })
 
-// Router 설정
-const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
-
 var app = express();
 
 // Cors Setting
 app.use(cors());
 app.options('*', cors());
+
+// Router 설정
+const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
+const zoomRouter = require('./routes/zoom');
 
 // Session Setting
 app.use(session({
@@ -74,6 +76,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
+app.use('/user', userRouter);
+app.use('/zoom', zoomRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');
