@@ -77,7 +77,7 @@ function SignUp(){
         if(!user.name||!user.school||!user.professorID||!user.major){
             return setEmptyError(true);
 		}
-		axios.post('http://3.133.119.255:3000/auth/signup',
+		axios.post('http://13.125.234.161/auth/signup',
             {
 				type: 'professor',
 				email: email,

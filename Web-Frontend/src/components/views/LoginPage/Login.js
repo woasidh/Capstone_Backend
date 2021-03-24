@@ -71,7 +71,7 @@ function Login() {
               imgUrl: profile.getImageUrl()
             }
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            axios.post('http://3.133.119.255:3000/auth/login',
+            axios.post('http://13.125.234.161/auth/login',
             {email: profile.getEmail()}, {
               headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
             .then((response) => {
