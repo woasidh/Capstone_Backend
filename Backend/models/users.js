@@ -10,6 +10,9 @@ const professorSchema = new Schema({
         required: true,
         unique: true
     },
+    photourl: {
+        type: String
+    },
     school: {
         type: String,
         required: true
@@ -34,6 +37,9 @@ const studentSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    photourl: {
+        type: String
     },
     school: {
         type: String,

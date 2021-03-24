@@ -1,18 +1,16 @@
 const express = require('express');
 const router = express.Router();
-// const passport = require('../config/passport');
 const { Professor, Student } = require('../models/users');
 
-const sendSession = (req, type) => {
-    req.session = {
-        isLogined: true,
-        name: req.user.name,
-        email: req.user.email,
-        type: type
-    }
-    req.session.save(()=>{
-        res.status(200).json({ session: req.session });
-    });
+const sendSession = (req, res, user) => {
+    const type = (user === Professor) ? 'professor' : 'student';
+
+    req.session.isLogined = true;
+    req.session.name = user.name;
+    req.session.email = user.email;
+    req.session.type = type;
+
+    res.status(200).json({ session: req.session });
 }
 
 router.post('/login', (req, res) => {
@@ -34,26 +32,14 @@ router.post('/login', (req, res) => {
             }, (err, professor) => {
                 if (err) console.log(err);
                 else if (professor === null) {
-                    res.status(200).json({ userExist : false });
+                    res.status(200).json({ userExist: false });
                 }
-                else sendSession(req, 'professor');
+                else sendSession(req, res, professor);
             });
         }
-        else sendSession(req, 'student');
+        else sendSession(req, res, student);
     })
 });
-
-// router.get('/google',
-//     // #swagger.tags = ['Auth']
-//     // #swagger.path = '/auth/google'
-//     passport.authenticate('google', { scope: ['profile', 'email'] })
-// );
-
-// router.get('/google/callback',
-//     // #swagger.tags = ['Auth']
-//     // #swagger.path = '/auth/google/callback'
-//     passport.authenticate('google'), googleCallback
-// );
 
 router.post('/signup', (req, res) => {
     /*  #swagger.tags = ['Auth']
@@ -66,7 +52,7 @@ router.post('/signup', (req, res) => {
     */
     let user = {};
     const userType = (req.body.type === 'professor') ? Professor : Student;
-    if(userType === Professor){
+    if (userType === Professor) {
         user = new userType({
             email: req.body.email,
             name: req.body.name,

@@ -8,6 +8,12 @@ const passport = require('passport');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 
+var app = express();
+
+// Cors Setting
+app.use(cors());
+app.options('*', cors());
+
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
 
 const dotenv = require('dotenv');
@@ -37,12 +43,6 @@ connection.once('open', () => {
     console.log('Connected to mongoDB server');
 })
 
-var app = express();
-
-// Cors Setting
-app.use(cors());
-app.options('*', cors());
-
 // Router 설정
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -64,7 +64,7 @@ app.use(session({
     })
 }));
 
-// Passport for google login
+// Passport for OAuth
 app.use(passport.initialize());
 app.use(passport.session());
 
