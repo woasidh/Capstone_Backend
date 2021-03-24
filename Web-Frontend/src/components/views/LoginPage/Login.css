@@ -1,3 +1,7 @@
+body{
+	background-color: #233044;
+}
+
 .Login{
 	text-align: center;
 	display: block;
@@ -14,7 +18,7 @@ font-weight:400;
 }
 
 .icon {
-	background-image: url("../../images/g-logo.svg");
+	background-image: url("../../../images/logo/g-logo.svg");
 	background-size: cover;	
 	background-repeat: no-repeat;
 	display:inline-block;

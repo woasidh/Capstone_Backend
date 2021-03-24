@@ -5,12 +5,13 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import Login from './views/Login.js';
+import Login from './views/LoginPage/Login';
 import { ThemeProvider } from "styled-components";
 import Theme from "../styles/Theme"
 import MainPage from './views/MainPage/Index'
 import Routes from '../Routes/Index'
 import TestPage from './views/TestPage/Index'
+import SignUp from '../Routes/signup';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Switch>
         <Route path="/main" component={Routes} />
         <Route path="/test" component={TestPage} />
+        <Route path="/signup" component={SignUp} />
         <Route path="/" component={Login} />
         </Switch>
       </Router>

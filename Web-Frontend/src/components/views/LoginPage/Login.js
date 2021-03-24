@@ -1,7 +1,11 @@
 import './Login.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {useHistory} from 'react-router';
+import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
-import logoImg from '../../images/mainlogo1.png';
+import logoImg from '../../../images/logo/mainlogo1.png';
+
+import axios from "axios"
 
 const Container = styled.div`
 width : 100%;
@@ -32,10 +36,12 @@ const GoogleBtn = styled.button`
   }
 `;
 
+const header = new Headers();
+header.append('Access-Control-Allow-Origin', '*');
 
 function Login() {
   const googleLoginBtn = useRef(null);
-  const [token, setToken] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
     googleSDK();
@@ -49,7 +55,7 @@ function Login() {
       window.gapi.load("auth2", () => {
         const auth2 = window.gapi.auth2.init({
           client_id:
-            "내 클라이언트 ID",
+            "634966437860-qgcmn7q85nm1h9mp12mh2v3rkqrkj3nk.apps.googleusercontent.com",
           scope: "profile email",
         });
         //버튼 클릭시 사용자 정보 불러오기
@@ -58,17 +64,30 @@ function Login() {
           {},
           (googleUser) => {
             const profile = googleUser.getBasicProfile();
-            console.log(profile);
-            console.log(`Token || ${googleUser.getAuthResponse().id_token}`);
-            setToken(googleUser.getAuthResponse().id_token);
-            console.log(`ID: ${profile.getId()}`);
-            console.log(`Name: ${profile.getName()}`);
-            console.log(`Image URL: ${profile.getImageUrl()}`);
-            console.log(`Email: ${profile.getEmail()}`);
-          }/*,
+           
+            let user = {
+              name : profile.getName(),
+              email: profile.getEmail(),
+              imgUrl: profile.getImageUrl()
+            }
+            sessionStorage.setItem("userInfo", JSON.stringify(user));
+            axios.post('http://3.133.119.255:3000/auth/login',
+            {email: profile.getEmail()}, {
+              headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
+            .then((response) => {
+              const result = response.data;
+              if(result.userExist===false){
+                return history.push("/signup");
+              }
+              return history.push("/main");
+            })
+            .catch((response) => {
+              console.log('Error!');
+            });
+          },
           (error) => {
             alert(JSON.stringify(error, undefined, 2));
-          }*/
+          }
         );
       });
     };
@@ -85,6 +104,8 @@ function Login() {
       fjs.parentNode.insertBefore(js, fjs);
     })(document, "script", "google-jssdk");
   };
+
+
 
   return (
     <Container>
