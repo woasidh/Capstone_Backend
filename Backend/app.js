@@ -46,6 +46,7 @@ connection.once('open', () => {
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const roomRouter = require('./routes/room');
 
 // Session Setting
 app.use(session({
@@ -75,6 +76,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/room', roomRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

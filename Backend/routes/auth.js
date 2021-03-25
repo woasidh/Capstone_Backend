@@ -21,14 +21,13 @@ router.post('/login', (req, res) => {
             in: 'body',
             type: 'object',
             description: '유저가 없으면 userExist : false 반환'
-        }
-    */
+        } */
     User.findOne({
         email: req.body.email
     }, (err, user) => {
-        if (err) res.json(err);
+        if (err) console.log(err);
         else if (user === null) {
-            res.status(200).json({ userExist: false });
+            res.status(400).json({ userExist: false });
         }
         else sendSession(req, res, user);
     })
@@ -41,8 +40,7 @@ router.post('/signup', (req, res) => {
             in: 'body',
             type: 'object',
             description: 'Grade is Number'
-        }
-    */
+        } */
     let newUser = {};
     newUser = new User({
         email: req.body.email,
@@ -56,16 +54,16 @@ router.post('/signup', (req, res) => {
     });
     newUser.save((err) => {
         if (err) {
-            User.findOne({ email: req.body.email }, (err, user)=>{
-                if(err) res.json(err);
-                if(user) {
-                    res.status(200).json({
+            User.findOne({ email: req.body.email }, (err, user) => {
+                if (err) console.log(err);
+                if (user) {
+                    res.status(400).json({
                         success: false,
                         userExist: true
                     });
                 }
             });
-            res.json(err);
+            console.log(err);
         }
         else res.status(200).json({ success: true });
     });

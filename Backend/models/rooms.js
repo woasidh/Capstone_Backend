@@ -14,18 +14,32 @@ const lectureSchema = new Schema({
 });
 
 const subjectSchema = new Schema({
-    subject_name: {
+    name: {
         type: String,
         required: true
     },
     professor: {
         type: Number,
-        ref: 'Professor',
+        ref: 'user',
         required: true
     },
-    time: [{ type: Date, required: true }],
+    start_period: {
+        type: Date,
+        required: true
+    },
+    end_period: {
+        type: Date,
+        required: true
+    },
+    start_time: [{ type: String }],
+    end_time: [{ type: String }],
+    days: [{ type: Number }],
+    code: {
+        type: String,
+        required: true
+    },
     lectures: [{ type: Number, ref: 'lecture' }],
-    students: [{ type: Number, ref: 'student' }]
+    students: [{ type: Number, ref: 'user' }]
 });
 
 lectureSchema.plugin(mongooseAutoInc.plugin, 'lecture');
@@ -35,6 +49,6 @@ const lectureModel = model('lecture', lectureSchema);
 const subjectModel = model('subject', subjectSchema);
 
 module.exports = {
-    lecture: lectureModel,
-    subject: subjectModel
+    Lecture: lectureModel,
+    Subject: subjectModel
 };

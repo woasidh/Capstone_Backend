@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongooseAutoInc = require('mongoose-auto-increment');
 
 const userSchema = new Schema({
     name: {
@@ -31,9 +32,11 @@ const userSchema = new Schema({
         required: true
     },
     subjects: [{ type: Number, ref: 'subject' }]
-})
+});
 
-const userModel = model('User', userSchema);
+userSchema.plugin(mongooseAutoInc.plugin, 'user');
+
+const userModel = model('user', userSchema);
 
 module.exports = {
     User: userModel,

@@ -8,17 +8,20 @@ const doc = {
     host: process.env.IP,
     schemes: ['http', 'https'],
     tags: [
-        { "name": "Auth", "prefix": "/auth" },
+        { "name": "Auth" },
         { "name": "User" },
+        { "name": "Room" }
     ]
 }
 
 const outputFile = './swagger.json';
-const endpointsFiles = ['./routes/auth.js', './routes/index.js', './routes/user.js'];
+const endpointsFiles = [
+    './routes/auth.js', 
+    './routes/index.js', 
+    './routes/user.js', 
+    './routes/room.js'
+]
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{
     require('../bin/www');
 });
-
-if(process.env.NODE_ENV === 'production')
-    process.exit();
