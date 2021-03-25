@@ -1,6 +1,11 @@
-import React, {useState, useCallback} from "react";
-import styled from 'styled-components';
-import { Form , Checkbox} from 'antd';
+import React, {useState, useCallback, useReducer, useEffect} from "react";
+import styled, {css} from 'styled-components';
+//import './SignUp.css';
+
+import { Form , Input , Checkbox , Button, Select} from 'antd';
+import Login from '../LoginPage/Login';
+
+
 
 const SubmitBtn = styled.button`
 width : 100%;
@@ -31,6 +36,17 @@ padding : 5px;
 function SignUp(){
 	const [term,setTerm] = useState(false);
 	const [termError,setTermError] = useState(false);
+
+	const onChangeTerm = useCallback((e) => {
+		if(!term){
+		//체크박스 초기화
+		setTermError(false);
+        setTerm(true);
+        //state를 사용하지 않기때문에 빈값
+		}else{
+			setTerm(false);
+		}
+	},[term]);
 
 	const gotoStudent = useCallback((e) => {
         e.preventDefault();                

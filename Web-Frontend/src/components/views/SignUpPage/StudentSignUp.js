@@ -82,7 +82,7 @@ function SignUp(){
         if(!user.name||!user.school||!user.studentID||!user.major||!user.grade){
             return setEmptyError(true);
 		}
-		axios.post('http://13.125.234.161/auth/signup',
+		axios.post('http://13.125.234.161/auth/signup:3000',
             {
 				type: 'student',
 				email: email,

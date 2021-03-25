@@ -1,7 +1,6 @@
 import './Login.css';
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useHistory} from 'react-router';
-import {withRouter} from 'react-router-dom';
 import styled from 'styled-components';
 import logoImg from '../../../images/logo/mainlogo1.png';
 
@@ -71,11 +70,14 @@ function Login() {
               imgUrl: profile.getImageUrl()
             }
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            axios.post('http://13.125.234.161/auth/login',
+            axios.post('http://13.125.234.161:3000/auth/login',
             {email: profile.getEmail()}, {
-              headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
+              headers: header
+              //{'Content-type': 'application/json', 'Accept': 'application/json' }
+             } )
             .then((response) => {
               const result = response.data;
+              console.log(result);
               if(result.userExist===false){
                 return history.push("/signup");
               }

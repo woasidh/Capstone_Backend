@@ -2,7 +2,7 @@
   "name": "swcapstone__fe",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://ec2-3-133-119-255.us-east-2.compute.amazonaws.com:3000",
+  "proxy": "http://13.125.234.161:3000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
