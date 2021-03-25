@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const professorSchema = new Schema({
+const userSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -17,53 +17,24 @@ const professorSchema = new Schema({
         type: String,
         required: true
     },
-    professorID: {
-        type: String,
-        required: true
-    },
-    major: {
-        type: String,
-        required: true
-    },
-    subjects: [{ type: Number, ref: 'subject' }]
-});
-
-const studentSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
+    identityID: {
         type: String,
         required: true,
         unique: true
     },
-    photourl: {
-        type: String
-    },
-    school: {
-        type: String,
-        required: true
-    },
-    studentID: {
-        type: String,
-        required: true
-    },
     major: {
         type: String,
         required: true
     },
-    grade: {
-        type: Number,
+    type: {
+        type: String,
         required: true
     },
     subjects: [{ type: Number, ref: 'subject' }]
-});
+})
 
-const professorModel = model('Professor', professorSchema);
-const studentModel = model('Student', studentSchema);
+const userModel = model('User', userSchema);
 
 module.exports = {
-    Professor: professorModel,
-    Student: studentModel
+    User: userModel,
 };

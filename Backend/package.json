@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon ./bin/www --exec babel-node",
     "start": "nodemon ./bin/www",
-    "swagger-autogen": "node ./config/swagger.js"
+    "swagger": "node ./config/swagger.js"
   },
   "dependencies": {
     "@giorgosavgeris/passport-zoom-oauth2": "^1.1.0",

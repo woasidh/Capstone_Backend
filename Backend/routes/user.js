@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { Professor, Student } = require('../models/users');
+const { User } = require('../models/users');
 
 router.get('/get/student', (req, res)=>{
     // #swagger.tags = ['User']
     // #swagger.path = '/user/get/student'
-    Student.find({}).populate('subject').exec((err, users) => {
+    User.find({ type: 'student' }).populate('subject').exec((err, students) => {
         if(err) res.status(500).json({ success: false });
         else {
-            res.status(200).json(users);
+            res.status(200).json(students);
         }
     });
 });
@@ -16,7 +16,18 @@ router.get('/get/student', (req, res)=>{
 router.get('/get/professor', (req, res)=>{
     // #swagger.tags = ['User']
     // #swagger.path = '/user/get/professor'
-    Professor.find({}).populate('subject').exec((err, users) => {
+    User.find({ type: 'professor' }).populate('subject').exec((err, professors) => {
+        if(err) res.status(500).json({ success: false });
+        else {
+            res.status(200).json(professors);
+        }
+    });
+});
+
+router.get('/get', (req, res)=>{
+    // #swagger.tags = ['User']
+    // #swagger.path = '/user/get'
+    User.find({}).populate('subject').exec((err, users) => {
         if(err) res.status(500).json({ success: false });
         else {
             res.status(200).json(users);

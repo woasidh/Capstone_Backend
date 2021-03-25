@@ -13,9 +13,6 @@
     },
     {
       "name": "User"
-    },
-    {
-      "name": "Zoom"
     }
   ],
   "schemes": [
@@ -113,9 +110,20 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -162,70 +170,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/zoom/get": {
-      "get": {
-        "tags": [
-          "Zoom"
-        ],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/zoom/create/room": {
-      "get": {
-        "tags": [
-          "Zoom"
-        ],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/zoom/oauth": {
-      "get": {
-        "tags": [
-          "Zoom"
-        ],
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/zoom/oauth/callback": {
-      "get": {
-        "tags": [
-          "Zoom"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }

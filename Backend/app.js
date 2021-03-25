@@ -4,7 +4,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const cors = require('cors');
-const passport = require('passport');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 
@@ -29,7 +28,7 @@ dotenv.config({
 const mongoose = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
-mongoose.connect('mongodb://mongo:27017/cabstone', {
+mongoose.connect(`mongodb://${process.env.DB}:27017/capstone`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -47,7 +46,6 @@ connection.once('open', () => {
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
-const zoomRouter = require('./routes/zoom');
 
 // Session Setting
 app.use(session({
@@ -65,8 +63,8 @@ app.use(session({
 }));
 
 // Passport for OAuth
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -77,7 +75,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
-app.use('/zoom', zoomRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

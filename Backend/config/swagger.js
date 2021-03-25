@@ -10,12 +10,11 @@ const doc = {
     tags: [
         { "name": "Auth", "prefix": "/auth" },
         { "name": "User" },
-        { "name": "Zoom" }
     ]
 }
 
 const outputFile = './swagger.json';
-const endpointsFiles = ['./routes/auth.js', './routes/index.js', './routes/user.js', './routes/zoom.js'];
+const endpointsFiles = ['./routes/auth.js', './routes/index.js', './routes/user.js'];
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{
     require('../bin/www');
