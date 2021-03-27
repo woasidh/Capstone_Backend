@@ -41,8 +41,8 @@ function SignUp(){
 	const [photourl,setPhote] = useState(userInfo.imgUrl);
 	const [studentID, setStudentID] = useState('');
 	const [school, setSchool] = useState('');
-	const [major,setMajor] = useState('');
-	const [grade,setGrade] = useState(0);
+	const [major,setMajor] = useState("major_it1");
+	const [grade,setGrade] = useState(1);
 	
 	const onChangeName = e => {
 	    setName(e.target.value);
@@ -67,32 +67,30 @@ function SignUp(){
 	const submitHandler = useCallback((e) => {
 		e.preventDefault();
 		let user = {
-			type: 'student',
 			email: email,
 			name: name,
 			photourl: photourl,
-			professorID: '',
+			identityID : studentID,
 			school: school,
 			major: major,
-			studentID : studentID,
-			grade : grade
+			grade : grade,
+			type: 'student'
 		};
 		console.log(user);
 
-        if(!user.name||!user.school||!user.studentID||!user.major||!user.grade){
+        if(!user.name||!user.school||!user.identityID||!user.major||!user.grade){
             return setEmptyError(true);
 		}
-		axios.post('http://13.125.234.161/auth/signup:3000',
+		axios.post('http://13.125.234.161:3000/auth/signup',
             {
-				type: 'student',
 				email: email,
 				name: name,
 				photourl: photourl,
-				professorID: '',
+				identityID: studentID,
 				school: school,
 				major: major,
-				studentID : studentID,
-				grade : grade
+				grade : grade,
+				type: 'student'
 			}, {
               headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
             .then((response) => {
@@ -106,7 +104,7 @@ function SignUp(){
 				return window.location.href = '/signup';
               }
         })
-	},[school, major, studentID, grade]);
+	},[name, school, major, studentID, grade]);
 
 	return(
 		<Form onSubmit={onsubmit}>
