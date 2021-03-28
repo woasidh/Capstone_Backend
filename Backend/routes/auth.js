@@ -20,14 +20,15 @@ router.post('/login', (req, res) => {
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: '유저가 없으면 userExist : false 반환'
+            description: '유저가 없으면 userExist : false 반환',
+            schema: { $email: "kkimbj18@ajou.ac.kr" }
         } */
     User.findOne({
         email: req.body.email
     }, (err, user) => {
         if (err) console.log(err);
         else if (user === null) {
-            res.status(400).json({ userExist: false });
+            res.status(200).json({ userExist: false });
         }
         else sendSession(req, res, user);
     })
@@ -39,7 +40,7 @@ router.post('/signup', (req, res) => {
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: 'Grade is Number'
+            schema: { $ref: "#/definitions/signUp" }
         } */
     let newUser = {};
     newUser = new User({
@@ -55,15 +56,15 @@ router.post('/signup', (req, res) => {
     newUser.save((err) => {
         if (err) {
             User.findOne({ email: req.body.email }, (err, user) => {
-                if (err) console.log(err);
+                if (err) res.status(400).json(err);
                 if (user) {
-                    res.status(400).json({
+                    res.status(200).json({
                         success: false,
                         userExist: true
                     });
                 }
             });
-            console.log(err);
+            res.json(err);
         }
         else res.status(200).json({ success: true });
     });

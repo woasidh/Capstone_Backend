@@ -11,12 +11,20 @@ router.post('/create', (req, res) => {
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: '성공시 success, code 반환, time과 days는 배열'
+            description: '성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미',
+            schema: { $ref: "#/definitions/createRoom" }
         } */
     const salt = Math.round((new Date().valueOf() + Math.random())) + "";
     const hashCode = crypto.createHash("sha512").update(salt).digest('hex').slice(0, 16);
 
+    if(!req.session.isLogined) res.status(401).json({
+        success: false
+    });
+
     User.findOne({ email: req.session.email }, (err, user) => {
+        if(user.type != 'professor') res.status(403).json({ 
+            success: false,
+        });
         const subject = new Subject({
             name: req.body.name,
             professor: user._id,
@@ -51,22 +59,23 @@ router.post('/join', (req, res) => {
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: '성공시 success 반환'
+            description: '성공시 success 반환',
+            schema: { $code: "" }
         } */
     User.findOne({ email: req.session.email }, (err, user) => {
         if(err) console.log(err);
-        else if(user === null) res.status(401).json({ 
+        else if(user === null) res.status(200).json({ 
             success: false,
             isLogined: false
         });
         Subject.findOne({ code: req.body.code }, (err, subject) => {
             if (err) console.log(err);
-            else if (subject === null) res.status(403).json({ 
+            else if (subject === null) res.status(200).json({ 
                 success: false,
                 codeValidation: false
             });
             else {
-                if (user.subjects.includes(subject._id)) res.status(403).json({
+                if (user.subjects.includes(subject._id)) res.status(200).json({
                     success: false,
                     subjectExist: true
                 });

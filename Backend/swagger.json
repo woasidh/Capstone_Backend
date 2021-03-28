@@ -1,0 +1,364 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Test API with swagger",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "User"
+    },
+    {
+      "name": "Room"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "description": "유저가 없으면 userExist : false 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "kkimbj18@ajou.ac.kr"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/signUp"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/get/student": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/get/professor": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/get": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/get/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/room/create": {
+      "post": {
+        "tags": [
+          "Room"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "description": "성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미",
+            "schema": {
+              "$ref": "#/definitions/createRoom"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/room/join": {
+      "post": {
+        "tags": [
+          "Room"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "description": "성공시 success 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/room/get": {
+      "get": {
+        "tags": [
+          "Room"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "signUp": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "kkimbj18@ajou.ac.kr"
+        },
+        "name": {
+          "type": "string",
+          "example": "김민건"
+        },
+        "photourl": {
+          "type": "string",
+          "example": "url"
+        },
+        "identityID": {
+          "type": "string",
+          "example": "201620912"
+        },
+        "school": {
+          "type": "string",
+          "example": "아주대"
+        },
+        "major": {
+          "type": "string",
+          "example": "소프트웨어학과"
+        },
+        "grade": {
+          "type": "number",
+          "example": 4
+        },
+        "type": {
+          "type": "string",
+          "example": "student"
+        }
+      },
+      "required": [
+        "email",
+        "name",
+        "identityID",
+        "school",
+        "major",
+        "type"
+      ]
+    },
+    "createRoom": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "캡스톤디자인"
+        },
+        "start_period": {
+          "type": "string",
+          "example": "2021-03-02"
+        },
+        "end_period": {
+          "type": "string",
+          "example": "2021-06-30"
+        },
+        "start_time": {
+          "type": "array",
+          "example": [
+            "16:30",
+            "18:00",
+            "19:30"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "end_time": {
+          "type": "array",
+          "example": [
+            "18:00",
+            "19:30",
+            "21:00"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "days": {
+          "type": "array",
+          "example": [
+            1,
+            1,
+            1
+          ],
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
