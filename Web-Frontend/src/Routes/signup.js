@@ -30,7 +30,7 @@ function Index() {
 
     return (
         <>
-	        <div style={{height : "100%", overflowY : "auto", padding : "1rem", paddingBottom : "4rem"}}>
+	        <div style={{height : "100%", overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor: "#233044"}}>
                 <div style={{width: "80%", paddingTop: "30px", margin: "auto"}}>
             <Title>SIGN UP</Title>
 			<SubTitle>DISBOARD에 오신것을 환영합니다.</SubTitle>

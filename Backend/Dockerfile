@@ -11,5 +11,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ['npm', 'run', 'swagger']
 CMD ["pm2-runtime", "start", "./bin/www"]
