@@ -41,7 +41,7 @@ function SignUp(){
 	const [photourl,setPhote] = useState(userInfo.imgUrl);
 	const [professorID, setProfessorID] = useState('');
 	const [school, setSchool] = useState('');
-	const [major,setMajor] = useState('');
+	const [major,setMajor] = useState("major_it1");
 	
 	const onChangeName = e => {
     setName(e.target.value);
@@ -62,32 +62,30 @@ function SignUp(){
 	const submitHandler = useCallback((e) => {
 		e.preventDefault();
 		let user = {
-			type: 'professor',
 			email: email,
 			name: name,
 			photourl: photourl,
-			professorID: professorID,
+			identityID: professorID,
 			school: school,
 			major: major,
-			studentID : '',
-			grade : ''
+			grade : '',
+			type: 'professor'
 		};
 		console.log(user);
 
-        if(!user.name||!user.school||!user.professorID||!user.major){
+        if(!user.name||!user.school||!user.identityID||!user.major){
             return setEmptyError(true);
 		}
-		axios.post('http://13.125.234.161/auth/signup:3000',
+		axios.post('http://13.125.234.161:3000/auth/signup',
             {
-				type: 'professor',
 				email: email,
 				name: name,
 				photourl: photourl,
-				professorID: professorID,
+				identityID: professorID,
 				school: school,
 				major: major,
-				studentID : '',
-				grade : 0
+				grade : 0,
+				type: 'professor'
 			}, {
               headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
             .then((response) => {
@@ -101,7 +99,7 @@ function SignUp(){
 				return window.location.href = '/signup';
               }
         })
-	},[school, major, professorID]);
+	},[email, name, school, major, professorID]);
 
 	return(
 		<Form onSubmit={onsubmit}>
