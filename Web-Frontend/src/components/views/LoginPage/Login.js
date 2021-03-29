@@ -42,9 +42,19 @@ function Login() {
   const googleLoginBtn = useRef(null);
   const history = useHistory();
 
+/*   useEffect(() => {
+    console.log("hi");
+    axios.post('http://13.125.234.161:3000/auth/login', {email : "woasidh@ajou.ac.kr"})
+    .then(response=>{
+      console.log(response);
+    })
+  }, []); */
+
   useEffect(() => {
+    console.log('hi');
     googleSDK();
   }, []);
+
 
 
   //SDK 초기 설정 및 내 API초기화
@@ -76,15 +86,16 @@ function Login() {
               //{'Content-type': 'application/json', 'Accept': 'application/json' }
              } )
             .then((response) => {
+              console.log("hihi");
               const result = response.data;
               console.log(result);
               if(result.userExist===false){
                 return history.push("/signup");
               }
-              return history.push("/main");
+              return history.push("/signup");
             })
             .catch((response) => {
-              console.log('Error!');
+              console.log(response);
             });
           },
           (error) => {

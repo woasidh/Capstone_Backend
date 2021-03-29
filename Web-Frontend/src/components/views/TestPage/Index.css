@@ -1,0 +1,17 @@
+#canvas0{
+    background-color : red;
+    width : 319px;
+    height : 278px;
+}
+
+#canvas1{
+    background-color : orange;
+}
+
+#canvas2{
+    background-color : blue;
+}
+
+button{
+    display : block;
+}
