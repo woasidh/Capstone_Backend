@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
+    useHistory,
 } from "react-router-dom";
 import LeftBar from '../components/utils/LeftBar/Index'
 import TopBar from '../components/utils/TopBar/Index'
@@ -11,18 +12,24 @@ import UploadLecturePage from '../components/views/UploadLecturePage/Index'
 import enterLecturePage from '../components/views/EnterLecturePage/Index'
 import ZoomTestPage from '../components/views/ZoomTestPage/Index'
 
+
 const baseUrl = "/main/";
 
 function Index() {
-
+    const [userInfo, setUserInfo] = useState(JSON.parse(sessionStorage.getItem("user")));
+    const history = useHistory();
     useEffect(() => {
         console.log("this is main page");
-    }, [])
+        if(!userInfo){
+            alert("로그인이 필요합니다.");
+            return history.push("/");
+        }
+    }, [userInfo])
 
     return (
         <>
             <LeftBar />
-            <TopBar />
+            <TopBar mode={true}/>
             <div className = "maincontainer" style={{height : "100%", marginLeft: '200px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
                 <Router>
                     <Switch>

@@ -90,9 +90,14 @@ function SignUp(){
               headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
             .then((response) => {
               const result = response.data;
-              
+              if(result.userExist){
+				sessionStorage.removeItem("userInfo");
+				alert("이미 존재하는 계정입니다.");
+				return history.push("/");
+			  }
               if(result.success){
-				sessionStorage.removeItem("userInfo"); 
+				sessionStorage.removeItem("userInfo");
+				alert("회원가입이 완료되었습니다.");
 				return history.push("/");
               }else{
 				//return history.push("/signup");
