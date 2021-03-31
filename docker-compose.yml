@@ -5,10 +5,6 @@ services:
       build:
          context: './Web-Frontend'
          dockerfile: './Dockerfile.dev'
-      ports:
-         - '80:80'
-      links:
-         - backend
       networks:
          - network
    backend:
@@ -31,15 +27,15 @@ services:
       networks:
          - network
 
-   # nginx:
-   #    restart: always
-   #    build:
-   #       dockerfile: Dockerfile.dev
-   #       context: ./Nginx
-   #    ports:
-   #       - '8080:80'
-   #    networks:
-   #       - network
+   nginx:
+      restart: always
+      build:
+         dockerfile: Dockerfile.dev
+         context: ./Nginx
+      ports:
+         - '80:80'
+      networks:
+         - network
 networks: 
   network:
     driver: bridge
