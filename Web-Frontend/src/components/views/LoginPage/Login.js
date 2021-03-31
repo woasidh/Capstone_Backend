@@ -42,23 +42,23 @@ function Login() {
   const googleLoginBtn = useRef(null);
   const history = useHistory();
 
-/*   useEffect(() => {
+  useEffect(() => {
     console.log("hi");
     axios.post('http://13.125.234.161:3000/auth/login', {email : "woasidh@ajou.ac.kr"})
     .then(response=>{
       console.log(response);
     })
-  }, []); */
+  }, []);
 
-  useEffect(() => {
+/*   useEffect(() => {
     console.log('hi');
     googleSDK();
-  }, []);
+  }, []); */
 
 
 
   //SDK 초기 설정 및 내 API초기화
-  const googleSDK = () => {
+  /* const googleSDK = () => {
     window.googleSDKLoaded = () => {
       console.log(window.gapi);
       window.gapi.load("auth2", () => {
@@ -77,7 +77,7 @@ function Login() {
             let user = {
               name : profile.getName(),
               email: profile.getEmail(),
-              imgUrl: profile.getImageUrl()
+              imgUrl: profile.getImageUrl(),
             }
             sessionStorage.setItem("userInfo", JSON.stringify(user));
             axios.post('http://13.125.234.161:3000/auth/login',
@@ -92,7 +92,12 @@ function Login() {
               if(result.userExist===false){
                 return history.push("/signup");
               }
-              return history.push("/signup");
+              if(result.session.type == "student"){
+                sessionStorage.setItem("type", "student");
+              }else{
+                sessionStorage.setItem("type", "professor");
+              }
+              return history.push("/main");
             })
             .catch((response) => {
               console.log(response);
@@ -116,7 +121,7 @@ function Login() {
       js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
       fjs.parentNode.insertBefore(js, fjs);
     })(document, "script", "google-jssdk");
-  };
+  }; */
 
 
 

@@ -6,6 +6,7 @@ import axios from "axios"
 import ZoomInstant from "@zoomus/instantsdk";
 import { RenderCanvas, ToggleCanvas, SetCanvasSize } from './utils/SetCanvas/Index'
 import Loading from './utils/Loading/Index'
+import {generateInstantToken} from './utils/Auth/Index'
 const MainCnt = styled.div`
 padding : 0.7rem;
 display : flex;
@@ -108,7 +109,7 @@ function Index(props) {
       canvas.style.height = `${parent.offsetHeight}px`; 
      })
 
-    client.on("video-active-change", async (payload) => {
+/*     client.on("video-active-change", async (payload) => {
       console.log("this is it!!");
       const stream = client.getMediaStream();
       if (payload.state === "Active") {
@@ -123,28 +124,8 @@ function Index(props) {
       } else if (payload.state === "Inactive") {
         console.log('video inactive');
       }
-    });
+    }); */
   }, [])
-
-  //generating token
-  function generateInstantToken(sdkKey, sdkSecret, topic, password = "") {
-    let signature = "";
-    const iat = Math.round(new Date().getTime() / 1000);
-    const exp = iat + 60 * 60 * 2;
-    const oHeader = { alg: "HS256", typ: "JWT" };
-    const oPayload = {
-      app_key: sdkKey,
-      iat,
-      exp,
-      tpc: topic,
-      pwd: password,
-    };
-    const sHeader = JSON.stringify(oHeader);
-    const sPayload = JSON.stringify(oPayload);
-    signature = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, sdkSecret);
-    return signature;
-  }
-
 
   useEffect(() => {
     !isLoading && ToggleCanvas(screenNum);
@@ -168,8 +149,9 @@ function Index(props) {
   async function startVideoBtn() {
     const stream = client.getMediaStream();
     try {
-      const newCameraDeviceId = stream.getCameraList()[0];
       await stream.startVideo();
+      const canvas = document.getElementById("canvas0");
+      await stream.renderVideo(canvas, client.getCurrentUserInfo().userId, canvas.width, canvas.height, 0, 0, 1);
     } catch (error) {
       console.log(error);
     }
@@ -188,6 +170,9 @@ function Index(props) {
     const stream = client.getMediaStream();
     try {
       const canvas = document.getElementById("canvas2");
+      const parent = canvas.parentElement;
+      canvas.style.width = `${parent.offsetWidth}px`;
+      canvas.style.height = `${parent.offsetHeight}px`; 
       stream.startShareScreen(canvas);
     } catch (error) {
       console.log(error);

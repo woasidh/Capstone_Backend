@@ -1,9 +1,20 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import axios from 'axios'
 
 function Index() {
+
+    useEffect(() => {
+        const payload = {
+            email : "woasidh1@gmail.com"
+        }
+        axios.post('http://13.125.234.161:3000/auth/login', payload).then(response =>{
+            console.log(response);
+        })
+    }, [])
+
     return (
         <div>
-            <iframe style = {{width : '700px', height : '700px'}} src="https://zoom.us/wc/6345315876/join?prefer=1&un=TWluZGF1Z2Fz" sandbox="allow-forms allow-scripts allow-same-origin" allow="microphone; camera"></iframe>
+            this is zoom test page
         </div>
     )
 }

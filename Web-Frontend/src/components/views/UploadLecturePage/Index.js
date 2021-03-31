@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import theme from '../../../styles/Theme'
+import axios from 'axios'
 import { DatePicker, TimePicker } from 'antd';
 import 'antd/dist/antd.css';
 import {
@@ -9,6 +10,7 @@ import {
     Route,
 } from "react-router-dom";
 import VerifyPage from './section/verify/Index'
+import TitleNav from '../../utils/TitleNav/Index'
 
 const { RangePicker } = DatePicker;
 
@@ -22,24 +24,29 @@ padding : 1.5rem;
 const SubTitless = styled.div`
 color : ${props => props.theme.color.gray1};
 font-size : 16px;
-margin-bottom : 15px;
+margin-bottom : 10px;
 `
 
 const Title = styled.div`
+font-style : italic;
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
-/* font-style : italic; */
+`
+
+const SemiTitle = styled.div`
+border-bottom : 1px solid ${props => props.theme.color.line_color};
+height : 40px;
 `
 
 const NameBox = styled.div`
 width : 50%;
 ${boxStyle}
-margin-bottom : 25px;
+margin : 25px 0;
 `
 
 const NameInput = styled.input`
+margin-top : -5px;
+display : block;
 border : none;
 height : 50px;
 width : 300px;
@@ -67,7 +74,7 @@ align-items :center;
 margin-bottom : 20px;
 `
 
-const Day = styled.div`
+const DayButton = styled.button`
 width : 50px;
 height : 50px;
 border-radius : 10px;
@@ -97,46 +104,107 @@ border-radius : 10px;
 
 function Index() {
 
+    const [LectureName, setLectureName] = useState("");
+    const [startPeriod, setstartPeriod] = useState("");
+    const [endPeriod, setendPeriod] = useState("");
+    const [startTime, setstartTime] = useState("");
+    const [endTime, setendTime] = useState("");
+    const [days, setdays] = useState([]);
+
     const selectDayHandler = (e) => {
         const elm = e.target;
+        const id = parseInt(elm.id);
+        if(!days.includes(id)){
+            days.push(id);
+        }else{
+            const idx = days.indexOf(id)
+            days.splice(idx, 1);
+        }
         if (elm.classList.value.includes('active')) elm.classList.remove('active');
         else elm.classList.add('active');
-        /* if(e.target.classList.active) */
+        console.log(days);
     }
 
     const submitHandler = () => {
-        window.location.href = '/main/uploadLecture/verify';
+        days.sort();
+        let start_time = [];
+        let end_time = [];
+        for(let i =0;i<days.length;i++){
+            start_time.push(startTime);
+            end_time.push(endTime);
+        } 
+        const payload = {
+            name : LectureName,
+            start_period : startPeriod,
+            end_period : endPeriod,
+            start_time : start_time,
+            end_time : end_time,
+            days : days
+        }
+        console.log(payload);
+        axios.post('http://13.125.234.161:3000/subject/create', payload).then(response=>{
+            console.log(response);
+            if(response.data.success == true){
+                window.location.href = '/main/uploadLecture/verify';
+            }else{
+                alert("error");
+            }
+        })
     }
+
+    const lectureNameHandler = (e)=>{
+        setLectureName(e.target.value);
+    }
+
+    const DateonChange = (dates, dateStrings) => {
+        setstartPeriod(dateStrings[0]);
+        setendPeriod(dateStrings[1]);
+      }
+
+      const TimeonChange = (times, timeStrings) => {
+          const startTimeArr = timeStrings[0].split(":");
+          const startString = startTimeArr[0]+":"+startTimeArr[1];
+          const endTimeArr = timeStrings[1].split(":");
+          const endString = endTimeArr[0]+":"+endTimeArr[1];
+          setstartTime(startString);
+          setendTime(endString);
+      }
+
+      const renderButtons = ()=>{
+          const days = ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'];
+          const result = days.map((day, index)=>{
+              return <DayButton id = {index+1} onClick={selectDayHandler}>{day}</DayButton>
+          })
+          return result;
+      }
 
     return (
         <Router>
             <Switch>
                 <Route exact path="/main/uploadLecture/verify" component={VerifyPage} />
                 <Route path="/">
-                    <div className = "sex">
-                        <Title>강의를 개설하세요!</Title>
+                    <div className="uploadCnt">
+                        <TitleNav 
+                        title = "Create your Lecture"
+                        titles = {["Home", "Create a Lecture"]}
+                        ></TitleNav>
                         <NameBox>
-                            <SubTitless>강의 이름</SubTitless>
-                            <NameInput type="text" placeholder="강의 이름을 입력해주세요" />
+                            <SubTitless>lecture name</SubTitless>
+                            <span style={{color : '#bdbdbd'}}>name</span>
+                            <NameInput type="text" onChange = {lectureNameHandler} placeholder="Type in your lecture name" />
                         </NameBox>
                         <PeriodBox>
-                            <SubTitless>강의 범위</SubTitless>
-                            <RangePicker size="large" />
+                            <SubTitless>lecture period</SubTitless>
+                            <RangePicker onChange = {DateonChange} size="large" />
                         </PeriodBox>
                         <TimeBox>
-                            <SubTitless>강의 시간</SubTitless>
+                            <SubTitless>lecture time</SubTitless>
                             <DayContainer>
-                                <button onClick={selectDayHandler}><Day>월</Day></button>
-                                <button onClick={selectDayHandler}><Day>화</Day></button>
-                                <button onClick={selectDayHandler}><Day>수</Day></button>
-                                <button onClick={selectDayHandler}><Day>목</Day></button>
-                                <button onClick={selectDayHandler}><Day>금</Day></button>
-                                <button onClick={selectDayHandler}><Day>토</Day></button>
-                                <button onClick={selectDayHandler}><Day>일</Day></button>
+                                {renderButtons()}
                             </DayContainer>
-                            <TimePicker.RangePicker />
+                            <TimePicker.RangePicker onChange = {TimeonChange} />
                         </TimeBox>
-                        <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
+                        <SubmitBtn onClick={submitHandler}>submit</SubmitBtn>
                     </div>
                 </Route>
             </Switch>
