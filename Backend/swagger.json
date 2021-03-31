@@ -14,7 +14,7 @@
       "name": "User"
     },
     {
-      "name": "Room"
+      "name": "Subject"
     }
   ],
   "schemes": [
@@ -68,6 +68,7 @@
             "name": "obj",
             "in": "body",
             "type": "object",
+            "description": "  200 - 유저가 이미 존재하면 userExist : true, success : false 반환,  \n200 - 성공적으로 회원가입 성공시, success : true 반환",
             "schema": {
               "$ref": "#/definitions/signUp"
             }
@@ -76,9 +77,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
@@ -89,7 +87,14 @@
           "Auth"
         ],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "description": "200 - 성공적으로 로그아웃 성공시, success : true 반환"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -151,27 +156,6 @@
         }
       }
     },
-    "/user/{id}": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/user/get/current": {
       "get": {
         "tags": [
@@ -186,10 +170,10 @@
         }
       }
     },
-    "/room/create": {
+    "/subject/create": {
       "post": {
         "tags": [
-          "Room"
+          "Subject"
         ],
         "description": "",
         "parameters": [
@@ -197,9 +181,9 @@
             "name": "obj",
             "in": "body",
             "type": "object",
-            "description": "성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미",
+            "description": "  성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미  \n403 - type이 professor가 아닌 경우,  \n401 - user가 로그인이 되지 않은 경우,  \n200 - success : true, code 반환",
             "schema": {
-              "$ref": "#/definitions/createRoom"
+              "$ref": "#/definitions/createSubject"
             }
           }
         ],
@@ -216,10 +200,10 @@
         }
       }
     },
-    "/room/join": {
+    "/subject/join": {
       "post": {
         "tags": [
-          "Room"
+          "Subject"
         ],
         "description": "",
         "parameters": [
@@ -227,7 +211,7 @@
             "name": "obj",
             "in": "body",
             "type": "object",
-            "description": "성공시 success 반환",
+            "description": "  200 - 성공시 success, subject 객체 반환,  \n401 - 로그인이 되지 않은 경우",
             "schema": {
               "type": "object",
               "properties": {
@@ -245,20 +229,26 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/room/get": {
+    "/subject/get": {
       "get": {
         "tags": [
-          "Room"
+          "Subject"
         ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -310,7 +300,7 @@
         "type"
       ]
     },
-    "createRoom": {
+    "createSubject": {
       "type": "object",
       "properties": {
         "name": {
