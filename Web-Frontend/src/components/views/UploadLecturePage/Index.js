@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState, component} from 'react'
 import styled, { css } from 'styled-components'
 import theme from '../../../styles/Theme'
 import { DatePicker, TimePicker } from 'antd';
@@ -9,6 +9,7 @@ import {
     Route,
 } from "react-router-dom";
 import VerifyPage from './section/verify/Index'
+import axios from 'axios';
 
 const { RangePicker } = DatePicker;
 
@@ -96,16 +97,83 @@ border-radius : 10px;
 
 
 function Index() {
+    const [name, setName] = useState('');
+    const [startPeriod, setStartPeriod] = useState('');
+    const [endPeriod, setEndPeriod] = useState('');
+    const [startTime, setStartTime] = useState([]);
+    const [endTime, setEndTime] = useState([]);
+    const [dayList, setDayList] = useState([]);
+    const [week, setWeek] = useState(["월", "화", "수", "목", "금", "토", "일"]);
+    
+    const header = new Headers();
+    header.append('Access-Control-Allow-Origin', '*');
 
-    const selectDayHandler = (e) => {
+    const onChangeName = (e) => {
+        setName(e.target.value);
+    }
+
+    const onChangeRange = (value, dateString) => {
+        setStartPeriod(dateString[0]);
+        setEndPeriod(dateString[1]);
+    }
+
+    const selectDayHandler = (e, value) => {
         const elm = e.target;
-        if (elm.classList.value.includes('active')) elm.classList.remove('active');
-        else elm.classList.add('active');
+        console.log(elm);
+        console.log(value);
+        if (elm.classList.value.includes('active')){
+            elm.classList.remove('active');
+            setDayList(
+                dayList.filter((e)=>(e !== value)));
+        }
+        else {
+            elm.classList.add('active');
+            setDayList([
+                ...dayList,
+                value
+            ]);
+        }
+        console.log(dayList);
         /* if(e.target.classList.active) */
     }
 
+    const onChangeTime = (value, dateString) => {
+        console.log(dateString);
+        setStartTime([
+            ...startTime,
+            dateString[0]]);
+        setEndTime([
+            ...endTime,
+            dateString[1]]);
+        console.log(startTime);
+        console.log(endTime);
+    }
+
     const submitHandler = () => {
-        window.location.href = '/main/uploadLecture/verify';
+        console.log(name);
+        console.log(startPeriod);
+        console.log(endPeriod);
+        console.log(startTime);
+        console.log(endTime);
+        console.log(dayList);
+        axios.post('http://13.125.234.161:3000/subject/create', 
+        { 
+            name: name,
+            start_period: startPeriod,
+            end_period: endPeriod,
+            start_time: startTime,
+            end_time: endTime,
+            days: dayList
+         },{headers:header} )
+         .then((response)=>{
+             console.log(response);
+             const code = response.data.code;
+             return window.location.href = '/main/uploadLecture/verify/:code';
+         })
+         .catch((response)=>{
+             console.log('Error!');
+             console.log(response);
+         });
     }
 
     return (
@@ -117,24 +185,24 @@ function Index() {
                         <Title>강의를 개설하세요!</Title>
                         <NameBox>
                             <SubTitless>강의 이름</SubTitless>
-                            <NameInput type="text" placeholder="강의 이름을 입력해주세요" />
+                            <NameInput type="text" name="name" placeholder="강의 이름을 입력해주세요" onChange={onChangeName}/>
                         </NameBox>
                         <PeriodBox>
                             <SubTitless>강의 범위</SubTitless>
-                            <RangePicker size="large" />
+                            <RangePicker size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange}/>
                         </PeriodBox>
                         <TimeBox>
                             <SubTitless>강의 시간</SubTitless>
                             <DayContainer>
-                                <button onClick={selectDayHandler}><Day>월</Day></button>
-                                <button onClick={selectDayHandler}><Day>화</Day></button>
-                                <button onClick={selectDayHandler}><Day>수</Day></button>
-                                <button onClick={selectDayHandler}><Day>목</Day></button>
-                                <button onClick={selectDayHandler}><Day>금</Day></button>
-                                <button onClick={selectDayHandler}><Day>토</Day></button>
-                                <button onClick={selectDayHandler}><Day>일</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 1)}><Day>월</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 2)}><Day>화</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 3)}><Day>수</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 4)}><Day>목</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 5)}><Day>금</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 6)}><Day>토</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 7)}><Day>일</Day></button>
                             </DayContainer>
-                            <TimePicker.RangePicker />
+                            {dayList.map(value => <li>{week[value-1]}<TimePicker.RangePicker format="HH:mm"onChange={onChangeTime}/></li>)}
                         </TimeBox>
                         <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
                     </div>

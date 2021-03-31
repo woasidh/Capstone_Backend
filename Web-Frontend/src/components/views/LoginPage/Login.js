@@ -50,7 +50,7 @@ function Login() {
   //SDK 초기 설정 및 내 API초기화
   const googleSDK = () => {
     window.googleSDKLoaded = () => {
-      console.log(window.gapi);
+      //console.log(window.gapi);
       window.gapi.load("auth2", () => {
         const auth2 = window.gapi.auth2.init({
           client_id:
@@ -69,22 +69,26 @@ function Login() {
               email: profile.getEmail(),
               imgUrl: profile.getImageUrl()
             }
+            console.log(user);
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            axios.post('http://13.125.234.161:3000/auth/login',
-            {email: profile.getEmail()}, {
-              headers: header
-              //{'Content-type': 'application/json', 'Accept': 'application/json' }
-             } )
-            .then((response) => {
+            axios.post('http://13.125.234.161:3000/auth/login', {
+              email: user.email},{
+                headers: header
+              } )
+              .then((response) => {
               const result = response.data;
               console.log(result);
               if(result.userExist===false){
                 return history.push("/signup");
               }
+              sessionStorage.removeItem("userInfo");
+              sessionStorage.setItem("user", JSON.stringify(result.session));
+              console.log(result.session);
               return history.push("/main");
             })
             .catch((response) => {
               console.log('Error!');
+              console.log(response);
             });
           },
           (error) => {

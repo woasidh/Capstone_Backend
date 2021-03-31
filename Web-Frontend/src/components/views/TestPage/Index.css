@@ -1,0 +1,15 @@
+#canvas0{
+    background-color : red;
+}
+
+#canvas1{
+    background-color : orange;
+}
+
+#canvas2{
+    background-color : blue;
+}
+
+button{
+    display : block;
+}
