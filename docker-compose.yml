@@ -4,7 +4,7 @@ services:
       container_name: react
       build:
          context: './Web-Frontend'
-         dockerfile: './Dockerfile'
+         dockerfile: './Dockerfile.dev'
       ports:
          - '80:80'
       links:
@@ -30,6 +30,16 @@ services:
          - '27017:27017'
       networks:
          - network
+
+   # nginx:
+   #    restart: always
+   #    build:
+   #       dockerfile: Dockerfile.dev
+   #       context: ./Nginx
+   #    ports:
+   #       - '8080:80'
+   #    networks:
+   #       - network
 networks: 
   network:
     driver: bridge
