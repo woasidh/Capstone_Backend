@@ -20,18 +20,23 @@ dotenv.config({
 
 var app = express();
 
+// app.set('trust proxy', 1);
+
 // Cors Setting
-app.use(cors());
-app.options('*', cors());
+const corsConfig = {
+    origin: true,
+    credentials: true
+}
+
+app.use(cors(corsConfig));
+app.options('*', cors(corsConfig));
 
 // Session Setting
 app.use(session({
-    httpOnly: true,
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true,
         maxAge: 2000 * 60 * 60
     },
     store: new MemoryStore({

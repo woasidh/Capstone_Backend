@@ -156,7 +156,7 @@ function Index() {
         console.log(startTime);
         console.log(endTime);
         console.log(dayList);
-        axios.post('http://13.125.234.161:3000/subject/create', 
+        axios.post('http://cabstone.ml/api/subject/create', 
         { 
             name: name,
             start_period: startPeriod,

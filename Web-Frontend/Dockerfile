@@ -1,10 +1,9 @@
-FROM node:12-alpine
+FROM node:12-alpine as build
 
 WORKDIR /root/Capstone/Project/Web-Frontend
 COPY package*.json ./
 
 RUN npm install
-RUN npm i -g serve
 
 ENV NODE_ENV production
 
@@ -12,6 +11,11 @@ COPY . .
 
 RUN npm run build
 
+FROM nginx
+
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /root/Capstone/Project/Web-Frontend/build /usr/share/nginx/html
+
 EXPOSE 80
 
-CMD ["serve", "-l", "80", "-s", "build"]
+CMD ["nginx", "-g", "daemon off;"]

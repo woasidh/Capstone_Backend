@@ -71,10 +71,12 @@ function Login() {
             }
             console.log(user);
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            axios.post('http://13.125.234.161:3000/auth/login', {
-              email: user.email},{
-                headers: header
-              } )
+            const instance = axios.create({
+              withCredentials: true,
+              baseURL: 'http://cabstone.ml'
+            });
+
+            instance.post('/api/auth/login', {email: user.email})
               .then((response) => {
               const result = response.data;
               console.log(result);

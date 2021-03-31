@@ -6,7 +6,8 @@ const doc = {
         version: '1.0.0'
     },
     host: process.env.IP,
-    schemes: ['http', 'https'],
+    basePath: "/api",
+    schemes: ['http'],
     tags: [
         { "name": "Auth" },
         { "name": "User" },

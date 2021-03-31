@@ -19,6 +19,10 @@ router.post('/create', (req, res) => {
                 \n200 - success : true, code 반환',
             schema: { $ref: "#/definitions/createSubject" }
         } */
+        console.log(JSON.stringify({"cookies" : req.cookies}));
+        console.log(JSON.stringify({"session" : req.session}));
+        console.log(JSON.stringify({"header" : req.headers}));
+    
     const salt = Math.round((new Date().valueOf() + Math.random())) + "";
     const hashCode = crypto.createHash("sha512").update(salt).digest('hex').slice(0, 16);
 
