@@ -156,7 +156,7 @@ function Index() {
         console.log(startTime);
         console.log(endTime);
         console.log(dayList);
-        axios.post('http://cabstone.ml/api/subject/create', 
+        axios.post('/api/subject/create', 
         { 
             name: name,
             start_period: startPeriod,
@@ -164,7 +164,7 @@ function Index() {
             start_time: startTime,
             end_time: endTime,
             days: dayList
-         },{headers:header} )
+         })
          .then((response)=>{
              console.log(response);
              const code = response.data.code;

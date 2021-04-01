@@ -25,7 +25,8 @@ var app = express();
 // Cors Setting
 const corsConfig = {
     origin: true,
-    credentials: true
+    credentials: true,
+    allowedheaders: ['Content-Type', 'x-requested-with', 'origin', '*']
 }
 
 app.use(cors(corsConfig));

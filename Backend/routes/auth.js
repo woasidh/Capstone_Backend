@@ -13,8 +13,11 @@ router.post('/login', (req, res) => {
             description: '유저가 없으면 userExist : false 반환',
             schema: { $email: "kkimbj18@ajou.ac.kr" }
         } */
-        console.log(JSON.stringify({"cookies" : req.cookies}));
-        console.log(JSON.stringify({"header" : req.headers }));
+        // console.log(JSON.stringify({"cookies" : req.cookies}));
+        // console.log(JSON.stringify({"header" : req.headers }));
+        console.log(req.protocol);
+        console.log(req.secure);
+        console.log(res.secure);
 
     User.findOne({
         email: req.body.email

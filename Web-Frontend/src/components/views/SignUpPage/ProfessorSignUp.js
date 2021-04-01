@@ -76,7 +76,7 @@ function SignUp(){
         if(!user.name||!user.school||!user.identityID||!user.major){
             return setEmptyError(true);
 		}
-		axios.post('http://cabstone.ml/api/auth/signup',
+		axios.post('https://cabstone.ml/api/auth/signup',
             {
 				email: email,
 				name: name,
