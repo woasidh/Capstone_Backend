@@ -71,13 +71,6 @@ function Login() {
             }
             console.log(user);
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            // const instance = axios.create({
-            //   crossDomain: true,
-            //   withCredentials: true,
-            //   baseURL: 'https://cabstone.ml'
-            // });
-
-            axios.get('/api/', { crossDomain: true });
 
             axios.post('/api/auth/login', {email: user.email})
               .then((response) => {
