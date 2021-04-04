@@ -67,7 +67,7 @@ function Index() {
     }
 
     const submitHandler = () => {
-        axios.post('http://13.125.234.161:3000/subject/join', 
+        axios.post('/api/subject/join', 
         { 
             code : code
          },{headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )

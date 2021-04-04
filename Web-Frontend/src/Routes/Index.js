@@ -11,6 +11,7 @@ import Main from '../components/views/MainPage/Index'
 import UploadLecturePage from '../components/views/UploadLecturePage/Index'
 import enterLecturePage from '../components/views/EnterLecturePage/Index'
 import ZoomTestPage from '../components/views/ZoomTestPage/Index'
+import Lecture from '../components/views/LectureChartPage/Index'
 
 
 const baseUrl = "/main/";
@@ -37,6 +38,7 @@ function Index() {
                         <Route path= {baseUrl+"uploadLecture"} component={UploadLecturePage} />
                         <Route path= {baseUrl+"enterLecture"} component={enterLecturePage} />
                         <Route path= {baseUrl+"zoom"} component={ZoomTestPage} />
+                        <Route path= {baseUrl+"lecture/chart"} component={Lecture} />
                     </Switch>
                 </Router>
             </div>
