@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
+import axios from 'axios'
 
 const Container = styled.div`
 width : 100%;
@@ -58,15 +59,37 @@ border-bottom : 1px solid black;
 `
 
 function Index() {
+    const [code, setCode] = useState('');
+
+    const onChangeCode = (e) => {
+        setCode(e.target.value);
+        console.log(code);
+    }
+
+    const submitHandler = () => {
+        axios.post('http://13.125.234.161:3000/subject/join', 
+        { 
+            code : code
+         },{headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
+         .then((response)=>{
+             console.log(response);
+         })
+         .catch((response)=>{
+             console.log('Error!');
+             console.log(response);
+         });
+    }
+
+
     return (
         <Container>
             <Box>
                 <Title>강의 참여</Title>
                 <Desc>아래 링크를 통해 강의에 참여하세요</Desc>
                 <LinkBox>
-                    <Input placeholder = "링크를 입력하세요"/>
+                    <Input placeholder = "링크를 입력하세요" onChange={onChangeCode}/>
                 </LinkBox>
-                <SubmitBtn>강의 참여</SubmitBtn>
+                <SubmitBtn onClick={submitHandler}>강의 참여</SubmitBtn>
             </Box>
         </Container>
     )

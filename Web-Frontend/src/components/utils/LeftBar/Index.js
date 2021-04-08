@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import logo_mark from '../../../images/logo/logo_mark.png'
 import logo_word from '../../../images/logo/logo_word.png'
 import Avater from '../../../images/avatar/avater.jpeg'
+import { useHistory } from 'react-router-dom'
 
 const Container = styled.div`
 width : ${props => props.theme.margin.leftBar};
@@ -35,17 +36,19 @@ font-size : 12px;
 
 `
 const Footer = styled.div`
-position : absolute;
-bottom : 10px;
+width : 200px;
+position : fixed;
+padding : 10px;
+background-color : #1E2A38;
+bottom : 0;
 height : 40px;
-margin : 10px 7px;
 display : flex;
 align-items : center;
 `
 
 const FooterAvater = styled.div`
-width: 40px;
-height: 40px;
+width: 30px;
+height: 30px;
 background-image: url(${Avater});
 border-radius: 50%;
 background-position: center center;
@@ -56,7 +59,7 @@ display : inline-block;
 const FooterRight = styled.div`
 color : white;
 display : inline-block;
-margin-left : 10px;
+margin-left: 10px;
 `
 
 
@@ -75,6 +78,14 @@ function Index() {
 
     const [ShowMenu1, setShowMenu1] = useState(true);
     const [ShowMenu2, setShowMenu2] = useState(true);
+    const [userInfo, setUserInfo] = useState('');
+    const history = useHistory();
+
+    useEffect(() => {
+        setUserInfo(JSON.parse(sessionStorage.getItem("user")));
+       
+        
+  });
 
     const toggle1 = (e) => {
         if (ShowMenu1 === false) setShowMenu1(true);
@@ -94,7 +105,7 @@ function Index() {
             </a>
             <Content>
                 <Menu onClick={toggle1}>
-                    메뉴
+                    강의
                 </Menu>
                 {ShowMenu1 && <div>
                     {isProfessor && <SubMenu href="/main/uploadLecture">{'>'}<span>강의 개설</span></SubMenu>}
@@ -119,7 +130,7 @@ function Index() {
                 <FooterAvater />
                 <FooterRight>
                     <div>
-                        <div style={{ fontSize: '15px' }}>김수민(201620905)</div>
+                        <div style={{ fontSize: '15px' }}>{userInfo.name}(201620905)</div>
                         <div style={{ fontSize: '10px' }}>소프트웨어학과</div>
                     </div>
                 </FooterRight>

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState, component} from 'react'
 import styled, { css } from 'styled-components'
 import theme from '../../../styles/Theme'
-import axios from 'axios'
 import { DatePicker, TimePicker } from 'antd';
 import 'antd/dist/antd.css';
 import {
@@ -10,7 +9,7 @@ import {
     Route,
 } from "react-router-dom";
 import VerifyPage from './section/verify/Index'
-import TitleNav from '../../utils/TitleNav/Index'
+import axios from 'axios';
 
 const { RangePicker } = DatePicker;
 
@@ -24,29 +23,24 @@ padding : 1.5rem;
 const SubTitless = styled.div`
 color : ${props => props.theme.color.gray1};
 font-size : 16px;
-margin-bottom : 10px;
+margin-bottom : 15px;
 `
 
 const Title = styled.div`
-font-style : italic;
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-`
-
-const SemiTitle = styled.div`
-border-bottom : 1px solid ${props => props.theme.color.line_color};
-height : 40px;
+height : 80px;
+line-height : 80px;
+/* font-style : italic; */
 `
 
 const NameBox = styled.div`
 width : 50%;
 ${boxStyle}
-margin : 25px 0;
+margin-bottom : 25px;
 `
 
 const NameInput = styled.input`
-margin-top : -5px;
-display : block;
 border : none;
 height : 50px;
 width : 300px;
@@ -74,7 +68,7 @@ align-items :center;
 margin-bottom : 20px;
 `
 
-const DayButton = styled.button`
+const Day = styled.div`
 width : 50px;
 height : 50px;
 border-radius : 10px;
@@ -103,108 +97,114 @@ border-radius : 10px;
 
 
 function Index() {
+    const [name, setName] = useState('');
+    const [startPeriod, setStartPeriod] = useState('');
+    const [endPeriod, setEndPeriod] = useState('');
+    const [startTime, setStartTime] = useState([]);
+    const [endTime, setEndTime] = useState([]);
+    const [dayList, setDayList] = useState([]);
+    const [week, setWeek] = useState(["월", "화", "수", "목", "금", "토", "일"]);
+    
+    const header = new Headers();
+    header.append('Access-Control-Allow-Origin', '*');
 
-    const [LectureName, setLectureName] = useState("");
-    const [startPeriod, setstartPeriod] = useState("");
-    const [endPeriod, setendPeriod] = useState("");
-    const [startTime, setstartTime] = useState("");
-    const [endTime, setendTime] = useState("");
-    const [days, setdays] = useState([]);
+    const onChangeName = (e) => {
+        setName(e.target.value);
+    }
 
-    const selectDayHandler = (e) => {
+    const onChangeRange = (value, dateString) => {
+        setStartPeriod(dateString[0]);
+        setEndPeriod(dateString[1]);
+    }
+
+    const selectDayHandler = (e, value) => {
         const elm = e.target;
-        const id = parseInt(elm.id);
-        if(!days.includes(id)){
-            days.push(id);
-        }else{
-            const idx = days.indexOf(id)
-            days.splice(idx, 1);
+        console.log(elm);
+        console.log(value);
+        if (elm.classList.value.includes('active')){
+            elm.classList.remove('active');
+            setDayList(
+                dayList.filter((e)=>(e !== value)));
         }
-        if (elm.classList.value.includes('active')) elm.classList.remove('active');
-        else elm.classList.add('active');
-        console.log(days);
+        else {
+            elm.classList.add('active');
+            setDayList([
+                ...dayList,
+                value
+            ]);
+        }
+        console.log(dayList);
+        /* if(e.target.classList.active) */
+    }
+
+    const onChangeTime = (value, dateString) => {
+        console.log(dateString);
+        setStartTime([
+            ...startTime,
+            dateString[0]]);
+        setEndTime([
+            ...endTime,
+            dateString[1]]);
+        console.log(startTime);
+        console.log(endTime);
     }
 
     const submitHandler = () => {
-        days.sort();
-        let start_time = [];
-        let end_time = [];
-        for(let i =0;i<days.length;i++){
-            start_time.push(startTime);
-            end_time.push(endTime);
-        } 
-        const payload = {
-            name : LectureName,
-            start_period : startPeriod,
-            end_period : endPeriod,
-            start_time : start_time,
-            end_time : end_time,
-            days : days
-        }
-        console.log(payload);
-        axios.post('http://13.125.234.161:3000/subject/create', payload).then(response=>{
-            console.log(response);
-            if(response.data.success == true){
-                window.location.href = '/main/uploadLecture/verify';
-            }else{
-                alert("error");
-            }
-        })
+        console.log(name);
+        console.log(startPeriod);
+        console.log(endPeriod);
+        console.log(startTime);
+        console.log(endTime);
+        console.log(dayList);
+        axios.post('http://13.125.234.161:3000/subject/create', 
+        { 
+            name: name,
+            start_period: startPeriod,
+            end_period: endPeriod,
+            start_time: startTime,
+            end_time: endTime,
+            days: dayList
+         },{headers:header} )
+         .then((response)=>{
+             console.log(response);
+             const code = response.data.code;
+             return window.location.href = '/main/uploadLecture/verify/:code';
+         })
+         .catch((response)=>{
+             console.log('Error!');
+             console.log(response);
+         });
     }
-
-    const lectureNameHandler = (e)=>{
-        setLectureName(e.target.value);
-    }
-
-    const DateonChange = (dates, dateStrings) => {
-        setstartPeriod(dateStrings[0]);
-        setendPeriod(dateStrings[1]);
-      }
-
-      const TimeonChange = (times, timeStrings) => {
-          const startTimeArr = timeStrings[0].split(":");
-          const startString = startTimeArr[0]+":"+startTimeArr[1];
-          const endTimeArr = timeStrings[1].split(":");
-          const endString = endTimeArr[0]+":"+endTimeArr[1];
-          setstartTime(startString);
-          setendTime(endString);
-      }
-
-      const renderButtons = ()=>{
-          const days = ['Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat', 'Sun'];
-          const result = days.map((day, index)=>{
-              return <DayButton id = {index+1} onClick={selectDayHandler}>{day}</DayButton>
-          })
-          return result;
-      }
 
     return (
         <Router>
             <Switch>
                 <Route exact path="/main/uploadLecture/verify" component={VerifyPage} />
                 <Route path="/">
-                    <div className="uploadCnt">
-                        <TitleNav 
-                        title = "Create your Lecture"
-                        titles = {["Home", "Create a Lecture"]}
-                        ></TitleNav>
+                    <div className = "sex">
+                        <Title>강의를 개설하세요!</Title>
                         <NameBox>
-                            <SubTitless>lecture name</SubTitless>
-                            <span style={{color : '#bdbdbd'}}>name</span>
-                            <NameInput type="text" onChange = {lectureNameHandler} placeholder="Type in your lecture name" />
+                            <SubTitless>강의 이름</SubTitless>
+                            <NameInput type="text" name="name" placeholder="강의 이름을 입력해주세요" onChange={onChangeName}/>
                         </NameBox>
                         <PeriodBox>
-                            <SubTitless>lecture period</SubTitless>
-                            <RangePicker onChange = {DateonChange} size="large" />
+                            <SubTitless>강의 범위</SubTitless>
+                            <RangePicker size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange}/>
                         </PeriodBox>
                         <TimeBox>
-                            <SubTitless>lecture time</SubTitless>
+                            <SubTitless>강의 시간</SubTitless>
                             <DayContainer>
-                                {renderButtons()}
+                                <button onClick={(e) => selectDayHandler(e, 1)}><Day>월</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 2)}><Day>화</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 3)}><Day>수</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 4)}><Day>목</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 5)}><Day>금</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 6)}><Day>토</Day></button>
+                                <button onClick={(e) => selectDayHandler(e, 7)}><Day>일</Day></button>
                             </DayContainer>
-                            <TimePicker.RangePicker onChange = {TimeonChange} />
+                            {dayList.map(value => <li>{week[value-1]}<TimePicker.RangePicker format="HH:mm"onChange={onChangeTime}/></li>)}
                         </TimeBox>
-                        <SubmitBtn onClick={submitHandler}>submit</SubmitBtn>
+                        <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
                     </div>
                 </Route>
             </Switch>

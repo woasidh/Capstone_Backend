@@ -1,8 +1,8 @@
 export function RenderCanvas() {
-    const arr = [0, 1, 2];
+    const arr = [0, 1, 2, 3];
     const result = arr.map((value, index) => {
         return <canvas style={{
-            position: 'absolute', left: '0', top: '0'
+            position: 'absolute', left: '0', top: '0', display : 'flex', justifyContent : 'center', alignItems : 'center'
         }} id={'canvas' + index}></canvas>
     })
     return result;
@@ -38,12 +38,14 @@ export function ToggleCanvas(screenNum) {
 
 export function SetCanvasSize() {
     const arr = ['canvas1', 'canvas0', 'canvas2'];
-    const canvases = arr.forEach((value) => {
+    arr.forEach((value) => {
         const canvas = document.getElementById(value);
-        const parent = canvas.parentElement;
-        canvas.style.width = parent.offsetWidth;
-        canvas.style.height = parent.offsetHeight;
-        canvas.width = parent.offsetWidth;
-        canvas.height = parent.offsetHeight;
+        if (canvas) {
+            const parent = canvas.parentElement;
+            //canvas.style.width = parent.offsetWidth;
+            //canvas.style.height = parent.offsetHeight;
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+        }
     })
 }

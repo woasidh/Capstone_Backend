@@ -42,7 +42,8 @@ justify-content : space-between;
 align-items : center;
 `
 
-function Index() {
+function Index({match}) {
+    const {code} = match.params;
     return (
         <Container>
             <Box>

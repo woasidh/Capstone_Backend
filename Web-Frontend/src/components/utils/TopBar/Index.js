@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import searchIcon from '../../../images/utils/search.png'
+import PropTypes from 'prop-types';
+import {Link, Redirect, useHistory} from "react-router-dom";
+import axios from 'axios';
+import { Alert } from 'antd';
+
 
 const Container = styled.div`
 margin-left : ${props => props.theme.margin.leftBar};
@@ -56,6 +61,22 @@ line-height : 15px;
 `
 
 function Index() {
+    const history = useHistory();
+    const onLogout = useCallback((e)=>{
+        e.preventDefault();
+        axios.get('http://13.125.234.161:3000/auth/logout')
+        .then((response)=>{
+            const result = response.data.success;
+            console.log(result);
+            sessionStorage.removeItem("user");
+            alert("로그아웃 되었습니다.");
+            return history.push("/");
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+    });
+    
     return (
         <Container>
             <Left>
@@ -65,7 +86,7 @@ function Index() {
             <Right> 
                 <i className="far fa-comment-alt"><Alarm>1</Alarm></i>
                 <i className="far fa-bell"><Alarm>3</Alarm></i>
-                <i className="fas fa-sign-out-alt"></i>
+                <button onClick={onLogout}><i className="fas fa-sign-out-alt"></i></button>
             </Right>
         </Container>
     )

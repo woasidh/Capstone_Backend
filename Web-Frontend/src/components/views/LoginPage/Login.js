@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {useHistory} from 'react-router';
 import styled from 'styled-components';
 import logoImg from '../../../images/logo/mainlogo1.png';
-
+import Text from './Text.tsx'
 import axios from "axios"
 
 const Container = styled.div`
@@ -28,7 +28,6 @@ const GoogleBtn = styled.button`
   white-space: nowrap;
   margin-bottom: 2.5px;
   padding: 1px;
-
   &:hover {
     background: #4285F4;
     cursor: pointer;
@@ -43,24 +42,14 @@ function Login() {
   const history = useHistory();
 
   useEffect(() => {
-    console.log("hi");
-    axios.post('http://13.125.234.161:3000/auth/login', {email : "woasidh@ajou.ac.kr"})
-    .then(response=>{
-      console.log(response);
-    })
-  }, []);
-
-/*   useEffect(() => {
-    console.log('hi');
     googleSDK();
-  }, []); */
-
+  }, []);
 
 
   //SDK 초기 설정 및 내 API초기화
-  /* const googleSDK = () => {
+  const googleSDK = () => {
     window.googleSDKLoaded = () => {
-      console.log(window.gapi);
+      //console.log(window.gapi);
       window.gapi.load("auth2", () => {
         const auth2 = window.gapi.auth2.init({
           client_id:
@@ -77,29 +66,27 @@ function Login() {
             let user = {
               name : profile.getName(),
               email: profile.getEmail(),
-              imgUrl: profile.getImageUrl(),
+              imgUrl: profile.getImageUrl()
             }
+            console.log(user);
             sessionStorage.setItem("userInfo", JSON.stringify(user));
-            axios.post('http://13.125.234.161:3000/auth/login',
-            {email: profile.getEmail()}, {
-              headers: header
-              //{'Content-type': 'application/json', 'Accept': 'application/json' }
-             } )
-            .then((response) => {
-              console.log("hihi");
+            axios.post('http://13.125.234.161:3000/auth/login', {
+              email: user.email},{
+                headers: header
+              } )
+              .then((response) => {
               const result = response.data;
               console.log(result);
               if(result.userExist===false){
                 return history.push("/signup");
               }
-              if(result.session.type == "student"){
-                sessionStorage.setItem("type", "student");
-              }else{
-                sessionStorage.setItem("type", "professor");
-              }
+              sessionStorage.removeItem("userInfo");
+              sessionStorage.setItem("user", JSON.stringify(result.session));
+              console.log(result.session);
               return history.push("/main");
             })
             .catch((response) => {
+              console.log('Error!');
               console.log(response);
             });
           },
@@ -121,7 +108,7 @@ function Login() {
       js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
       fjs.parentNode.insertBefore(js, fjs);
     })(document, "script", "google-jssdk");
-  }; */
+  };
 
 
 
@@ -136,6 +123,7 @@ function Login() {
             <span className="buttonText">SIGN IN WITH GOOGLE</span>
           </div>
         </GoogleBtn>
+        <Text/>
       </div>
     </Container>
   );
