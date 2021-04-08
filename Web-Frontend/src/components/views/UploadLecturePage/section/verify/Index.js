@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
+
 
 const Container = styled.div`
 width : 100%;
@@ -43,15 +44,15 @@ align-items : center;
 `
 
 function Index({match}) {
-    const {code} = match.params;
+    const code = match.params.code;
     return (
         <Container>
             <Box>
                 <Title>강의를 성공적으로 만들었습니다</Title>
-                <Desc>아래 링크를 이용해 학생들을 초대해주세요</Desc>
+                <Desc>아래 코드를 이용해 학생들을 초대해주세요</Desc>
                 <LinkBox>
                     <Link>
-                        <span className = "linkcontent" style = {{fontSize : "16px"}}>https://ajou-ac-kr/zoom.us/j/j42h4qn342h34n</span>
+                        <span className = "linkcontent" style = {{fontSize : "16px"}}>{code}</span>
                         <button onClick = {()=>{
                             const elm = document.querySelector('.linkcontent');
                             navigator.clipboard.writeText(elm.innerText);

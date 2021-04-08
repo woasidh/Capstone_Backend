@@ -74,7 +74,7 @@ function Index() {
         setUserInfo(JSON.parse(sessionStorage.getItem("user")));
        
         
-  });
+  },[]);
 
     const toggle1 = (e) => {
         if (ShowMenu1 === false) setShowMenu1(true);
