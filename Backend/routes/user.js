@@ -35,17 +35,6 @@ router.get('/get', (req, res)=>{
     });
 });
 
-router.get('/:id', (req, res)=>{
-    // #swagger.tags = ['User']
-    // #swagger.path = '/user/{id}'
-    User.findOne({ _id: req.params.id }).populate('subject').exec((err, user) => {
-        if(err) console.log(err);
-        else {
-            res.status(200).json(user);
-        }
-    });
-})
-
 router.get('/get/current', (req, res)=>{
     // #swagger.tags = ['User']
     // #swagger.path = '/user/get/current'
@@ -55,6 +44,6 @@ router.get('/get/current', (req, res)=>{
             res.status(200).json(user);
         }
     });
-})
+});
 
 module.exports = router;

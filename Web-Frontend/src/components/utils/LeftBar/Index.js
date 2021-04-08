@@ -85,7 +85,7 @@ function Index() {
         setUserInfo(JSON.parse(sessionStorage.getItem("user")));
        
         
-  });
+  },[]);
 
     const toggle1 = (e) => {
         if (ShowMenu1 === false) setShowMenu1(true);
@@ -119,6 +119,7 @@ function Index() {
                     내 강의
                 </Menu>
                 {ShowMenu2 && <div>
+                    <SubMenu href="/main/lecture/chart">{'>'}학습 분석 차트</SubMenu>
                     <SubMenu href="/">{'>'}캡스톤 디자인</SubMenu>
                     <SubMenu href="/">{'>'}인공지능</SubMenu>
                     <SubMenu href="/">{'>'}자료구조 및 실습</SubMenu>

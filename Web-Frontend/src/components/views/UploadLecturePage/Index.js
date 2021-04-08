@@ -123,8 +123,10 @@ function Index() {
         console.log(value);
         if (elm.classList.value.includes('active')){
             elm.classList.remove('active');
-            setDayList(
-                dayList.filter((e)=>(e !== value)));
+            const i = dayList.indexOf(value);
+            setDayList(dayList.filter((e)=>(e !== value)));
+            startTime.splice(i,1);
+            endTime.splice(i,1);
         }
         else {
             elm.classList.add('active');
@@ -133,18 +135,17 @@ function Index() {
                 value
             ]);
         }
-        console.log(dayList);
+        
         /* if(e.target.classList.active) */
     }
 
-    const onChangeTime = (value, dateString) => {
+    const onChangeTime = (i, dateString) => {
+        console.log(i);
         console.log(dateString);
-        setStartTime([
-            ...startTime,
-            dateString[0]]);
-        setEndTime([
-            ...endTime,
-            dateString[1]]);
+
+        startTime[i]=dateString[0];
+        endTime[i]=dateString[1];
+        
         console.log(startTime);
         console.log(endTime);
     }
@@ -156,7 +157,7 @@ function Index() {
         console.log(startTime);
         console.log(endTime);
         console.log(dayList);
-        axios.post('http://13.125.234.161:3000/subject/create', 
+        axios.post('/api/subject/create', 
         { 
             name: name,
             start_period: startPeriod,
@@ -164,11 +165,11 @@ function Index() {
             start_time: startTime,
             end_time: endTime,
             days: dayList
-         },{headers:header} )
+         })
          .then((response)=>{
              console.log(response);
              const code = response.data.code;
-             return window.location.href = '/main/uploadLecture/verify/:code';
+             return window.location.href = '/main/uploadLecture/verify/'+code;
          })
          .catch((response)=>{
              console.log('Error!');
@@ -179,7 +180,7 @@ function Index() {
     return (
         <Router>
             <Switch>
-                <Route exact path="/main/uploadLecture/verify" component={VerifyPage} />
+                <Route path="/main/uploadLecture/verify/:code" component={VerifyPage} />
                 <Route path="/">
                     <div className = "sex">
                         <Title>강의를 개설하세요!</Title>
@@ -202,7 +203,7 @@ function Index() {
                                 <button onClick={(e) => selectDayHandler(e, 6)}><Day>토</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 7)}><Day>일</Day></button>
                             </DayContainer>
-                            {dayList.map(value => <li>{week[value-1]}<TimePicker.RangePicker format="HH:mm"onChange={onChangeTime}/></li>)}
+                            {dayList.map((value, index) => <li>{week[value-1]}<TimePicker.RangePicker format="HH:mm"onChange={(value, dateString)=>onChangeTime(index, dateString)}/></li>)}
                         </TimeBox>
                         <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
                     </div>

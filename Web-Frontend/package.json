@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "crypto": "^1.0.1",
     "http-proxy-middleware": "^0.19.1",
+    "insert-css": "^2.0.0",
     "jsrsasign": "^10.1.13",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -26,7 +27,7 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "set PORT=80 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

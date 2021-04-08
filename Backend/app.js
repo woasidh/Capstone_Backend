@@ -7,12 +7,6 @@ const cors = require('cors');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 
-var app = express();
-
-// Cors Setting
-app.use(cors());
-app.options('*', cors());
-
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
 
 const dotenv = require('dotenv');
@@ -23,6 +17,33 @@ dotenv.config({
         process.env.NODE_ENV == "production" ? ".env" : ".env.dev"
     )
 });
+
+var app = express();
+
+// app.set('trust proxy', 1);
+
+// Cors Setting
+const corsConfig = {
+    origin: true,
+    credentials: true,
+    allowedheaders: ['Content-Type', 'x-requested-with', 'origin', '*']
+}
+
+app.use(cors(corsConfig));
+app.options('*', cors(corsConfig));
+
+// Session Setting
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 2000 * 60 * 60
+    },
+    store: new MemoryStore({
+        checkPeriod: 2000 * 60 * 60
+    })
+}));
 
 // Mongoose 연결
 const mongoose = require('mongoose');
@@ -46,22 +67,7 @@ connection.once('open', () => {
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
-const roomRouter = require('./routes/room');
-
-// Session Setting
-app.use(session({
-    httpOnly: true,
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        maxAge: 2000 * 60 * 60
-    },
-    store: new MemoryStore({
-        checkPeriod: 2000 * 60 * 60
-    })
-}));
+const subjectRouter = require('./routes/subject');
 
 // Passport for OAuth
 // app.use(passport.initialize());
@@ -76,7 +82,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
-app.use('/room', roomRouter);
+app.use('/subject', subjectRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

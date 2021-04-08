@@ -64,7 +64,7 @@ function Index() {
     const history = useHistory();
     const onLogout = useCallback((e)=>{
         e.preventDefault();
-        axios.get('http://13.125.234.161:3000/auth/logout')
+        axios.get('/api/auth/logout')
         .then((response)=>{
             const result = response.data.success;
             console.log(result);

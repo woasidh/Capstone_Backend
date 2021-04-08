@@ -6,11 +6,12 @@ const doc = {
         version: '1.0.0'
     },
     host: process.env.IP,
-    schemes: ['http', 'https'],
+    basePath: "/api",
+    schemes: ['https'],
     tags: [
         { "name": "Auth" },
         { "name": "User" },
-        { "name": "Room" }
+        { "name": "Subject" }
     ],
     definitions: {
         signUp: {
@@ -23,7 +24,7 @@ const doc = {
             grade: 4,
             $type: 'student'
         },
-        createRoom: {
+        createSubject: {
             name: '캡스톤디자인',
             start_period: '2021-03-02',
             end_period: '2021-06-30',
@@ -39,7 +40,7 @@ const endpointsFiles = [
     './routes/auth.js', 
     './routes/index.js', 
     './routes/user.js', 
-    './routes/room.js'
+    './routes/subject.js'
 ]
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{

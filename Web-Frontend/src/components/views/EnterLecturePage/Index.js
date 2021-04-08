@@ -67,12 +67,15 @@ function Index() {
     }
 
     const submitHandler = () => {
-        axios.post('http://13.125.234.161:3000/subject/join', 
+        axios.post('/api/subject/join', 
         { 
             code : code
          },{headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
          .then((response)=>{
-             console.log(response);
+             const result = response.data;
+             console.log(result);
+             alert(result.subject.name + "에 성공적으로 참여하였습니다.");
+             return window.location.href = '/main';
          })
          .catch((response)=>{
              console.log('Error!');

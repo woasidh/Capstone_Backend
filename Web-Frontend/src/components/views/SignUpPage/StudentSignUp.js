@@ -81,7 +81,7 @@ function SignUp(){
         if(!user.name||!user.school||!user.identityID||!user.major||!user.grade){
             return setEmptyError(true);
 		}
-		axios.post('http://13.125.234.161:3000/auth/signup',
+		axios.post('/api/auth/signup',
             {
 				email: email,
 				name: name,
