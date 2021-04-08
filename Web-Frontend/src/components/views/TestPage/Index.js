@@ -60,14 +60,6 @@ function Index(props) {
   const [screenNum, setscreenNum] = useState(0);
   const [client, setclient] = useState();
 
-  useEffect(() => {
-    axios.post("http://cabstone.ml/api/auth/login", {
-      email : "woasidh@ajou.ac.kr"
-    }).then(response=>{
-      console.log(response);
-    })
-  }, [])
-
   //when entered
   useEffect(() => {
     setisLoading(false);
