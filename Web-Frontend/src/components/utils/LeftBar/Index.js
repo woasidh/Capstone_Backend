@@ -71,10 +71,8 @@ function Index() {
     const history = useHistory();
 
     useEffect(() => {
-        setUserInfo(JSON.parse(sessionStorage.getItem("user")));
-       
-        
-  });
+        setUserInfo(JSON.parse(sessionStorage.getItem("user"))); 
+    }, []);
 
     const toggle1 = (e) => {
         if (ShowMenu1 === false) setShowMenu1(true);
