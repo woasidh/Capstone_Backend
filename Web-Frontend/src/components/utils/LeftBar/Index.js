@@ -65,14 +65,27 @@ margin-left: 10px;
 
 function Index() {
 
+    const [isStudent, setisStudent] = useState(false)
+    const [isProfessor, setisProfessor] = useState(false);
+
+    useEffect(() => {
+        if(window.sessionStorage.type == 'student'){
+            setisStudent(true);
+        }else{
+            setisProfessor(true);
+        }
+    }, [])
+
     const [ShowMenu1, setShowMenu1] = useState(true);
     const [ShowMenu2, setShowMenu2] = useState(true);
     const [userInfo, setUserInfo] = useState('');
     const history = useHistory();
 
     useEffect(() => {
-        setUserInfo(JSON.parse(sessionStorage.getItem("user"))); 
-    }, []);
+        setUserInfo(JSON.parse(sessionStorage.getItem("user")));
+       
+        
+  },[]);
 
     const toggle1 = (e) => {
         if (ShowMenu1 === false) setShowMenu1(true);
@@ -95,8 +108,8 @@ function Index() {
                     강의
                 </Menu>
                 {ShowMenu1 && <div>
-                    <SubMenu href="/main/uploadLecture">{'>'}<span>강의 개설</span></SubMenu>
-                    <SubMenu href="/main/enterLecture">{'>'}강의 참여</SubMenu>
+                    {isProfessor && <SubMenu href="/main/uploadLecture">{'>'}<span>강의 개설</span></SubMenu>}
+                    {isStudent && <SubMenu href="/main/enterLecture">{'>'}강의 참여</SubMenu>}
                     <SubMenu href="/main/zoom">{'>'}zoom test</SubMenu>
                     <SubMenu href="/">{'>'}공지사항</SubMenu>
                     <SubMenu href="/">{'>'}출결관리</SubMenu>

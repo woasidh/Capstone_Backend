@@ -9,7 +9,8 @@ export default {
         gray5 : "#e0e0e0",
         gray6 : "#eeeeee",
         gray7 : "#f5f5f5",
-        blue : "#407AD6"
+        blue : "#407AD6",
+        line_color : "#D5D5D5"
     },
 
     //margin
