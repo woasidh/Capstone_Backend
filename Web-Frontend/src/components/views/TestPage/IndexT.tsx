@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import styled, { css } from 'styled-components';
-import './Index.css'
-import axios from "axios"
-import ZoomInstant from "@zoomus/instantsdk";
+import React, { useState, useEffect } from 'react'
+import styled, { css } from 'styled-components'
 import { RenderCanvas, ToggleCanvas, SetCanvasSize } from './utils/SetCanvas/Index'
+import MediaController from './utils/MediaController/Index'
 import Loading from './utils/Loading/Index'
 import { generateInstantToken } from './utils/Auth/Index'
-import MediaController from './utils/MediaController/Index'
+import ZoomInstant from "@zoomus/instantsdk";
+import './Index.css'
 
 const MainCnt = styled.div`
 background-color : ${props => props.theme.color.background_gray};
@@ -58,7 +57,7 @@ justify-content : space-between;
 background-color : ${props => props.theme.color.background_gray};
 `
 
-const ActiveStyle = css `
+const ActiveStyle = css`
 flex-basis : 49%;
 background-color : white;
 border-radius : 20px;
@@ -77,7 +76,7 @@ const Active2Cnt = styled.div`
 ${ActiveStyle}
 `
 
-const ActvieContentCntStyle = css `
+const ActvieContentCntStyle = css`
 flex-basis :85%;
 position : relative;
 `
@@ -172,18 +171,28 @@ const EtcBtn = styled.button`
 ${constActiveBtnStyle}
 `
 
-function Index(props) {
+interface TestProps {
+  match: {
+    params: {
+      id: number
+    }
+  }
+}
 
-  //states
-  const [isLoading, setisLoading] = useState(false);
-  const [screenNum, setscreenNum] = useState(0);
-  const [client, setclient] = useState();
-  const [Active1Num, setActive1Num] = useState(1);
-  const [Active2Num, setActive2Num] = useState(1);
+function IndexT(props: TestProps) {
 
-  //when entered
+  //------states------
+  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [screenNum, setscreenNum] = useState<number>(0);
+  const [client, setclient] = useState<any>();
+  const [Active1Num, setActive1Num] = useState<number>(1);
+  const [Active2Num, setActive2Num] = useState<number>(1);
+
+  //------useeffect------
+
+  //zoom init
   useEffect(() => {
-    setisLoading(false);
+    setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
     const token = generateInstantToken(
@@ -191,12 +200,12 @@ function Index(props) {
       "RgEUnU0BDoSEozxsw8ySNWs8C0WvTfpDsUxA",
       "harry"
     );
-    client.join("harry", token, props.match.params.id)
+    console.log(props.match.params.id);
+    client.join("harry", token, props.match.params.id.toString())
       .then(() => {
         console.log("Successfully joined a session.");
         setclient(client);
         setisLoading(false);
-        console.log(client);
       })
       .catch((error) => {
         console.error(error);
@@ -212,7 +221,7 @@ function Index(props) {
 
     client.on('active-share-change', async (payload) => {
       console.log('active-share-change');
-      const canvas = document.getElementById("canvas1");
+      const canvas = document.getElementById("canvas1") as HTMLCanvasElement;;
       const stream = client.getMediaStream();
       console.log(payload);
       if (payload.state === 'Active') {
@@ -227,12 +236,11 @@ function Index(props) {
 
     client.on('share-content-dimension-change', payload => {
       console.log('share-content-dimension-change');
-      const canvas1 = document.getElementById("canvas1");
-      const canvas2 = document.getElementById("canvas2");
-      const arr = [canvas1, canvas2];
+      const canvas1 = document.getElementById("canvas1") as HTMLCanvasElement;
+      const arr = [canvas1];
       arr.forEach((value, index) => {
         const canvas = value;
-        const parent = canvas.parentElement;
+        const parent = canvas.parentElement as HTMLElement;
         const contentWidth = payload.width;
         const contentHeight = payload.height;
         const cntWidth = parent.offsetWidth;
@@ -258,13 +266,12 @@ function Index(props) {
 
     //resize canvas when window resizes
     window.addEventListener('resize', () => {
-      const canvas = document.getElementById("canvas0");
-      const parent = canvas.parentElement;
+      const canvas = document.getElementById("canvas0") as HTMLCanvasElement;;
+      const parent = canvas.parentElement as HTMLElement;
       const stream = client.getMediaStream();
       stream.updateVideoCanvasDimension(canvas, parent.offsetWidth, parent.offsetHeight);
       stream.adjustRenderedVideoPosition(canvas, client.getCurrentUserInfo().userId, canvas.width, canvas.height, 0, 0);
     });
-
   }, [])
 
   useEffect(() => {
@@ -275,51 +282,60 @@ function Index(props) {
     !isLoading && SetCanvasSize();
   }, [isLoading])
 
+  //for Active 1 
   useEffect(() => {
-    const contents = document.querySelectorAll('.Active1Content');
-    contents.forEach((content, idx)=>{
-      content.style.display = 'none';
-      if(content.id == Active1Num) content.style.display = 'block';
+    const contents: NodeListOf<Element> = document.querySelectorAll('.Active1Content');
+    contents.forEach((content: Element, idx) => {
+      content.setAttribute("style", "display : none;")
+      if (parseInt(content.id) === Active1Num)
+        content.setAttribute("style", "display : block;")
     })
     const buttons = document.querySelectorAll('.Active1Btn');
-    buttons.forEach((button, idx)=>{
+    buttons.forEach((button: Element, idx) => {
       button.classList.remove('active');
-      if(button.id == Active1Num) button.classList.add('active');
+      if (parseInt(button.id) === Active1Num) button.classList.add('active');
     })
   }, [Active1Num])
 
+  //for Active 2
   useEffect(() => {
     const contents = document.querySelectorAll('.Active2Content');
-    contents.forEach((content, idx)=>{
-      content.style.display = 'none';
-      if(content.id == Active2Num) content.style.display = 'block';
+    contents.forEach((content, idx) => {
+      content.setAttribute("style", "display : none;")
+      if (parseInt(content.id) === Active2Num)
+        content.setAttribute("style", "display : block;")
     })
     const buttons = document.querySelectorAll('.Active2Btn');
-    buttons.forEach((button, idx)=>{
+    buttons.forEach((button, idx) => {
       button.classList.remove('active');
-      if(button.id == Active2Num) button.classList.add('active');
+      if (parseInt(button.id) === Active2Num) button.classList.add('active');
     })
   }, [Active2Num])
 
-  //render menu buttons
+  //------rendering------
+  //render screen button handler
   const RenderMenuBtns = () => {
     const screens = ['내화면', '공유화면', '참가자들'];
     const result = screens.map((value, index) => {
-      return (<ScreenMenu onClick={changeScrenBtn} id={index}>{value}</ScreenMenu>);
+      return (<ScreenMenu onClick={changeScrenBtn} id={index.toString()}>{value}</ScreenMenu>);
     })
     return result;
   }
 
-  //change menu controller
-  const changeScrenBtn = (e) => {
+  //------handler------
+  //change screen handler
+  const changeScrenBtn = (e: any) => {
+    console.log(e);
     setscreenNum(parseInt(e.target.id));
   }
 
-  const Active1BtnHandler = (e) =>{
+  //change active1 content
+  const Active1BtnHandler = (e: any) => {
+    console.log(e);
     setActive1Num(parseInt(e.target.id));
   }
-
-  const Active2BtnHandler = (e) =>{
+  //change active2 content
+  const Active2BtnHandler = (e: any) => {
     setActive2Num(parseInt(e.target.id));
   }
 
@@ -344,26 +360,33 @@ function Index(props) {
             <QuestionContent className="Active1Content" id="3"></QuestionContent>
           </Active1ContentCnt>
           <Active1Menu>
-            <ParticipantsBtn className = "Active1Btn active" id = "1" onClick={Active1BtnHandler} id = "1">참가자</ParticipantsBtn>
-            <ChatBtn className = "Active1Btn" id = "2" onClick={Active1BtnHandler} id = "2">채팅</ChatBtn>
-            <QuestionBtn className = "Active1Btn" id = "3" onClick={Active1BtnHandler} id = "3">질문</QuestionBtn>
+            <ParticipantsBtn className="Active1Btn active" id="1" onClick={Active1BtnHandler}>참가자</ParticipantsBtn>
+            <ChatBtn className="Active1Btn" id="2" onClick={Active1BtnHandler}>채팅</ChatBtn>
+            <QuestionBtn className="Active1Btn" id="3" onClick={Active1BtnHandler}>질문</QuestionBtn>
           </Active1Menu>
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <UnderstoodContent className = "Active2Content" id = "1"></UnderstoodContent>
-            <SubtitleContent className = "Active2Content" id = "2"></SubtitleContent>
-            <EtcContent className = "Active2Content" id = "3"></EtcContent>
+            <UnderstoodContent className="Active2Content" id="1"></UnderstoodContent>
+            <SubtitleContent className="Active2Content" id="2"></SubtitleContent>
+            <EtcContent className="Active2Content" id="3"></EtcContent>
           </Active2ContentCnt>
           <Active2Menu>
-            <UnderstoodsBtn className = "Active2Btn active" id = "1" onClick={Active2BtnHandler} id = "1">이해도</UnderstoodsBtn>
-            <SubtitleBtn className = "Active2Btn" id = "2" onClick={Active2BtnHandler} id = "2">자막</SubtitleBtn>
-            <EtcBtn className = "Active2Btn" id = "3" onClick={Active2BtnHandler} id = "3">작업</EtcBtn>
+            <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>
+            <SubtitleBtn className="Active2Btn" id="2" onClick={Active2BtnHandler}>자막</SubtitleBtn>
+            <EtcBtn className="Active2Btn" id="3" onClick={Active2BtnHandler}>작업</EtcBtn>
           </Active2Menu>
         </Active2Cnt>
+        <button onClick={() => {
+          const stream = client.getMediaStream();
+          const canvas = document.getElementById("canvas1");
+          console.log("share screen");
+          stream.startShareScreen(canvas);
+          console.log("share screen");
+        }}>share screen</button>
       </RightCnt>
     </MainCnt>
   )
 }
 
-export default Index
+export default IndexT

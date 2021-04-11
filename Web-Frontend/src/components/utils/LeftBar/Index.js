@@ -110,7 +110,7 @@ function Index() {
                 {ShowMenu1 && <div>
                     {isProfessor && <SubMenu href="/main/uploadLecture">{'>'}<span>강의 개설</span></SubMenu>}
                     {isStudent && <SubMenu href="/main/enterLecture">{'>'}강의 참여</SubMenu>}
-                    <SubMenu href="/main/zoom">{'>'}zoom test</SubMenu>
+                    <SubMenu href="/test/aaa">{'>'}zoom test</SubMenu>
                     <SubMenu href="/">{'>'}공지사항</SubMenu>
                     <SubMenu href="/">{'>'}출결관리</SubMenu>
                     <SubMenu href="/">{'>'}진도 관리</SubMenu>

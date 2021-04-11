@@ -42,8 +42,6 @@ export function SetCanvasSize() {
         const canvas = document.getElementById(value);
         if (canvas) {
             const parent = canvas.parentElement;
-            //canvas.style.width = parent.offsetWidth;
-            //canvas.style.height = parent.offsetHeight;
             canvas.width = parent.offsetWidth;
             canvas.height = parent.offsetHeight;
         }

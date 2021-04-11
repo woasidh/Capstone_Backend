@@ -9,6 +9,11 @@ export default {
         gray5 : "#e0e0e0",
         gray6 : "#eeeeee",
         gray7 : "#f5f5f5",
+        dark_gray : "#BFBFBF",
+        light_gray : "#ECECEC",
+        font_light_gray : "#949494",
+        font_dark_gray : "#3E3E3E",
+        background_gray : "#F7F9FC",
         blue : "#407AD6",
         line_color : "#D5D5D5"
     },

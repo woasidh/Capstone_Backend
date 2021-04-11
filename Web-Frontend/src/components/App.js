@@ -10,7 +10,7 @@ import { ThemeProvider } from "styled-components";
 import Theme from "../styles/Theme"
 import MainPage from './views/MainPage/Index'
 import Routes from '../Routes/Index'
-import TestPage from './views/TestPage/Index'
+import TestPage from './views/TestPage/IndexT.tsx'
 import SignUp from '../Routes/signup';
 
 function App() {
