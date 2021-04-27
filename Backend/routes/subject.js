@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { Subject } = require('../models/subjects');
+const { Subject, Lecture } = require('../models/subjects');
 const { User } = require('../models/users');
+const { auth, professorAuth } = require('../middleware/authentication');
 
 const crypto = require('crypto');
 const moment = require('moment');
@@ -12,7 +13,7 @@ moment.tz.setDefault('Asia/Seoul');
 
 // 강의 개설
 
-router.post('/create', (req, res) => {
+router.post('/create', professorAuth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/create' 
         #swagger.parameters['obj'] = {
@@ -25,54 +26,42 @@ router.post('/create', (req, res) => {
                 \n200 - success : true, code 반환',
             schema: { $ref: "#/definitions/createSubject" }
         } */
-        console.log(JSON.stringify({"cookies" : req.cookies}));
-        console.log(JSON.stringify({"session" : req.session}));
-        console.log(JSON.stringify({"header" : req.headers}));
     
     const salt = Math.round((new Date().valueOf() + Math.random())) + "";
     const hashCode = crypto.createHash("sha512").update(salt).digest('hex').slice(0, 16);
 
-    if(!req.session.isLogined) res.status(401).json({
-        success: false
-    });
-
-    else {
-        User.findOne({ email: req.session.email }, (err, user) => {
-            if(user.type != 'professor') res.status(403).json({ 
-                success: false,
-            });
-            const subject = new Subject({
-                name: req.body.name,
-                professor: user._id,
-                start_period: req.body.start_period,
-                end_period: req.body.end_period,
-                start_time: req.body.start_time,
-                end_time: req.body.end_time,
-                days: req.body.days,
-                code: hashCode
-            });
-            subject.save((err, doc) => {
-                if (err) console.log(err);
-                else {
-                    user.subjects.push(doc._id);
-                    user.save((err) => {
-                        if (err) console.log(err);
-                        else {
-                            res.status(200).json({
-                                success: true,
-                                code: hashCode
-                            });
-                        }
-                    });
-                }
-            });
+    User.findOne({ email: req.session.email }, (err, user) => {
+        const subject = new Subject({
+            name: req.body.name,
+            professor: user._id,
+            start_period: req.body.start_period,
+            end_period: req.body.end_period,
+            start_time: req.body.start_time,
+            end_time: req.body.end_time,
+            days: req.body.days,
+            code: hashCode
         });
-    }
+        subject.save((err, doc) => {
+            if (err) console.log(err);
+            else {
+                user.subjects.push(doc._id);
+                user.save((err) => {
+                    if (err) console.log(err);
+                    else {
+                        res.status(200).json({
+                            success: true,
+                            code: hashCode
+                        });
+                    }
+                });
+            }
+        });
+    });
 });
 
 // 강의 방 참가
 
-router.post('/join', (req, res) => {
+router.post('/join', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/join' 
         #swagger.parameters['obj'] = {
@@ -85,9 +74,6 @@ router.post('/join', (req, res) => {
                 $code: ""
             }
         } */
-    if(!req.session.isLogined) res.status(401).json({
-        success: false
-    });
 
     User.findOne({ email: req.session.email }, (err, user) => {
         if(err) console.log(err);
@@ -129,7 +115,7 @@ router.post('/join', (req, res) => {
 
 // 내 강의 목록 확인
 
-router.get('/get/mySubjects', (req, res) => {
+router.get('/get/mySubjects', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/get/mySubjects' */
     User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
@@ -142,7 +128,9 @@ router.get('/get/mySubjects', (req, res) => {
     });
 });
 
-router.get('/get/upcomingLecture', (req, res) => {
+// 곧 있을 수업 정보 받아오기
+
+router.get('/get/upcomingLecture', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/get/upcomingLecture' */
     if (!req.session.isLogined) res.status(401).json({
@@ -153,9 +141,10 @@ router.get('/get/upcomingLecture', (req, res) => {
         if (err) res.status(500).json(err);
         else {
             let minDiff = 60 * 24;
-            let upcomingLecture = -1;
+            let existUpcomingLecture = false;
+            let existInProgressLecture = false;
+            let upcomingLecture;
 
-            // const today = new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'});
             const today = moment();
 
             const nowDay = today.day();
@@ -186,30 +175,31 @@ router.get('/get/upcomingLecture', (req, res) => {
                             if (startTimeDiff < 0) {
                                 res.status(200).json({
                                     inProgress: true,
-                                    subject: subject,
+                                    subject: subject._id,
                                     diffH: startHourDiff,
                                     diffM: startMinuteDiff
                                 });
 
-                                upcomingLecture = 0;
+                                existInProgressLecture = true;
                                 return true;
                             }
 
                             if (endTimeDiff < minDiff) {
                                 minDiff = endTimeDiff;
-                                upcomingLecture = subject;
+                                upcomingLecture = subject._id;
+                                existUpcomingLecture = true;
                             }
                         }
                     }
                 });
 
-                if (upcomingLecture == 0) return true;
+                if (existInProgressLecture) return true;
             });
-            if (upcomingLecture != 0) {
-                if (upcomingLecture != -1) {
+            if (!existInProgressLecture) {
+                if (existUpcomingLecture) {
                     res.status(200).json({
                         upcoming: true,
-                        subject: upcomingLecture,
+                        subject: upcomingLecture._id,
                         diffH: minDiff / 60,
                         diffM: minDiff % 60
                     });
@@ -224,15 +214,85 @@ router.get('/get/upcomingLecture', (req, res) => {
     });
 });
 
-// 전체 subjects 객체들 반환
+// 수업 시작하기
 
-router.get('/get', (req, res) => {
+router.post('/lecture/start', professorAuth, (req, res)=>{
     /*  #swagger.tags = ['Subject']
-        #swagger.path = '/subject/get' */
-    Subject.find({}).populate('students').exec((err, subjects)=>{
-        if(err) res.status(500).json(err);
+        #swagger.path = '/subject/lecture/start' */
+    Subject.findOne({ _id: req.body.subjectId }, (err, subject)=>{
+        if (err) res.status(500).json(err);
         else {
-            res.status(200).json(subjects);
+            const today = moment();
+
+            const lecture = new Lecture({
+                date: today.format('YYYY-MM-DD'),
+                status: 'inProgress',
+                start_time: today.format('hh:mm'),
+                subject: subject._id,
+                options: [{
+                    subtitle: req.body.subtitle,
+                    record: req.body.record,
+                    attendance: req.body.attendance,
+                    limit: req.body.limit
+                }]
+            });
+            lecture.save((err, lecture)=>{
+                if (err) res.status(500).json(err);
+                else {
+                    subject.lectures.push(lecture._id);
+                    
+                    res.status(200).json({
+                        success: true,
+                        lecture: lecture
+                    });
+                }
+            });
+        }
+    })
+});
+
+// 수업 종료하기
+
+router.put('/lecture/close', professorAuth, (req, res)=>{
+    Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
+        status: 'done',
+        end_time: moment().format('hh:mm')
+    }, { new: true }, (err, lecture)=>{
+        if (err) res.status(500).json(err);
+        else {
+            res.status(200).json({
+                success: true,
+                lecture: lecture
+            });
+        }
+    });
+});
+
+// 해당 과목의 현재 진행중인 강의 참가
+
+router.put('/lecture/join', auth, (req, res)=>{
+    Subject.findOne({ _id: req.body.subjectId }).populate('lectures').exec((err, subject)=>{
+        const currentLecture = subject.lectures[subject.lectures.length - 1];
+
+        if (currentLecture.status === 'inProgress') {
+            Lecture.findOneAndUpdate({ _id: currentLecture._id }, {
+                $push: { students: { student: req.session._id }}
+            }, { new: true }, (err, lecture)=>{
+                if (err) res.status(500).json(err);
+                else {
+                    res.status(200).json({
+                        success: true,
+                        existInProgressLecture: true,
+                        lecture: lecture
+                    });
+                }
+            });
+        }
+        else {
+            res.status(200).json({
+                success: false,
+                existInProgressLecture: false
+            });
         }
     });
 });

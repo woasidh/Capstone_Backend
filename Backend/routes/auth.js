@@ -26,6 +26,7 @@ router.post('/login', (req, res) => {
             req.session.name = user.name;
             req.session.email = user.email;
             req.session.type = user.type;
+            req.session._id = user._id;
 
             req.session.save(()=>{
                 res.status(200).json({

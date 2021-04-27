@@ -2,10 +2,19 @@ const { Schema, model } = require('mongoose');
 const mongooseAutoInc = require('mongoose-auto-increment');
 
 const lectureSchema = new Schema({
-    date: {
+    date: { 
         type: Date,
-        default: Date.now
+        required: true 
     },
+    status: { 
+        type: String,
+        required: true
+    },
+    start_time: { 
+        type: String,
+        required: true 
+    },
+    end_time: { type: String },
     subject: {
         type: Number,
         ref: 'subject'
