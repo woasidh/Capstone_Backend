@@ -68,6 +68,7 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const subjectRouter = require('./routes/subject');
+const lectureRouter = require('./routes/lecture');
 
 // Passport for OAuth
 // app.use(passport.initialize());
@@ -83,6 +84,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/subject', subjectRouter);
+app.use('/lecture', lectureRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

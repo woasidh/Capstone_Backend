@@ -7,10 +7,13 @@ const { User } = require('../models/users');
 router.post('/login', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/login'
+        #swagger.responses[200] = {
+            description: '로그인 성공 시, userExist, session 객체 반환
+                \n 로그인 실패 시, userExist: false 반환'
+        }
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: '유저가 없으면 userExist : false 반환',
             schema: { $email: "kkimbj18@ajou.ac.kr" }
         } */
 
@@ -45,12 +48,14 @@ router.post('/login', (req, res) => {
 router.post('/signup', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/signup'
+        #swagger.responses[200] = {
+            description: '
+                200 - 유저가 이미 존재하면 userExist, success : false 반환,
+                \n200 - 성공적으로 회원가입 성공시, success 반환'
+        }
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            description: '
-                200 - 유저가 이미 존재하면 userExist : true, success : false 반환,
-                \n200 - 성공적으로 회원가입 성공시, success : true 반환',
             schema: { $ref: "#/definitions/signUp" }
         } */
     let newUser = {};
@@ -83,18 +88,27 @@ router.post('/signup', (req, res) => {
 
 router.get("/logout", function (req, res, next) {
     /*  #swagger.tags = ['Auth']
-        #swagger.path = '/auth/logout' 
-        #swagger.parameters['obj'] = {
-            in: 'body',
-            type: 'object',
-            description: '200 - 성공적으로 로그아웃 성공시, success : true 반환'
-        }*/
-    req.session.destroy();
-    res.clearCookie('sid');
+        #swagger.path = '/auth/logout'
+        #swagger.responses[200] = {
+            description: '
+                200 - 성공적으로 로그아웃 성공 시, success 반환
+                \n200 - 로그인 상태 아닐 시, success: false, isLogined: false 반환'
+        }
+    */
+    if (req.session.isLogined) {
+        req.session.destroy();
+        res.clearCookie('sid');
 
-    res.status(200).json({
-        success: true
-    })
-})
+        res.status(200).json({
+            success: true
+        });
+    }
+    else {
+        res.status(200).json({
+            success: false,
+            isLogined: false
+        });
+    }
+});
 
 module.exports = router;
