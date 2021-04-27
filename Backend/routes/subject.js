@@ -1,8 +1,14 @@
 const express = require('express');
-const crypto = require('crypto');
 const router = express.Router();
+
 const { Subject } = require('../models/subjects');
 const { User } = require('../models/users');
+
+const crypto = require('crypto');
+const moment = require('moment');
+require('moment-timezone');
+
+moment.tz.setDefault('Asia/Seoul');
 
 // 강의 개설
 
@@ -13,7 +19,7 @@ router.post('/create', (req, res) => {
             in: 'body',
             type: 'object',
             description: '
-                성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미
+                성공시 success, code 반환, time과 days는 배열, days는 0~6까지 일요일부터 토요일을 의미
                 \n403 - type이 professor가 아닌 경우,
                 \n401 - user가 로그인이 되지 않은 경우,
                 \n200 - success : true, code 반환',
@@ -128,14 +134,92 @@ router.get('/get/mySubjects', (req, res) => {
         #swagger.path = '/subject/get/mySubjects' */
     User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
         if(err) res.status(500).json(err);
-        else if(user === null) res.status(200).json({
-            success: false
-        });
         else {
             res.status(200).json({
-                success: true,
                 subjects: user.subjects
             });
+        }
+    });
+});
+
+router.get('/get/upcomingLecture', (req, res) => {
+    /*  #swagger.tags = ['Subject']
+        #swagger.path = '/subject/get/upcomingLecture' */
+    if (!req.session.isLogined) res.status(401).json({
+        success: false
+    });
+    
+    User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
+        if (err) res.status(500).json(err);
+        else {
+            let minDiff = 60 * 24;
+            let upcomingLecture = -1;
+
+            // const today = new Date().toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'});
+            const today = moment();
+
+            const nowDay = today.day();
+            const nowHour = today.hours();
+            const nowMin = today.minutes();
+
+            user.subjects.some((subject)=>{
+                subject.days.some((day, dayIndex)=>{
+                    if (day == nowDay) {
+                        const startTime = subject.start_time[dayIndex].split(':');
+                        const endTime = subject.end_time[dayIndex].split(':');
+
+                        const startHourDiff = (startTime[0] - nowHour);
+                        const endHourDiff = (endTime[0] - nowHour);
+                        const startMinuteDiff = (startTime[1] - nowMin);
+                        const endMinuteDiff = (endTime[1] - nowMin);
+
+                        const startTimeDiff = startHourDiff * 60 + startMinuteDiff;
+                        const endTimeDiff = endHourDiff * 60 + endMinuteDiff;
+
+                        console.log(startTime, endTime);
+                        console.log(nowHour);
+                        console.log(startHourDiff, endHourDiff);
+                        console.log(startMinuteDiff, endMinuteDiff);
+                        console.log(startTimeDiff, endTimeDiff);
+
+                        if (endTimeDiff > 0) {
+                            if (startTimeDiff < 0) {
+                                res.status(200).json({
+                                    inProgress: true,
+                                    subject: subject,
+                                    diffH: startHourDiff,
+                                    diffM: startMinuteDiff
+                                });
+
+                                upcomingLecture = 0;
+                                return true;
+                            }
+
+                            if (endTimeDiff < minDiff) {
+                                minDiff = endTimeDiff;
+                                upcomingLecture = subject;
+                            }
+                        }
+                    }
+                });
+
+                if (upcomingLecture == 0) return true;
+            });
+            if (upcomingLecture != 0) {
+                if (upcomingLecture != -1) {
+                    res.status(200).json({
+                        upcoming: true,
+                        subject: upcomingLecture,
+                        diffH: minDiff / 60,
+                        diffM: minDiff % 60
+                    });
+                }
+                else {
+                    res.status(200).json({
+                        upcoming: false
+                    })
+                }
+            }
         }
     });
 });

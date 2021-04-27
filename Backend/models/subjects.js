@@ -45,7 +45,7 @@ const subjectSchema = new Schema({
     },
     start_time: [{ type: String }],
     end_time: [{ type: String }],
-    days: [{ type: String }],
+    days: [{ type: Number }],
     code: { 
         type: String,
         required: true

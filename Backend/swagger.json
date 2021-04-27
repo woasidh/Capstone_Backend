@@ -181,7 +181,7 @@
             "name": "obj",
             "in": "body",
             "type": "object",
-            "description": "  성공시 success, code 반환, time과 days는 배열, days는 1부터 7까지 월요일부터 일요일을 의미  \n403 - type이 professor가 아닌 경우,  \n401 - user가 로그인이 되지 않은 경우,  \n200 - success : true, code 반환",
+            "description": "  성공시 success, code 반환, time과 days는 배열, days는 0~6까지 일요일부터 토요일을 의미  \n403 - type이 professor가 아닌 경우,  \n401 - user가 로그인이 되지 않은 경우,  \n200 - success : true, code 반환",
             "schema": {
               "$ref": "#/definitions/createSubject"
             }
@@ -246,6 +246,26 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/subject/get/upcomingLecture": {
+      "get": {
+        "tags": [
+          "Subject"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
