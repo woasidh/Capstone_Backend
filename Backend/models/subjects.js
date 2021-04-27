@@ -4,13 +4,25 @@ const mongooseAutoInc = require('mongoose-auto-increment');
 const lectureSchema = new Schema({
     date: {
         type: Date,
-        required: true
+        default: Date.now
     },
-    ave_attendance: { type: Number },
     subject: {
         type: Number,
         ref: 'subject'
-    }
+    },
+    options: [{
+        subtitle: { type: Boolean },
+        record: { type: Boolean },
+        attendance: { type: Boolean },
+        limit: { type: Number }
+    }],
+    students: [{
+        student: { 
+            type: Number,
+            ref: 'user'
+        },
+        attendance: { type: String }
+    }]
 });
 
 const subjectSchema = new Schema({
@@ -39,7 +51,8 @@ const subjectSchema = new Schema({
         required: true
     },
     lectures: [{ type: Number, ref: 'lecture' }],
-    students: [{ type: Number, ref: 'user' }]
+    students: [{ type: Number, ref: 'user' }],
+    introURL: { type: String }
 });
 
 lectureSchema.plugin(mongooseAutoInc.plugin, 'lecture');

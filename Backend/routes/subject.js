@@ -121,9 +121,28 @@ router.post('/join', (req, res) => {
     });
 });
 
+// 내 강의 목록 확인
+
+router.get('/get/mySubjects', (req, res) => {
+    /*  #swagger.tags = ['Subject']
+        #swagger.path = '/subject/get/mySubjects' */
+    User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
+        if(err) res.status(500).json(err);
+        else if(user === null) res.status(200).json({
+            success: false
+        });
+        else {
+            res.status(200).json({
+                success: true,
+                subjects: user.subjects
+            });
+        }
+    });
+});
+
 // 전체 subjects 객체들 반환
 
-router.get('/get', (req, res)=>{
+router.get('/get', (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/get' */
     Subject.find({}).populate('students').exec((err, subjects)=>{
