@@ -8,8 +8,8 @@ router.post('/login', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/login'
         #swagger.responses[200] = {
-            description: '로그인 성공 시, userExist, session 객체 반환
-                \n 로그인 실패 시, userExist: false 반환'
+            description: '로그인 성공 시, success, userExist, session 객체 반환
+                \n 로그인 실패 시, success: false, userExist: false 반환'
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -20,9 +20,13 @@ router.post('/login', (req, res) => {
     User.findOne({
         email: req.body.email
     }, (err, user) => {
-        if (err) console.log(err);
-        else if (user === null) {
-            res.status(200).json({ userExist: false });
+        if (err) return res.status(500).json(err);
+
+        if (user === null) {
+            res.status(200).json({ 
+                success: false,
+                userExist: false 
+            });
         }
         else {
             req.session.isLogined = true;
@@ -33,6 +37,7 @@ router.post('/login', (req, res) => {
 
             req.session.save(()=>{
                 res.status(200).json({
+                    success: true,
                     session: req.session,
                     userExist: true
                 });
@@ -50,16 +55,15 @@ router.post('/signup', (req, res) => {
         #swagger.path = '/auth/signup'
         #swagger.responses[200] = {
             description: '
-                200 - 유저가 이미 존재하면 userExist, success : false 반환,
-                \n200 - 성공적으로 회원가입 성공시, success 반환'
+                200 - 유저가 이미 존재하면 userExist, success: false,
+                \n200 - 성공적으로 회원가입 성공시 success'
         }
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
             schema: { $ref: "#/definitions/signUp" }
         } */
-    let newUser = {};
-    newUser = new User({
+    const newUser = new User({
         email: req.body.email,
         name: req.body.name,
         photourl: req.body.photourl,
@@ -72,15 +76,16 @@ router.post('/signup', (req, res) => {
     newUser.save((err) => {
         if (err) {
             User.findOne({ email: req.body.email }, (err, user) => {
-                if (err) res.json(err);
+                if (err) return res.status(500).json(err);
+                
                 if (user) {
                     res.status(200).json({
                         success: false,
                         userExist: true
                     });
                 }
+                else res.status(400).json(err);
             });
-            res.json(err);
         }
         else res.status(200).json({ success: true });
     });

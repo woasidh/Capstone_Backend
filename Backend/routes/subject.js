@@ -35,6 +35,8 @@ router.post('/create', professorAuth, (req, res) => {
     const hashCode = crypto.createHash("sha512").update(salt).digest('hex').slice(0, 16);
 
     User.findOne({ email: req.session.email }, (err, user) => {
+        if (err) return res.status(500).json(err);
+
         const subject = new Subject({
             name: req.body.name,
             professor: user._id,
@@ -46,25 +48,23 @@ router.post('/create', professorAuth, (req, res) => {
             code: hashCode
         });
         subject.save((err, doc) => {
-            if (err) console.log(err);
-            else {
-                user.subjects.push(doc._id);
-                user.save((err) => {
-                    if (err) console.log(err);
-                    else {
-                        res.status(200).json({
-                            success: true,
-                            code: hashCode
-                        });
-                    }
+            if (err) return res.status(500).json(err);
+
+            user.subjects.push(doc._id);
+            user.save((err) => {
+                if (err) return res.status(500).json(err);
+
+                res.status(200).json({
+                    success: true,
+                    code: hashCode
                 });
-            }
+            });
         });
     });
 });
 
 // 강의 방 참가
-router.post('/join', auth, (req, res) => {
+router.put('/join', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/join' 
         #swagger.responses[200] = {
@@ -85,11 +85,12 @@ router.post('/join', auth, (req, res) => {
         } */
 
     User.findOne({ email: req.session.email }, (err, user) => {
-        if(err) console.log(err);
+        if(err) return res.status(500).json(err);
         
         Subject.findOne({ code: req.body.code }, (err, subject) => {
-            if (err) console.log(err);
-            else if (subject === null) res.status(200).json({ 
+            if (err) return res.status(500).json(err);
+
+            if (subject === null) res.status(200).json({ 
                 success: false,
                 codeValidation: false
             });
@@ -100,19 +101,17 @@ router.post('/join', auth, (req, res) => {
                 });
                 user.subjects.push(subject._id);
                 user.save((err) => {
-                    if (err) console.log(err);
-                    else {
-                        subject.students.push(user._id);
-                        subject.save((err) => {
-                            if (err) console.log(err);
-                            else {
-                                res.status(200).json({ 
-                                    success: true,
-                                    subject
-                                });
-                            }
+                    if (err) return res.status(500).json(err);
+
+                    subject.students.push(user._id);
+                    subject.save((err) => {
+                        if (err) return res.status(500).json(err);
+
+                        res.status(200).json({ 
+                            success: true,
+                            subject
                         });
-                    }
+                    });
                 });
             }
         });
@@ -134,12 +133,11 @@ router.get('/get/mySubjects', auth, (req, res) => {
         }
     */
     User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
-        if(err) res.status(500).json(err);
-        else {
-            res.status(200).json({
-                subjects: user.subjects
-            });
-        }
+        if(err) return res.status(500).json(err);
+
+        res.status(200).json({
+            subjects: user.subjects
+        });
     });
 });
 
@@ -171,34 +169,35 @@ router.post('/lecture/start', professorAuth, (req, res)=>{
             }
         } */
     Subject.findOne({ _id: req.body.subjectId }, (err, subject)=>{
-        if (err) res.status(500).json(err);
-        else {
-            const today = moment();
+        if (err) return res.status(500).json(err);
 
-            const lecture = new Lecture({
-                date: today.format('YYYY-MM-DD'),
-                status: 'inProgress',
-                start_time: today.format('hh:mm'),
-                subject: subject._id,
-                options: [{
-                    subtitle: req.body.subtitle,
-                    record: req.body.record,
-                    attendance: req.body.attendance,
-                    limit: req.body.limit
-                }]
+        const today = moment();
+
+        const lecture = new Lecture({
+            date: today.format('YYYY-MM-DD'),
+            status: 'inProgress',
+            start_time: today.format('hh:mm'),
+            subject: subject._id,
+            options: [{
+                subtitle: req.body.subtitle,
+                record: req.body.record,
+                attendance: req.body.attendance,
+                limit: req.body.limit
+            }]
+        });
+        lecture.save((err, lecture)=>{
+            if (err) return res.status(500).json(err);
+
+            subject.lectures.push(lecture._id);
+            subject.save((err)=>{
+                if (err) return res.status(500).json(err);
+
+                res.status(200).json({
+                    success: true,
+                    lecture: lecture
+                });
             });
-            lecture.save((err, lecture)=>{
-                if (err) res.status(500).json(err);
-                else {
-                    subject.lectures.push(lecture._id);
-                    
-                    res.status(200).json({
-                        success: true,
-                        lecture: lecture
-                    });
-                }
-            });
-        }
+        });
     })
 });
 
@@ -226,13 +225,50 @@ router.put('/lecture/close', professorAuth, (req, res)=>{
         status: 'done',
         end_time: moment().format('hh:mm')
     }, { new: true }, (err, lecture)=>{
-        if (err) res.status(500).json(err);
-        else {
-            res.status(200).json({
-                success: true,
-                lecture: lecture
-            });
+        if (err) return res.status(500).json(err);
+
+        res.status(200).json({
+            success: true,
+            lecture: lecture
+        });
+    });
+});
+
+// 해당 과목의 현재 진행중인 수업 받아오기
+router.get('/lecture/get/inProgress', auth, (req, res)=>{
+    /*  #swagger.tags = ['Subject']
+        #swagger.path = '/subject/lecture/get/inProgress' 
+        #swagger.responses[200] = {
+            description: '현재 진행중인 수업이 있을 경우, existInProgressLecture, lecture 객체 반환
+                \n없을 경우, existInProgressLecture: false 반환'
         }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우'
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $subjectId: 0
+            }
+        } */
+    Subject.findOne({ _id: req.body.subjectId }).populate('lectures').exec((err, subject)=>{
+        if (err) res.status(500).json(err);
+
+        for (let i = subject.lectures.length; i >= 0; i--) {
+            if (subject.lectures[i].status === 'inProgress') {
+                res.status(200).json({
+                    existInProgressLecture: true,
+                    lecture: subject.lectures[i]
+                });
+
+                return;
+            }
+        }
+
+        res.status(200).json({
+            existInProgressLecture: false
+        });
     });
 });
 
@@ -260,14 +296,13 @@ router.put('/lecture/join', auth, (req, res)=>{
             Lecture.findOneAndUpdate({ _id: currentLecture._id }, {
                 $push: { students: { student: req.session._id }}
             }, { new: true }, (err, lecture)=>{
-                if (err) res.status(500).json(err);
-                else {
-                    res.status(200).json({
-                        success: true,
-                        existInProgressLecture: true,
-                        lecture: lecture
-                    });
-                }
+                if (err) return res.status(500).json(err);
+                
+                res.status(200).json({
+                    success: true,
+                    existInProgressLecture: true,
+                    lecture: lecture
+                });
             });
         }
         else {
