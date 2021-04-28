@@ -7,7 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
-const { isObject } = require('util');
+
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
 
 /**
  * Get port from environment and store in Express.
@@ -21,6 +24,11 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+/**
+ * Create Socket Communication
+ */
+
 const socket = require('socket.io')(server);
 
 socket.on('connection', (soc)=>{
@@ -37,8 +45,25 @@ socket.on('connection', (soc)=>{
   })
 
   soc.on('msg', (data)=>{
-    console.log('message: ', data.msg);
-    soc.broadcast.emit('sendMsg', data.msg);
+    const now = moment();
+    const nHour = now.hours();
+    const nMinute = now.minutes();
+
+    const startTime = data.time.split(":");
+
+    let time;
+
+    if (nMinute-startTime[1] < 0) {
+      time = (nHour-startTime[0]-1) + ':' + (nMinute-startTime[1]+60);
+    }
+    else {
+      time = (nHour-startTime[0]) + ':' + (nMinute-startTime[1]);
+    }
+
+    let res = {time, ...data};
+
+    console.log('name: ', res.name, 'message: ', res.content, 'time: ', res.time);
+    soc.broadcast.emit('sendMsg', res);
   });
 
   soc.on('disconnect', ()=>{

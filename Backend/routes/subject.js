@@ -8,7 +8,6 @@ const { auth, professorAuth } = require('../middleware/authentication');
 const crypto = require('crypto');
 const moment = require('moment');
 require('moment-timezone');
-
 moment.tz.setDefault('Asia/Seoul');
 
 // 강의 개설
