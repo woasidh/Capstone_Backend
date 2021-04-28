@@ -21,6 +21,7 @@ const quizSchema = new Schema({
 
 const questionSchema = new Schema({
     lecture: { type: Number, ref: 'lecture' },
+    // subject: { type: Number, ref: 'subject' },
     questioner: { type: Number, ref: 'user' },
     questionContent: { type: String, required: true },
     answers: [{
@@ -29,11 +30,11 @@ const questionSchema = new Schema({
     }]
 });
 
-const chattingSchema = new Schema({
-    lecture: { type: Number, ref: 'lecture' },
-    user: { type: Number, ref: 'user' },
-    content: { type: String, required: true }
-});
+// const chattingSchema = new Schema({
+//     lecture: { type: Number, ref: 'lecture' },
+//     user: { type: Number, ref: 'user' },
+//     content: { type: String, required: true }
+// });
 
 const understandingSchema = new Schema({
     type: { type: String, required: true },

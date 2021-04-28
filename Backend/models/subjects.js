@@ -36,6 +36,10 @@ const lectureSchema = new Schema({
         time: { type: String },
         user: { type: String },
         content: { type: String }
+    }],
+    questions: [{
+        type: Number,
+        ref: 'question'
     }]
 });
 

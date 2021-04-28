@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { Subject, Lecture } = require('../models/subjects');
 const { User } = require('../models/users');
+const { Question } = require('../models/models');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const crypto = require('crypto');
@@ -220,17 +221,24 @@ router.put('/lecture/close', professorAuth, (req, res)=>{
                 $lectureId: 0
             }
         } */
-    Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
-        status: 'done',
-        end_time: moment().format('hh:mm')
-    }, { new: true }, (err, lecture)=>{
+    const question = new Question(req.body.question);
+    question.save((err, q)=>{
         if (err) return res.status(500).json(err);
 
-        res.status(200).json({
-            success: true,
-            lecture: lecture
+        Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
+            status: 'done',
+            end_time: moment().format('hh:mm'),
+            chatting: req.body.chatting,
+            question: q._id
+        }, { new: true }, (err, lecture)=>{
+            if (err) return res.status(500).json(err);
+    
+            res.status(200).json({
+                success: true,
+                lecture: lecture
+            });
         });
-    });
+    })
 });
 
 // 해당 과목의 현재 진행중인 수업 받아오기
