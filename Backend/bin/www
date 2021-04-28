@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
+const { isObject } = require('util');
 
 /**
  * Get port from environment and store in Express.
@@ -20,8 +21,35 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+const socket = require('socket.io')(server);
 
+socket.on('connection', (soc)=>{
+  console.log('a user connected');
 
+  soc.on('user', (data)=>{
+    soc.name = data.name;
+
+    socket.emit('newUser', {
+      type: 'connect', 
+      name: 'SERVER', 
+      message: soc.name
+    });
+  })
+
+  soc.on('msg', (data)=>{
+    console.log('message: ', data.msg);
+    soc.broadcast.emit('sendMsg', data.msg);
+  });
+
+  soc.on('disconnect', ()=>{
+    console.log('user disconnected');
+    soc.broadcast.emit('disConnected', {
+      type: 'disconnect',
+      name: 'SERVER',
+      message: soc.name
+    })
+  })
+})
 
 /**
  * Listen on provided port, on all network interfaces.
