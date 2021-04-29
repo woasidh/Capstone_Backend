@@ -9,7 +9,7 @@ router.post('/login', (req, res) => {
         #swagger.path = '/auth/login'
         #swagger.responses[200] = {
             description: '로그인 성공 시, success, userExist, session 객체 반환
-                \n 로그인 실패 시, success: false, userExist: false 반환'
+                \n로그인 실패 시, success: false, userExist: false 반환'
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -54,9 +54,10 @@ router.post('/signup', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/signup'
         #swagger.responses[200] = {
-            description: '
-                200 - 유저가 이미 존재하면 userExist, success: false,
-                \n200 - 성공적으로 회원가입 성공시 success'
+            description: '성공적으로 회원가입 성공시 success'
+        }
+        #swagger.responses[409] = {
+            description: '유저가 이미 존재할 때 userExist, success: false'
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -79,7 +80,7 @@ router.post('/signup', (req, res) => {
                 if (err) return res.status(500).json(err);
                 
                 if (user) {
-                    res.status(200).json({
+                    res.status(409).json({
                         success: false,
                         userExist: true
                     });
@@ -87,7 +88,7 @@ router.post('/signup', (req, res) => {
                 else res.status(400).json(err);
             });
         }
-        else res.status(200).json({ success: true });
+        else res.status(201).json({ success: true });
     });
 });
 
@@ -96,8 +97,8 @@ router.get("/logout", function (req, res, next) {
         #swagger.path = '/auth/logout'
         #swagger.responses[200] = {
             description: '
-                200 - 성공적으로 로그아웃 성공 시, success 반환
-                \n200 - 로그인 상태 아닐 시, success: false, isLogined: false 반환'
+                성공적으로 로그아웃 성공 시, success 반환
+                \n로그인 상태 아닐 시, success: false, isLogined: false 반환'
         }
     */
     if (req.session.isLogined) {
@@ -108,7 +109,7 @@ router.get("/logout", function (req, res, next) {
             success: true
         });
     }
-    else {
+    else { 
         res.status(200).json({
             success: false,
             isLogined: false

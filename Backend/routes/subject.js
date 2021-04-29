@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { Subject, Lecture } = require('../models/subjects');
 const { User } = require('../models/users');
-const { Question } = require('../models/models');
+const { Question, Quiz } = require('../models/models');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const crypto = require('crypto');
@@ -54,7 +54,7 @@ router.post('/create', professorAuth, (req, res) => {
             user.save((err) => {
                 if (err) return res.status(500).json(err);
 
-                res.status(200).json({
+                res.status(201).json({
                     success: true,
                     code: hashCode
                 });
@@ -68,12 +68,16 @@ router.put('/join', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/join' 
         #swagger.responses[200] = {
-            description: '성공시 success, subject 객체 반환,
-            \n해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환,
-            \n이미 참여한 수업일 경우, success: false, subjectExist 반환'
+            description: '성공시 success, subject 객체 반환'
         }
         #swagger.responses[401] = {
             description: 'user가 로그인이 되지 않은 경우'
+        }
+        #swagger.responses[404] = {
+            description: '해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환'
+        }
+        #swagger.responses[409] = {
+            description: '이미 참여한 수업일 경우, success: false, subjectExist 반환'
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -90,12 +94,12 @@ router.put('/join', auth, (req, res) => {
         Subject.findOne({ code: req.body.code }, (err, subject) => {
             if (err) return res.status(500).json(err);
 
-            if (subject === null) res.status(200).json({ 
+            if (subject === null) res.status(404).json({ 
                 success: false,
                 codeValidation: false
             });
             else {
-                if (user.subjects.includes(subject._id)) res.status(200).json({
+                if (user.subjects.includes(subject._id)) res.status(409).json({
                     success: false,
                     subjectExist: true
                 });
@@ -145,7 +149,7 @@ router.get('/get/mySubjects', auth, (req, res) => {
 router.post('/lecture/start', professorAuth, (req, res)=>{
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/lecture/start' 
-        #swagger.responses[200] = {
+        #swagger.responses[201] = {
             description: 'success, lecture 객체 반환'
         }
         #swagger.responses[401] = {
@@ -192,7 +196,7 @@ router.post('/lecture/start', professorAuth, (req, res)=>{
             subject.save((err)=>{
                 if (err) return res.status(500).json(err);
 
-                res.status(200).json({
+                res.status(201).json({
                     success: true,
                     lecture: lecture
                 });
@@ -217,26 +221,31 @@ router.put('/lecture/close', professorAuth, (req, res)=>{
         #swagger.parameters['obj'] = {
             in: 'body',
             type: 'object',
-            schema: {
-                $lectureId: 0
-            }
+            schema: { $ref: "#/definitions/closeLecture" }
         } */
-    const question = new Question(req.body.question);
-    question.save((err, q)=>{
+    let questionIdArr = [];
+    
+    req.body.question.forEach((q)=>{
+        const question = new Question(q);
+
+        question.save((err, doc)=>{
+            if (err) return res.status(500).json(err);
+
+            questionIdArr.push(doc._id);
+        });
+    });
+
+    Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
+        status: 'done',
+        end_time: moment().format('hh:mm'),
+        chatting: req.body.chatting,
+        question: questionIdArr
+    }, { new: true }, (err, lecture)=>{
         if (err) return res.status(500).json(err);
 
-        Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
-            status: 'done',
-            end_time: moment().format('hh:mm'),
-            chatting: req.body.chatting,
-            question: q._id
-        }, { new: true }, (err, lecture)=>{
-            if (err) return res.status(500).json(err);
-    
-            res.status(200).json({
-                success: true,
-                lecture: lecture
-            });
+        res.status(200).json({
+            success: true,
+            lecture: lecture
         });
     })
 });
@@ -284,7 +293,8 @@ router.put('/lecture/join', auth, (req, res)=>{
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/lecture/join' 
         #swagger.responses[200] = {
-            description: 'success, lecture 객체 반환'
+            description: 'success, existInProgressLecture, lecture 객체 반환
+                \nsuccess: false, existInProgressLecture: false 반환'
         }
         #swagger.responses[401] = {
             description: 'user가 로그인이 되지 않은 경우'
@@ -318,6 +328,51 @@ router.put('/lecture/join', auth, (req, res)=>{
                 existInProgressLecture: false
             });
         }
+    });
+});
+
+// 퀴즈 생성
+router.post('/quiz/create', professorAuth, (req, res)=>{
+    /*  #swagger.tags = ['Subject']
+        #swagger.path = '/subject/quiz/create' 
+        #swagger.description = 'status는 pending/done으로 나뉨'
+        #swagger.responses[201] = {
+            description: 'success, quiz 객체 반환'
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우'
+        }
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우'
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $name: '중간점검 OX',
+                $subjectId: 0,
+                $answerSheet: [{
+                    question: '배고파?'
+                    answer: '웅'
+                }],
+                status: 'pending',
+                type: 'ox'
+            }
+        } */
+    const quiz = new Quiz({
+        name: req.body.name,
+        subject: req.body.subjectId,
+        answerSheet: req.body.answerSheet,
+        status: 'pending',
+        type: req.body.type,
+    });
+    quiz.save((err, q)=>{
+        if (err) return res.status(500).json(err);
+
+        res.status(201).json({
+            success: true,
+            quiz: q
+        });
     });
 });
 

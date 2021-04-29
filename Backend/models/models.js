@@ -4,12 +4,15 @@ const mongooseAutoInc = require('mongoose-auto-increment');
 const quizSchema = new Schema({
     name: { type: String, required: true },
     subject: { type: Number, ref: 'subject' },
-    question: [{
-        type: String
+    answerSheet: [{
+        question: {
+            type: String
+        },
+        answer: {
+            type: String
+        }
     }],
-    answer: [{
-        type: String
-    }],
+    status: { type: String },
     type: { type: String, required: true },
     responses: [{
         student: { type: Number, ref: 'user' },
@@ -22,10 +25,10 @@ const quizSchema = new Schema({
 const questionSchema = new Schema({
     lecture: { type: Number, ref: 'lecture' },
     // subject: { type: Number, ref: 'subject' },
-    questioner: { type: Number, ref: 'user' },
+    questioner: { type: String },
     questionContent: { type: String, required: true },
     answers: [{
-        respondent: { type: Number, ref: 'user' },
+        respondent: { type: String },
         content: { type: String, required: true }
     }]
 });
@@ -135,7 +138,7 @@ const recordSchema = new Schema({
 
 quizSchema.plugin(mongooseAutoInc.plugin, 'quiz');
 questionSchema.plugin(mongooseAutoInc.plugin, 'question');
-chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
+// chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
 understandingSchema.plugin(mongooseAutoInc.plugin, 'understanding');
 subtitleSchema.plugin(mongooseAutoInc.plugin, 'subtitle');
 noticeSchema.plugin(mongooseAutoInc.plugin, 'notice');
@@ -146,7 +149,7 @@ recordSchema.plugin(mongooseAutoInc.plugin, 'record');
 
 const quizModel = model('quiz', quizSchema);
 const questionModel = model('question', questionSchema);
-const chattingModel = model('chatting', chattingSchema);
+// const chattingModel = model('chatting', chattingSchema);
 const understandingModel = model('understanding', understandingSchema);
 const subtitleModel = model('subtitle', subtitleSchema);
 const noticeModel = model('notice', noticeSchema);
@@ -158,7 +161,7 @@ const recordModel = model('record', recordSchema);
 module.exports = {
     Quiz : quizModel,
     Question : questionModel,
-    Chatting : chattingModel,
+    // Chatting : chattingModel,
     Understanding : understandingModel,
     Subtitle : subtitleModel,
     Notice : noticeModel,
