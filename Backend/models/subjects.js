@@ -34,7 +34,7 @@ const lectureSchema = new Schema({
     }],
     chatting: [{
         time: { type: String },
-        user: { type: String },
+        name: { type: String },
         content: { type: String }
     }],
     questions: [{

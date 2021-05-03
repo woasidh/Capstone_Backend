@@ -18,11 +18,19 @@
     },
     {
       "name": "Lecture"
+    },
+    {
+      "name": "Quiz"
+    },
+    {
+      "name": "Notice"
+    },
+    {
+      "name": "LectureNote"
     }
   ],
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "consumes": [],
   "produces": [],
@@ -54,7 +62,7 @@
         ],
         "responses": {
           "200": {
-            "description": "로그인 성공 시, success, userExist, session 객체 반환  \n 로그인 실패 시, success: false, userExist: false 반환"
+            "description": "로그인 성공 시, success, userExist, session 객체 반환  \n로그인 실패 시, success: false, userExist: false 반환"
           },
           "500": {
             "description": "Internal Server Error"
@@ -80,10 +88,16 @@
         ],
         "responses": {
           "200": {
-            "description": "  200 - 유저가 이미 존재하면 userExist, success: false,  \n200 - 성공적으로 회원가입 성공시 success"
+            "description": "성공적으로 회원가입 성공시 success"
+          },
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
+          },
+          "409": {
+            "description": "유저가 이미 존재할 때 userExist, success: false"
           },
           "500": {
             "description": "Internal Server Error"
@@ -100,7 +114,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "  200 - 성공적으로 로그아웃 성공 시, success 반환  \n200 - 로그인 상태 아닐 시, success: false, isLogined: false 반환"
+            "description": "  성공적으로 로그아웃 성공 시, success 반환  \n로그인 상태 아닐 시, success: false, isLogined: false 반환"
           }
         }
       }
@@ -131,6 +145,40 @@
         }
       }
     },
+    "/user/get/professor": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/get/student": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/subject/create": {
       "post": {
         "tags": [
@@ -151,6 +199,9 @@
         "responses": {
           "200": {
             "description": "성공시 success, code 반환"
+          },
+          "201": {
+            "description": "Created"
           },
           "401": {
             "description": "user가 로그인이 되지 않은 경우"
@@ -192,10 +243,119 @@
         ],
         "responses": {
           "200": {
-            "description": "성공시 success, subject 객체 반환,  \n해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환,  \n이미 참여한 수업일 경우, success: false, subjectExist 반환"
+            "description": "성공시 success, subject 객체 반환"
           },
           "401": {
             "description": "user가 로그인이 되지 않은 경우"
+          },
+          "404": {
+            "description": "해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환"
+          },
+          "409": {
+            "description": "이미 참여한 수업일 경우, success: false, subjectExist 반환"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/subject/info/{id}": {
+      "get": {
+        "tags": [
+          "Subject"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공 시, success, 해당 강의를 subject로 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "404": {
+            "description": "해당 subject가 존재하지 않으면, success: false, existSubject: false 반환"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/subject/info/update/{id}": {
+      "put": {
+        "tags": [
+          "Subject"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "start_period": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "end_period": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "start_time": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "end_time": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "days": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "introURL": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공 시, success, subject 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우,  \n해당 과목을 만든 본인이 아닐 경우, success: false, isValidProfessor: false 반환"
+          },
+          "404": {
+            "description": "success: false, existSubject: false 반환"
           },
           "500": {
             "description": "Internal Server Error"
@@ -217,8 +377,25 @@
           "401": {
             "description": "user가 로그인이 되지 않은 경우"
           },
-          "403": {
-            "description": "type이 professor가 아닌 경우"
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/subject/get/upcoming": {
+      "get": {
+        "tags": [
+          "Subject"
+        ],
+        "description": "현재 수업 중인 강의, 또는 곧 있을 강의 \n 얼마나 지났는 지, 또는 해당 강의까지 남은 시간 반환",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "현재 진행중인 수업이 있을 경우, inProgress, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 있을 경우, upcoming, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 없을 경우, upcoming: false 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
           },
           "500": {
             "description": "Internal Server Error"
@@ -226,10 +403,10 @@
         }
       }
     },
-    "/subject/lecture/start": {
+    "/lecture/start": {
       "post": {
         "tags": [
-          "Subject"
+          "Lecture"
         ],
         "description": "",
         "parameters": [
@@ -284,7 +461,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "success, lecture 객체 반환"
           },
           "401": {
@@ -299,10 +476,10 @@
         }
       }
     },
-    "/subject/lecture/close": {
+    "/lecture/close": {
       "put": {
         "tags": [
-          "Subject"
+          "Lecture"
         ],
         "description": "",
         "parameters": [
@@ -331,13 +508,39 @@
         }
       }
     },
-    "/subject/lecture/get/inProgress": {
+    "/lecture/get/inProgress": {
+      "put": {
+        "tags": [
+          "Lecture"
+        ],
+        "description": "현재 진행중인 수업이 있으면 어떤 수업이든 받아오기",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "진행중인 수업이 있으면, success, existInProgressLecture, lectures 배열 반환,  \n없으면, success: false, existInProgressLecture: false 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lecture/get/inProgress/subject/{id}": {
       "get": {
         "tags": [
-          "Subject"
+          "Lecture"
         ],
         "description": "",
         "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -359,84 +562,6 @@
         "responses": {
           "200": {
             "description": "현재 진행중인 수업이 있을 경우, existInProgressLecture, lecture 객체 반환  \n없을 경우, existInProgressLecture: false 반환"
-          },
-          "401": {
-            "description": "user가 로그인이 되지 않은 경우"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/subject/lecture/join": {
-      "put": {
-        "tags": [
-          "Subject"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "obj",
-            "in": "body",
-            "type": "object",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "subjectId": {
-                  "type": "number",
-                  "example": 0
-                }
-              },
-              "required": [
-                "subjectId"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success, lecture 객체 반환"
-          },
-          "401": {
-            "description": "user가 로그인이 되지 않은 경우"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/lecture/get/upcoming": {
-      "get": {
-        "tags": [
-          "Lecture"
-        ],
-        "description": "현재 수업 중인 강의, 또는 곧 있을 강의 \n 얼마나 지났는 지, 또는 해당 강의까지 남은 시간 반환",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "현재 진행중인 수업이 있을 경우, inProgress, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 있을 경우, upcoming, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 없을 경우, upcoming: false 반환"
-          },
-          "401": {
-            "description": "user가 로그인이 되지 않은 경우"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/lecture/join/any": {
-      "put": {
-        "tags": [
-          "Lecture"
-        ],
-        "description": "현재 진행중인 수업이 있으면 어떤 수업이든 바로 참가",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "진행중인 수업이 있으면, success, existInProgressLecture, lecture 객체 반환,  \n없으면, success: false, existInProgressLecture: false 반환"
           },
           "401": {
             "description": "user가 로그인이 되지 않은 경우"

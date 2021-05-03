@@ -7,12 +7,15 @@ const doc = {
     },
     host: process.env.IP,
     basePath: "/api",
-    schemes: ['http', 'https'],
+    schemes: ['http'],
     tags: [
         { "name": "Auth" },
         { "name": "User" },
         { "name": "Subject" },
-        { "name": "Lecture" }
+        { "name": "Lecture" },
+        { "name": "Quiz" },
+        { "name": "Notice" },
+        { "name": "LectureNote" }
     ],
     definitions: {
         signUp: {
