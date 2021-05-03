@@ -4,36 +4,42 @@ const mongooseAutoInc = require('mongoose-auto-increment');
 const quizSchema = new Schema({
     name: { type: String, required: true },
     subject: { type: Number, ref: 'subject' },
-    question: [{
-        type: String
+    date: { type: Date },
+    deadLine: { type: Date },
+    answerSheets: [{
+        question: { type: String },
+        answer: { type: String },
+        points: { type: Number }
     }],
-    answer: [{
-        type: String
-    }],
+    status: { type: String },
     type: { type: String, required: true },
     responses: [{
+        date: { type: Date },
         student: { type: Number, ref: 'user' },
         response: [{
-            type: String,
-        }]
+            answer: { type: String },
+            correctness: { type: Boolean }
+        }],
+        score: { type: Number }
     }]
 });
 
 const questionSchema = new Schema({
     lecture: { type: Number, ref: 'lecture' },
-    questioner: { type: Number, ref: 'user' },
+    // subject: { type: Number, ref: 'subject' },
+    questioner: { type: String },
     questionContent: { type: String, required: true },
     answers: [{
-        respondent: { type: Number, ref: 'user' },
+        respondent: { type: String },
         content: { type: String, required: true }
     }]
 });
 
-const chattingSchema = new Schema({
-    lecture: { type: Number, ref: 'lecture' },
-    user: { type: Number, ref: 'user' },
-    content: { type: String, required: true }
-});
+// const chattingSchema = new Schema({
+//     lecture: { type: Number, ref: 'lecture' },
+//     user: { type: Number, ref: 'user' },
+//     content: { type: String, required: true }
+// });
 
 const understandingSchema = new Schema({
     type: { type: String, required: true },
@@ -57,17 +63,11 @@ const noticeSchema = new Schema({
     subject: { type: Number, ref: 'subject' },
     title: { type: String, required: true },
     content: { type: String, required: true },
-    date: {
-        type: Date,
-        default: Date.now
-    },
+    date: { type: Date },
     feed: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
-        date: { 
-            type: Date, 
-            default: Date.now
-        }
+        date: { type: Date }
     }]
 });
 
@@ -76,17 +76,11 @@ const lectureNoteSchema = new Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     fileURL: { type: String },
-    date: {
-        type: Date,
-        default: Date.now
-    },
+    date: { type: Date },
     feed: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
-        date: { 
-            type: Date, 
-            default: Date.now
-        }
+        date: { type: Date }
     }]
 });
 
@@ -98,16 +92,10 @@ const assignmentSchema = new Schema({
     feed: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
-        date: { 
-            type: Date, 
-            default: Date.now
-        }
+        date: { type: Date }
     }],
     deadline: { type: Date },
-    date: { 
-        type: Date,
-        default: Date.now
-    },
+    date: { type: Date },
     submission: [{
         user: { type: Number, ref: 'user' },
         fileURL: { type: String },
@@ -134,7 +122,7 @@ const recordSchema = new Schema({
 
 quizSchema.plugin(mongooseAutoInc.plugin, 'quiz');
 questionSchema.plugin(mongooseAutoInc.plugin, 'question');
-chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
+// chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
 understandingSchema.plugin(mongooseAutoInc.plugin, 'understanding');
 subtitleSchema.plugin(mongooseAutoInc.plugin, 'subtitle');
 noticeSchema.plugin(mongooseAutoInc.plugin, 'notice');
@@ -145,7 +133,7 @@ recordSchema.plugin(mongooseAutoInc.plugin, 'record');
 
 const quizModel = model('quiz', quizSchema);
 const questionModel = model('question', questionSchema);
-const chattingModel = model('chatting', chattingSchema);
+// const chattingModel = model('chatting', chattingSchema);
 const understandingModel = model('understanding', understandingSchema);
 const subtitleModel = model('subtitle', subtitleSchema);
 const noticeModel = model('notice', noticeSchema);
@@ -157,7 +145,7 @@ const recordModel = model('record', recordSchema);
 module.exports = {
     Quiz : quizModel,
     Question : questionModel,
-    Chatting : chattingModel,
+    // Chatting : chattingModel,
     Understanding : understandingModel,
     Subtitle : subtitleModel,
     Notice : noticeModel,

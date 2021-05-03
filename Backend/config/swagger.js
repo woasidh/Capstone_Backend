@@ -7,12 +7,15 @@ const doc = {
     },
     host: process.env.IP,
     basePath: "/api",
-    schemes: ['http', 'https'],
+    schemes: ['http'],
     tags: [
         { "name": "Auth" },
         { "name": "User" },
         { "name": "Subject" },
-        { "name": "Lecture" }
+        { "name": "Lecture" },
+        { "name": "Quiz" },
+        { "name": "Notice" },
+        { "name": "LectureNote" }
     ],
     definitions: {
         signUp: {
@@ -32,6 +35,18 @@ const doc = {
             start_time: ['16:30', '18:00', '19:30'],
             end_time: ['18:00', '19:30', '21:00'],
             days: [1, 1, 1],
+        },
+        closeLecture: {
+            question: [{
+                lecture: 0,
+                questioner: '김민건',
+                questionContent: '아 몰랑 안해',
+                answers: [{
+                    respondent: '최민우',
+                    content: '아 나도 몰랑 안해'
+                }]
+            }],
+            lectureId: 0
         }
     }
 }

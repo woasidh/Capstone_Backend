@@ -13,4 +13,24 @@ router.get('/get/current', (req, res)=>{
     });
 });
 
+router.get('/get/professor', (req, res)=>{
+    // #swagger.tags = ['User']
+    // #swagger.path = '/user/get/professor'
+    User.find({ type: 'professor' }).populate('subject').exec((err, user)=>{
+        if(err) return res.status(500).json(err);
+
+        res.status(200).json(user);
+    })
+});
+
+router.get('/get/student', (req, res)=>{
+    // #swagger.tags = ['User']
+    // #swagger.path = '/user/get/student'
+    User.find({ type: 'student' }).populate('subject').exec((err, user)=>{
+        if(err) return res.status(500).json(err);
+
+        res.status(200).json(user);
+    })
+})
+
 module.exports = router;

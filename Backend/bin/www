@@ -8,6 +8,10 @@ var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
 
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault('Asia/Seoul');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -21,7 +25,93 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+/**
+ * Create Socket Communication
+ */
 
+const socket = require('socket.io')(server);
+
+socket.on('connection', (soc)=>{
+  console.log('a user connected');
+
+  // 수업 참가 시, 참가자 갱신
+  soc.on('user', (data)=>{
+    soc.name = data.name;
+    soc.code = data.code;
+
+    soc.join(soc.code);
+
+    socket.to(soc.code).emit('newUser', {
+      type: 'connect', 
+      name: 'SERVER', 
+      message: soc.name
+    });
+  });
+
+  soc.on('msg', (data)=>{
+    const now = moment();
+    const currHour = now.hours();
+    const currMinute = now.minutes();
+
+    const startTime = data.time.split(":");
+    const startHour = startTime[0];
+    const startMinute = startTime[1];
+
+    const needBorrowing = minute-startTime[1] < 0 
+
+    let time;
+
+    if (needBorrowing) {
+      time = (currHour-startHour-1) + ':' + (currMinute-startMinute+60);
+    }
+    else {
+      time = (currHour-startHour) + ':' + (currMinute-startMinute);
+    }
+
+    data.time = time;
+    data.name = soc.name;
+
+    console.log('name: ', data.name, 'message: ', data.content, 'time: ', data.time);
+    soc.broadcast.to(soc.code).emit('sendMsg', data);
+  });
+
+  soc.on('question', (data)=>{
+    data.name = soc.name;
+
+    soc.broadcast.to(soc.code).emit('sendQ', data);
+  });
+
+  soc.on('answer', (data)=>{
+    data.name = soc.name;
+
+    soc.broadcast.to(soc.code).emit('sendA', data);
+  })
+
+  // 수업 퇴장 시, 참가자 갱신
+  soc.on('disconnect', ()=>{
+    console.log('user disconnected');
+
+    soc.broadcast.to(soc.code).emit('disConnected', {
+      type: 'disconnect',
+      name: 'SERVER',
+      message: soc.name
+    })
+  })
+
+  // 퀴즈 학생들에게 뿌리기
+  soc.on('quiz', (data)=>{
+    if (data.deadLine) {
+      const now = moment();
+      const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
+
+      setTimeout(()=>{
+        soc.broadcast.to(soc.code).emit('timeOver');
+      }, timeLeft);
+    }
+
+    soc.broadcast.to(soc.code).emit('sendQuiz', data); 
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.

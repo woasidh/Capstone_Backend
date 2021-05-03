@@ -31,6 +31,15 @@ const lectureSchema = new Schema({
             ref: 'user'
         },
         attendance: { type: String }
+    }],
+    chatting: [{
+        time: { type: String },
+        name: { type: String },
+        content: { type: String }
+    }],
+    questions: [{
+        type: Number,
+        ref: 'question'
     }]
 });
 
