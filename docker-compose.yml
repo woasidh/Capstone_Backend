@@ -32,9 +32,9 @@ services:
       build:
          dockerfile: Dockerfile.dev
          context: ./Nginx
-      volumes:
-         - ../volumes/certbot/conf:/etc/letsencrypt
-         - ../volumes/certbot/www:/var/www/certbot
+      # volumes:
+      #    - ../volumes/certbot/conf:/etc/letsencrypt
+      #    - ../volumes/certbot/www:/var/www/certbot
       ports:
          - '80:80'
          # - '443:443'
