@@ -11,21 +11,23 @@ import Main from '../components/views/MainPage/Index'
 import UploadLecturePage from '../components/views/UploadLecturePage/Index'
 import enterLecturePage from '../components/views/EnterLecturePage/Index'
 import ZoomTestPage from '../components/views/ZoomTestPage/Index'
-import Lecture from '../components/views/LectureChartPage/Index'
+import LectureChartPage from '../components/views/LectureChartPage/Index'
+import LectureInfoPage from '../components/views/LectureInfoPage/Index'
+import JoinLecturePage from '../components/views/JoinLecturePage/Index'
+import NoticePage from '../components/views/NoticePage/Index'
 
 
 const baseUrl = "/main/";
 
 function Index() {
-    const [userInfo, setUserInfo] = useState(JSON.parse(sessionStorage.getItem("user")));
-    const history = useHistory();
+    const [userInfo, setUserInfo] = useState(JSON.parse(window.sessionStorage.user));
     useEffect(() => {
         console.log("this is main page");
-        if(!userInfo){
+        if(!userInfo.isLogined){
             alert("로그인이 필요합니다.");
-            return history.push("/");
+            return window.location.href = '/';
         }
-    }, [userInfo])
+    }, [])
 
     return (
         <>
@@ -38,7 +40,10 @@ function Index() {
                         <Route path= {baseUrl+"uploadLecture"} component={UploadLecturePage} />
                         <Route path= {baseUrl+"enterLecture"} component={enterLecturePage} />
                         <Route path= {baseUrl+"zoom"} component={ZoomTestPage} />
-                        <Route path= {baseUrl+"lecture/chart"} component={Lecture} />
+                        <Route path= {baseUrl+":subject/join"} component={JoinLecturePage} />
+                        <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
+                        <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
+                        <Route path= {baseUrl+":subject/chart"} component={LectureChartPage} />
                     </Switch>
                 </Router>
             </div>

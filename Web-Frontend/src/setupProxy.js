@@ -4,8 +4,8 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://cabstone.ml',
-      changeOrigin: true
+      target: 'http://disboard13.kro.kr/',
+      changeOrigin: false
     })
   );
 };

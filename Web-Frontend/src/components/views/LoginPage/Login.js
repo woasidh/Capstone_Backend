@@ -68,7 +68,6 @@ function Login() {
               email: profile.getEmail(),
               imgUrl: profile.getImageUrl()
             }
-            console.log(user);
             sessionStorage.setItem("userInfo", JSON.stringify(user));
 
             axios.post('/api/auth/login', {email: user.email})
@@ -80,8 +79,16 @@ function Login() {
               }
               sessionStorage.removeItem("userInfo");
               sessionStorage.setItem("user", JSON.stringify(result.session));
-              console.log(result.session);
-              return history.push("/main");
+              axios.get('/api/user/get/current')
+              .then((response)=>{
+                const info = response.data;
+                console.log(info);
+                sessionStorage.setItem("userInfo", JSON.stringify(info));
+                return window.location.href = '/main';
+              })
+              .catch((error)=>{
+                console.log(error);
+              })
             })
             .catch((response) => {
               console.log('Error!');

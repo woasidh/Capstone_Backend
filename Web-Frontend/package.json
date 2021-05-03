@@ -1,7 +1,7 @@
 {
   "name": "swcapstone__fe",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "proxy": "http://13.125.234.161:3000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
