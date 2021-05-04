@@ -7,7 +7,7 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-import UpdatePage from './UpdateLectureInfo';
+//import UpdatePage from './UpdateLectureInfo';
 
 const Container = styled.div`
 width : 100%;
@@ -91,7 +91,7 @@ function Index({match}){
     return(
         <Router>
         <Switch>
-        <Route path={`/main/:subject/info/update`} component={UpdatePage}/>
+        <Route path={`/main/:subject/info/update`} component={}/>
         <Route path="/">
         <Container>
             <Title>강의 정보</Title>

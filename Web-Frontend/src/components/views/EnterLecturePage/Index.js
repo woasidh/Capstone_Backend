@@ -67,10 +67,10 @@ function Index() {
     }
 
     const submitHandler = () => {
-        axios.post('/api/subject/join', 
+        axios.put('/api/subject/join', 
         { 
             code : code
-         },{headers:{'Content-type': 'application/json', 'Accept': 'application/json' } } )
+         })
          .then((response)=>{
              const result = response.data;
              console.log(result);
