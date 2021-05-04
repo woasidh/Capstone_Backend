@@ -7,7 +7,7 @@ import {
     Switch,
     Route,
 } from "react-router-dom";
-//import UpdatePage from './UpdateLectureInfo';
+import UpdatePage from './UpdateLectureInfo';
 
 const Container = styled.div`
 width : 100%;
@@ -57,43 +57,29 @@ background: white;
 `
 
 function Index({match}){
-
+    const [isLoading, setIsLoading] = useState(false);
     const [isProfessor, setisProfessor] = useState(false);
     const [user, setUser] = useState(JSON.parse(window.sessionStorage.user));
     const [week, setWeek] = useState(["월", "화", "수", "목", "금", "토", "일"]);
     const [subjectId, setSubjectId] = useState(String(match.params.subject));
-    const [subjectInfo, setSubjectInfo] = useState({
-        name: '',
-        code: '',
-        days: [],
-        start_period: '',
-        end_period: '',
-        start_time: [],
-        end_time: []
-    });
+    const [subjectInfo, setSubjectInfo] = useState();
     
-    useEffect(() => {
-        const request = '/api/subject/info/'+ subjectId;
-        if(user.type === "professor"){
-            setisProfessor(true);
-        }
-        axios.get(request)
+    const getData = () => {
+        const url = '/api/subject/info/'+ subjectId;
+        axios.get(url)
         .then((response)=>{
-            setSubjectInfo(response.data);
+            const result = response.data.subject;
+            setSubjectInfo(result);
+            setIsLoading(true);
         })
         .catch((error)=>{
             console.log(error);
-        })
-    },[]);
+        });
+    }
 
-    
-
-    return(
-        <Router>
-        <Switch>
-        <Route path={`/main/:subject/info/update`} component={}/>
-        <Route path="/">
-        <Container>
+    const display = () => {
+        return(
+            <Container>
             <Title>강의 정보</Title>
             <div style={{width: "100%", display: "block"}}>
                 <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subjectInfo.name} / 강의 정보</div>                
@@ -123,11 +109,27 @@ function Index({match}){
                     </tr>
                     </tbody>
                 </table>
-                
-        </Container>
-        </Route>
-        </Switch>
+            </Container>
+        );
+    }
+    
+    useEffect(() => {
+        if(user.type === "professor") {setisProfessor(true);}
+        getData();
+    },[]);
+
+    
+
+    return(
+        <Router>
+            <Switch>
+                <Route path= "/main/:subject/info/update" component={UpdatePage}/>
+                <Route path="/">
+                    <div>{isLoading && display()}</div>
+                </Route>
+            </Switch>
         </Router>
+
     )
 }
 
