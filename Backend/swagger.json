@@ -601,6 +601,563 @@
           }
         }
       }
+    },
+    "/quiz/create": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "중간점검 OX"
+                },
+                "subjectId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "answerSheets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "string",
+                        "example": "배고파?"
+                      },
+                      "answer": {
+                        "type": "string",
+                        "example": "웅"
+                      }
+                    },
+                    "required": [
+                      "question",
+                      "answer"
+                    ]
+                  }
+                },
+                "status": {
+                  "type": "string",
+                  "example": "pending"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "ox"
+                }
+              },
+              "required": [
+                "name",
+                "subjectId",
+                "answerSheets",
+                "status",
+                "type"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success, quiz 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/get/subject/{id}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "success, quizzes 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/get/student/subject/{id}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "success, quizzes 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/get/{id}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/get/student/{id}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/open": {
+      "put": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "deadLine": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/close": {
+      "put": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/submit": {
+      "put": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "response": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "studentId": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "409": {
+            "description": "quiz의 deadLine이 지났을 경우 success: false, isOver 반환"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lectureNote/get/subject/{id}": {
+      "get": {
+        "tags": [
+          "LectureNote"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, lectureNotes 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lectureNote/get/{id}": {
+      "get": {
+        "tags": [
+          "LectureNote"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, lectureNote 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "404": {
+            "description": "해당하는 강의노트가 존재하지 않을 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lectureNote/create": {
+      "post": {
+        "tags": [
+          "LectureNote"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "fileURL": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, lectureNote 객체 반환"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/get/all": {
+      "get": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "success, notices 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/get/student/{id}": {
+      "get": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, notices 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/get/{id}": {
+      "get": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, notice 객체 반환"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "404": {
+            "description": "해당하는 공지가 존재하지 않을 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/create": {
+      "post": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, notice 객체 반환"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우"
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {

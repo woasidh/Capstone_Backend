@@ -57,7 +57,10 @@ const endpointsFiles = [
     './routes/index.js', 
     './routes/user.js', 
     './routes/subject.js',
-    './routes/lecture.js'
+    './routes/lecture.js',
+    './routes/quiz.js',
+    './routes/lectureNote.js',
+    './routes/notice.js'
 ]
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{

@@ -28,7 +28,7 @@ router.get('/get/all', auth, (req, res)=>{
             Notice.find({ subject: subject }).sort({date: -1}).exec((err, notices)=>{
                 if (err) return res.status(500).json(err);
 
-                const notices = notices.splice(0, 3);
+                notices = notices.splice(0, 3);
                 
                 notices.forEach((notice)=>{
                     const noticeForm = {
@@ -114,8 +114,7 @@ router.get('/get/:id', auth, (req, res)=>{
 
 router.post('/create', professorAuth, (req, res)=>{
      /*  #swagger.tags = ['Notice']
-        #swagger.path = '/notice/close' 
-        #swagger.description = 'status는 pending/open/done으로 나뉨'
+        #swagger.path = '/notice/create' 
         #swagger.responses[200] = {
             description: 'success, notice 객체 반환'
         }

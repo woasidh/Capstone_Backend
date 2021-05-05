@@ -69,6 +69,10 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const subjectRouter = require('./routes/subject');
 const lectureRouter = require('./routes/lecture');
+const noticeRouter = require('./routes/notice');
+const lectureNoteRouter = require('./routes/lectureNote');
+const quizRouter = require('./routes/quiz');
+const commentRouter = require('./routes/comment');
 
 // Passport for OAuth
 // app.use(passport.initialize());
@@ -85,6 +89,10 @@ app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/subject', subjectRouter);
 app.use('/lecture', lectureRouter);
+app.use('/notice', noticeRouter);
+app.use('/lectureNote', lectureNoteRouter);
+app.use('/quiz', quizRouter);
+app.use('/comment', commentRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

@@ -64,7 +64,7 @@ const noticeSchema = new Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     date: { type: Date },
-    feed: [{
+    comments: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }
@@ -77,7 +77,7 @@ const lectureNoteSchema = new Schema({
     content: { type: String, required: true },
     fileURL: { type: String },
     date: { type: Date },
-    feed: [{
+    comments: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }
@@ -89,7 +89,7 @@ const assignmentSchema = new Schema({
     title: { type: String, required: true },
     content: { type: String, required: true },
     fileURL: { type: String },
-    feed: [{
+    comments: [{
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }

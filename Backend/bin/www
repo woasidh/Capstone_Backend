@@ -57,7 +57,7 @@ socket.on('connection', (soc)=>{
     const startHour = startTime[0];
     const startMinute = startTime[1];
 
-    const needBorrowing = minute-startTime[1] < 0 
+    const needBorrowing = currMinute-startMinute < 0 
 
     let time;
 
