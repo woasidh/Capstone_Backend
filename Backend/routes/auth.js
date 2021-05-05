@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/users');
+const { auth } = require('../middleware/authentication');
 
 // 로그인
 
@@ -8,8 +9,18 @@ router.post('/login', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/login'
         #swagger.responses[200] = {
-            description: '로그인 성공 시, success, userExist, session 객체 반환
-                \n로그인 실패 시, success: false, userExist: false 반환'
+            description: '로그인 성공할 경우
+            \n로그인 실패할 경우',
+            schema: {
+                성공: {
+                    success: true,           
+                    userExist: true
+                },
+                실패: {
+                    success: false,
+                    userExist: false
+                }
+            }
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -38,12 +49,9 @@ router.post('/login', (req, res) => {
             req.session.save(()=>{
                 res.status(200).json({
                     success: true,
-                    session: req.session,
                     userExist: true
                 });
             });
-
-            console.log({"session" : req.session});
         }
     });
 });
@@ -53,11 +61,18 @@ router.post('/login', (req, res) => {
 router.post('/signup', (req, res) => {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/signup'
-        #swagger.responses[200] = {
-            description: '성공적으로 회원가입 성공시 success'
+        #swagger.responses[201] = {
+            description: '성공적으로 회원가입한 경우',
+            schema: {
+                success: true
+            }
         }
         #swagger.responses[409] = {
-            description: '유저가 이미 존재할 때 userExist, success: false'
+            description: '해당 고유값을 지니는 유저가 이미 존재할 경우',
+            schema: {
+                success: false,
+                userExist: true
+            }
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -92,29 +107,26 @@ router.post('/signup', (req, res) => {
     });
 });
 
-router.get("/logout", function (req, res, next) {
+router.get("/logout", auth, function (req, res) {
     /*  #swagger.tags = ['Auth']
         #swagger.path = '/auth/logout'
         #swagger.responses[200] = {
-            description: '
-                성공적으로 로그아웃 성공 시, success 반환
-                \n로그인 상태 아닐 시, success: false, isLogined: false 반환'
+            description: '성공적으로 로그아웃 성공 시, success 반환',
+            schema: {
+                success: true
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
     */
-    if (req.session.isLogined) {
-        req.session.destroy();
-        res.clearCookie('sid');
+    req.session.destroy();
+    res.clearCookie('sid');
 
-        res.status(200).json({
-            success: true
-        });
-    }
-    else { 
-        res.status(200).json({
-            success: false,
-            isLogined: false
-        });
-    }
+    res.status(200).json({
+        success: true
+    });
 });
 
 module.exports = router;

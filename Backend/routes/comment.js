@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { Notice, LectureNote } = require('../models/models');
-const { User } = require('../models/users');
-const { Subject } = require('../models/subjects');
-const { auth, professorAuth } = require('../middleware/authentication');
+const { auth } = require('../middleware/authentication');
 
 const moment = require('moment');
 require('moment-timezone');
@@ -14,13 +12,30 @@ router.put('/add', auth, (req, res)=>{
     /*  #swagger.tags = ['Comment']
         #swagger.path = '/comment/add' 
         #swagger.responses[200] = {
-            description: 'success 반환'
+            description: '성공적으로 댓글을 달았을 경우',
+            schema: {
+                success: true
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[404] = {
-            description: '해당하는 게시글이 존재하지 않을 경우'
+            description: '해당하는 게시글이 존재하지 않을 경우',
+            schema: {
+                success: false,
+                existPost: false
+            }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $postType: 'notice',
+                $postId: 0,
+                content: '롤 개마렵다 ㄹㅇ'
+            }
         } */
     const Post = (req.body.postType === 'notice') ? Notice : LectureNote;
 
@@ -48,17 +63,46 @@ router.put('/edit', auth, (req, res)=>{
     /*  #swagger.tags = ['Comment']
         #swagger.path = '/comment/edit' 
         #swagger.responses[200] = {
-            description: 'success 반환'
+            description: '댓글을 성공적으로 수정하였을 경우',
+            schema: {
+                success: true
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'user가 해당 댓글에 대한 권한이 없을 경우'
+            description: 'user가 해당 댓글에 대한 권한이 없을 경우',
+            schema: {
+                success: false,
+                validUser: false
+            }
         }
         #swagger.responses[404] = {
             description: '해당하는 게시글이 존재하지 않을 경우,
-            \n해당하는 댓글이 존재하지 않을 경우'
+            \n해당하는 댓글이 존재하지 않을 경우',
+            schema: {
+                게시글: {
+                    success: false,
+                    existPost: false
+                },
+                댓글: {
+                    success: false,
+                    existComment: false
+                }
+            }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            description: 'commentIndex는 해당 게시물에서 수정하고자하는 comment의 index를 의미',
+            schema: {
+                $postType: 'lectureNote',
+                $postId: 0,
+                $commentIndex: 0,
+                content: '중간발표 2주 남았네 ㅁㅊ'
+            }
         } */
     const Post = (req.body.postType === 'notice') ? Notice : LectureNote;
 
@@ -90,21 +134,49 @@ router.put('/edit', auth, (req, res)=>{
     })
 })
 
-router.delete('/delete', auth, (req, res)=>{
+router.put('/delete', auth, (req, res)=>{
     /*  #swagger.tags = ['Comment']
         #swagger.path = '/comment/delete' 
         #swagger.responses[200] = {
-            description: 'success 반환'
+            description: '성공적으로 댓글을 삭제한 경우',
+            schema: {
+                success: true
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'user가 해당 댓글에 대한 권한이 없을 경우'
+            description: 'user가 해당 댓글에 대한 권한이 없을 경우',
+            schema: {
+                success: false,
+                validUser: false
+            }
         }
         #swagger.responses[404] = {
             description: '해당하는 게시글이 존재하지 않을 경우,
-            \n해당하는 댓글이 존재하지 않을 경우'
+            \n해당하는 댓글이 존재하지 않을 경우',
+            schema: {
+                게시글: {
+                    success: false,
+                    existPost: false
+                },
+                댓글: {
+                    success: false,
+                    existComment: false
+                }
+            }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            description: 'commentIndex는 해당 게시물에서 수정하고자하는 comment의 index를 의미',
+            schema: {
+                $postType: 'lectureNote',
+                $postId: 0,
+                $commentIndex: 0
+            }
         } */
     const Post = (req.body.postType === 'notice') ? Notice : LectureNote;
 

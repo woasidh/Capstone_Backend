@@ -1,7 +1,8 @@
 const auth = (req, res, next)=>{
     if (!req.session.isLogined) {
         return res.status(401).json({
-            success: false
+            success: false,
+            isLogined: false
         });
     }
 
@@ -11,12 +12,14 @@ const auth = (req, res, next)=>{
 const professorAuth = (req, res, next)=>{
     if (!req.session.isLogined) {
         return res.status(401).json({
-            success: false
+            success: false,
+            isLogined: false
         });
     }
     else if (req.session.type != 'professor') {
         return res.status(403).json({
-            success: false
+            success: false,
+            isProfessor: false
         });
     }
 

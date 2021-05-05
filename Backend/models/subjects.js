@@ -19,18 +19,18 @@ const lectureSchema = new Schema({
         type: Number,
         ref: 'subject'
     },
-    options: [{
+    options: {
         subtitle: { type: Boolean },
         record: { type: Boolean },
         attendance: { type: Boolean },
         limit: { type: Number }
-    }],
+    },
     students: [{
         student: { 
             type: Number,
             ref: 'user'
         },
-        attendance: { type: String }
+        attendance: { type: Boolean }
     }],
     chatting: [{
         time: { type: String },

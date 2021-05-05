@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const { LectureNote } = require('../models/models');
-const { User } = require('../models/users');
-const { Subject } = require('../models/subjects');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
@@ -14,10 +12,30 @@ router.get('/get/subject/:id', auth, (req, res)=>{
      /*  #swagger.tags = ['LectureNote']
         #swagger.path = '/lectureNote/get/subject/{id}' 
         #swagger.responses[200] = {
-            description: 'success, lectureNotes 객체 반환'
+            description: '해당 과목의 강의노트들을 성공적으로 가져올 경우',
+            schema: {
+                success: true,
+                lectureNotes: [{
+                    _id: 0,
+                    title: '아니 인공지능',
+                    content: '아니 인공지능 성적 언제 나옴???',
+                    fileURL: '',
+                    date: '2021-05-05T15:38:19.424Z',
+                    comments: [{
+                        user: 0,
+                        content: '진심 몇 일째냐고~~~~~',
+                        date: '2021-05-05T15:38:19.424Z'
+                    }],
+                    emotions: [{
+                        user: 0,
+                        emotion: 'angry'
+                    }]
+                }]
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         } */
     LectureNote.find({ subject: req.params.id }).sort({date: -1}).exec((err, lectureNotes)=>{
         if (err) return res.status(500).json(err);
@@ -31,7 +49,8 @@ router.get('/get/subject/:id', auth, (req, res)=>{
                 content: lectureNote.content,
                 fileURL: lectureNote.fileURL,
                 date: lectureNote.date,
-                feedLength: lectureNote.feed.length
+                comments: notice.comments,
+                emotions: notice.emotions
             }
             lectureNoteArray.push(lectureNoteForm);
         })
@@ -47,15 +66,40 @@ router.get('/get/:id', auth, (req, res)=>{
      /*  #swagger.tags = ['LectureNote']
         #swagger.path = '/lectureNote/get/{id}' 
         #swagger.responses[200] = {
-            description: 'success, lectureNote 객체 반환'
+            description: '해당 강의노트를 성공적으로 받아올 경우',
+            schema: {
+                success: true,
+                lectureNote: {
+                    _id: 0,
+                    subject: 0,
+                    title: '아~ 이제 이거 너무 귀찮은데',
+                    content: '그래도 해야겠지ㅠ',
+                    fileURL: '',
+                    date: '2021-05-05T15:38:19.424Z',
+                    comments: [{
+                        user: 1,
+                        content: 'ㅋㅋ',
+                        date: '2021-05-05T15:38:19.424Z'
+                    }],
+                    emotions: [{
+                        user: 1,
+                        emotion: 'smile'
+                    }]
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[404] = {
-            description: '해당하는 강의노트가 존재하지 않을 경우'
+            description: '해당하는 강의노트가 존재하지 않을 경우',
+            schema: {
+                success: false,
+                existLectureNote: false
+            }
         } */
-    lectureNote.findOne({ _id: req.params.id }).populate('subject')
+    LectureNote.findOne({ _id: req.params.id }).populate('subject')
     .populate('user').exec((err, lectureNote)=>{
         if (err) return res.status(500).json(err);
         if (lectureNote === null) return res.status(404).json({
@@ -73,16 +117,43 @@ router.get('/get/:id', auth, (req, res)=>{
 router.post('/create', professorAuth, (req, res)=>{
      /*  #swagger.tags = ['LectureNote']
         #swagger.path = '/lectureNote/create' 
-        #swagger.responses[200] = {
-            description: 'success, lectureNote 객체 반환'
+        #swagger.responses[201] = {
+            description: '정상적으로 강의노트를 생성했을 경우',
+            schema: {
+                success: true,
+                lectureNote: {
+                    _id: 0,
+                    subject: 0,
+                    title: '오늘은 여기까지만...',
+                    content: '힘들드아',
+                    fileURL: '',
+                    date: '2021-05-05T15:38:19.424Z',
+                    comments: [],
+                    emotions: []
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                subject: 0,
+                title: '오늘은 여기까지만...',
+                content: '힘들드아',
+                fileURL: '',
+            }
         } */
-    const lectureNote = new lectureNote({
+    console.log(moment());
+    
+    const lectureNote = new LectureNote({
         subject: req.body.subject,
         title: req.body.title,
         content: req.body.content,

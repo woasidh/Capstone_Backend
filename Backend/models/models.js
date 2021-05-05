@@ -68,6 +68,10 @@ const noticeSchema = new Schema({
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }
+    }],
+    emotions: [{
+        user: { type: Number, ref: 'user' },
+        emotion: { type: String, required: true }
     }]
 });
 
@@ -81,6 +85,10 @@ const lectureNoteSchema = new Schema({
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }
+    }],
+    emotions: [{
+        user: { type: Number, ref: 'user' },
+        emotion: { type: String }
     }]
 });
 
@@ -93,6 +101,10 @@ const assignmentSchema = new Schema({
         user: { type: Number, ref: 'user' },
         content: { type: String },
         date: { type: Date }
+    }],
+    emotions: [{
+        user: { type: Number, ref: 'user' },
+        emotion: { type: String, required: true }
     }],
     deadline: { type: Date },
     date: { type: Date },
