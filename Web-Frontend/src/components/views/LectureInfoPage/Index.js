@@ -59,9 +59,9 @@ background: white;
 function Index({match}){
     const [isLoading, setIsLoading] = useState(false);
     const [isProfessor, setisProfessor] = useState(false);
-    const [user, setUser] = useState(JSON.parse(window.sessionStorage.user));
-    const [week, setWeek] = useState(["월", "화", "수", "목", "금", "토", "일"]);
-    const [subjectId, setSubjectId] = useState(String(match.params.subject));
+    const user = JSON.parse(window.sessionStorage.userInfo);
+    const week = ["월", "화", "수", "목", "금", "토", "일"]
+    const subjectId = String(match.params.subject);
     const [subjectInfo, setSubjectInfo] = useState();
     
     const getData = () => {

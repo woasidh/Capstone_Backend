@@ -78,7 +78,6 @@ function Login() {
                 return history.push("/signup");
               }
               sessionStorage.removeItem("userInfo");
-              sessionStorage.setItem("user", JSON.stringify(result.session));
               axios.get('/api/user/get/current')
               .then((response)=>{
                 const info = response.data;

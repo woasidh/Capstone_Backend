@@ -92,7 +92,7 @@ function Index() {
     const [isStudent, setisStudent] = useState(false)
     const [isProfessor, setisProfessor] = useState(false);
     const [subjectList, setSubjectList] = useState([]);
-    const [user, setUser] = useState(JSON.parse(window.sessionStorage.userInfo));
+    const user = JSON.parse(window.sessionStorage.userInfo);
 
     useEffect(() => {
         if(user.type === "student"){
@@ -102,13 +102,11 @@ function Index() {
         }
         axios.get('/api/subject/get/mySubjects')
         .then((response)=>{
-            console.log(response.data.subjects);
             setSubjectList(response.data.subjects);
         })
         .catch((error)=>{
             console.log(error);
         })
-        console.log(subjectList);
     }, [])
 
     const [ShowMenu1, setShowMenu1] = useState(true);

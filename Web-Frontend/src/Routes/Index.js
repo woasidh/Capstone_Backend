@@ -20,10 +20,10 @@ import NoticePage from '../components/views/NoticePage/Index'
 const baseUrl = "/main/";
 
 function Index() {
-    const [userInfo, setUserInfo] = useState(JSON.parse(window.sessionStorage.user));
+    const isLogined = window.sessionStorage.userInfo == null ? false : true;
     useEffect(() => {
         console.log("this is main page");
-        if(!userInfo.isLogined){
+        if(!isLogined){
             alert("로그인이 필요합니다.");
             return window.location.href = '/';
         }
@@ -31,21 +31,23 @@ function Index() {
 
     return (
         <>
-            <LeftBar />
-            <TopBar mode={true}/>
+            {isLogined && <LeftBar />}
+            {isLogined && <TopBar mode={true}/>}
             <div className = "maincontainer" style={{height : "100%", marginLeft: '200px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
-                <Router>
-                    <Switch>
-                        <Route exact path={baseUrl} component={Main} />
-                        <Route path= {baseUrl+"uploadLecture"} component={UploadLecturePage} />
-                        <Route path= {baseUrl+"enterLecture"} component={enterLecturePage} />
-                        <Route path= {baseUrl+"zoom"} component={ZoomTestPage} />
-                        <Route path= {baseUrl+":subject/join"} component={JoinLecturePage} />
-                        <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
-                        <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
-                        <Route path= {baseUrl+":subject/chart"} component={LectureChartPage} />
-                    </Switch>
-                </Router>
+                {isLogined &&
+                    <Router>
+                        <Switch>
+                            <Route exact path={baseUrl} component={Main} />
+                            <Route path= {baseUrl+"uploadLecture"} component={UploadLecturePage} />
+                            <Route path= {baseUrl+"enterLecture"} component={enterLecturePage} />
+                            <Route path= {baseUrl+"zoom"} component={ZoomTestPage} />
+                            <Route path= {baseUrl+":subject/join"} component={JoinLecturePage} />
+                            <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
+                            <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
+                            <Route path= {baseUrl+":subject/chart"} component={LectureChartPage} />
+                        </Switch>
+                    </Router>
+                }
             </div>
         </>
     )

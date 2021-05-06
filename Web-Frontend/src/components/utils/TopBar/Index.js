@@ -68,7 +68,6 @@ function Index() {
         .then((response)=>{
             const result = response.data.success;
             console.log(result);
-            sessionStorage.removeItem("user");
             sessionStorage.removeItem("userInfo");
             alert("로그아웃 되었습니다.");
             return window.location.href = '/';
