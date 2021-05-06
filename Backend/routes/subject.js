@@ -14,14 +14,20 @@ moment.tz.setDefault('Asia/Seoul');
 router.post('/create', professorAuth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/create' 
-        #swagger.responses[200] = {
-            description: '성공시 success, code 반환'
+        #swagger.responses[201] = {
+            description: '성공적으로 해당 subject를 개설했을 경우',
+            schema: {
+                success: true,
+                code: '519hi32hkjifb12'
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -67,16 +73,41 @@ router.put('/join', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/join' 
         #swagger.responses[200] = {
-            description: '성공시 success, subject 객체 반환'
+            description: '성공시 success, subject 객체 반환',
+            schema: {
+                success: true,
+                subject: {
+                    _id: 0,
+                    name: '캡스톤디자인',
+                    start_period: '2021-03-02',
+                    end_period: '2021-06-30',
+                    start_time: ['16:30', '18:00', '19:30'],
+                    end_time: ['18:00', '19:30', '21:00'],
+                    days: [1, 1, 1],
+                    code: '519hi32hkjifb12',
+                    lectures: [],
+                    students: [0],
+                    introURL: ''
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[404] = {
-            description: '해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환'
+            description: '해당하는 코드의 강의가 없는 경우',
+            schema: {
+                success: false,
+                codeValidation: false
+            }
         }
         #swagger.responses[409] = {
-            description: '이미 참여한 수업일 경우, success: false, subjectExist 반환'
+            description: '이미 참여한 수업일 경우',
+            schema: {
+                success: false,
+                subjectExist: true
+            }
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -126,16 +157,38 @@ router.get('/info/:id', auth, (req, res)=>{
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/info/{id}' 
         #swagger.responses[200] = {
-            description: '성공 시, success, 해당 강의를 subject로 반환'
+            description: '성공적으로 해당 강의 정보 받아온 경우',
+            schema: {
+                success: true,
+                subject: {
+                    _id: 0,
+                    name: '캡스톤디자인',
+                    start_period: '2021-03-02',
+                    end_period: '2021-06-30',
+                    start_time: ['16:30', '18:00', '19:30'],
+                    end_time: ['18:00', '19:30', '21:00'],
+                    days: [1, 1, 1],
+                    code: '519hi32hkjifb12',
+                    lectures: [],
+                    students: [0],
+                    introURL: ''
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
         }
         #swagger.responses[404] = {
-            description: '해당 subject가 존재하지 않으면, success: false, existSubject: false 반환'
+            description: '해당 subject가 존재하지 않는 경우',
+            schema: {
+                success: false,
+                existSubject: false
+            }
         }
     */
     Subject.findOne({ _id: req.params.id }, (err, subject)=>{
@@ -157,17 +210,43 @@ router.put('/info/update/:id', professorAuth, (req, res)=>{
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/info/update/{id}' 
         #swagger.responses[200] = {
-            description: '성공 시, success, subject 객체 반환'
+            description: '성공적으로 해당 강의 정보를 수정했을 경우',
+            schema: {
+                _id: 0,
+                name: '캡스톤디자인',
+                start_period: '2021-03-02',
+                end_period: '2021-06-30',
+                start_time: ['16:30', '18:00', '19:30'],
+                end_time: ['18:00', '19:30', '21:00'],
+                days: [1, 1, 1],
+                code: '519hi32hkjifb12',
+                lectures: [],
+                students: [0],
+                introURL: ''
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
             description: 'type이 professor가 아닌 경우,
-                \n해당 과목을 만든 본인이 아닐 경우, success: false, isValidProfessor: false 반환'
+                \n해당 과목을 만든 본인이 아닐 경우, success: false, isValidProfessor: false 반환',
+            schema: {
+                교수아님: { $ref: "#/definitions/proAuthFailed" },
+                본인아님: {
+                    success: false,
+                    isValidProfessor: false
+                }
+            }
         }
         #swagger.responses[404] = {
-            description: 'success: false, existSubject: false 반환'
+            description: '해당 강의가 존재하지 않을 경우',
+            schema: {
+                success: false,
+                existSubject: false
+            }
+
         }
     */
     Subject.findOne({ _id: req.params.id }, async (err, subject)=>{
@@ -207,16 +286,34 @@ router.get('/get/mySubjects', auth, (req, res) => {
     /*  #swagger.tags = ['Subject']
         #swagger.path = '/subject/get/mySubjects' 
         #swagger.responses[200] = {
-            description: '성공 시, 본인이 수강하고 있는 강의들을 subjects로 반환'
+            description: '성공 시, 본인이 수강하고 있는 강의들을 subjects로 반환',
+            schema: {
+                success: true,
+                subjects: [{
+                    _id: 0,
+                    name: '캡스톤디자인',
+                    start_period: '2021-03-02',
+                    end_period: '2021-06-30',
+                    start_time: ['16:30', '18:00', '19:30'],
+                    end_time: ['18:00', '19:30', '21:00'],
+                    days: [1, 1, 1],
+                    code: '519hi32hkjifb12',
+                    lectures: [],
+                    students: [0],
+                    introURL: ''
+                }]
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
     */
     User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
         if(err) return res.status(500).json(err);
 
         res.status(200).json({
+            success: true,
             subjects: user.subjects
         });
     });
@@ -228,12 +325,32 @@ router.get('/get/upcoming', auth, (req, res) => {
         #swagger.path = '/subject/get/upcoming' 
         #swagger.description = '현재 수업 중인 강의, 또는 곧 있을 강의 // 얼마나 지났는 지, 또는 해당 강의까지 남은 시간 반환',
         #swagger.responses[200] = {
-            description: '현재 진행중인 수업이 있을 경우, inProgress, subject: subjectId, diffH, diffM 반환
-                \n오늘 내에 강의가 있을 경우, upcoming, subject: subjectId, diffH, diffM 반환
-                \n오늘 내에 강의가 없을 경우, upcoming: false 반환'
+            description: '현재 진행중인 수업이 있을 경우
+                \n오늘 내에 강의가 있을 경우
+                \n오늘 내에 강의가 없을 경우',
+            schema: {
+                진행중: {
+                    success: true,
+                    inProgress: true,
+                    subject: 0,
+                    diffH: 0,
+                    diffM: -15
+                },
+                곧있음: {
+                    success: true,
+                    upcoming: true,
+                    subject: 0,
+                    diffH: 0,
+                    diffM: 30
+                },
+                없음: {
+                    success: false
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
     */
     User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
@@ -241,7 +358,6 @@ router.get('/get/upcoming', auth, (req, res) => {
 
         let minDiff = 60 * 24;
         let existUpcomingLecture = false;
-        let existInProgressLecture = false;
         let upcomingLecture;
 
         const today = moment();
@@ -256,55 +372,69 @@ router.get('/get/upcoming', auth, (req, res) => {
                     const startTime = subject.start_time[dayIndex].split(':');
                     const endTime = subject.end_time[dayIndex].split(':');
 
-                    const startHourDiff = (startTime[0] - nowHour);
-                    const endHourDiff = (endTime[0] - nowHour);
-                    const startMinuteDiff = (startTime[1] - nowMin);
-                    const endMinuteDiff = (endTime[1] - nowMin);
+                    let startHourDiff = (startTime[0] - nowHour);
+                    let endHourDiff = (endTime[0] - nowHour);
+                    let startMinuteDiff = (startTime[1] - nowMin);
+                    let endMinuteDiff = (endTime[1] - nowMin);
+
+                    const needBorrowing = (time, minute)=>{
+                        if (time[1] - minute < 0) return true;
+                        else return false;
+                    }
+                    
+                    if (needBorrowing(startTime, nowMin)) {
+                        startHourDiff = (startTime[0] - nowHour - 1);
+                        startMinuteDiff = (startTime[1] - nowMin + 60);
+                    }
+                    else {
+                        startHourDiff = (startTime[0] - nowHour);
+                        startMinuteDiff = (startTime[1] - nowMin);
+                    }
+                    if (needBorrowing(endTime, nowMin)) {
+                        endHourDiff = (endTime[0] - nowHour - 1);
+                        endMinuteDiff = (endTime[1] - nowMin + 60);
+                    }
+                    else {
+                        endHourDiff = (endTime[0] - nowHour);
+                        endMinuteDiff = (endTime[1] - nowMin);
+                    }
 
                     const startTimeDiff = startHourDiff * 60 + startMinuteDiff;
                     const endTimeDiff = endHourDiff * 60 + endMinuteDiff;
 
                     if (endTimeDiff > 0) {
                         if (startTimeDiff < 0) {
-                            res.status(200).json({
+                            return res.status(200).json({
                                 success: true,
                                 inProgress: true,
                                 subject: subject._id,
                                 diffH: startHourDiff,
                                 diffM: startMinuteDiff
                             });
-
-                            existInProgressLecture = true;
-                            return true;
                         }
 
-                        if (endTimeDiff < minDiff) {
-                            minDiff = endTimeDiff;
+                        if (startTimeDiff < minDiff) {
+                            minDiff = startTimeDiff;
                             upcomingLecture = subject._id;
                             existUpcomingLecture = true;
                         }
                     }
                 }
             });
-
-            if (existInProgressLecture) return true;
         });
-        if (!existInProgressLecture) {
-            if (existUpcomingLecture) {
-                res.status(200).json({
-                    success: true,
-                    upcoming: true,
-                    subject: upcomingLecture._id,
-                    diffH: minDiff / 60,
-                    diffM: minDiff % 60
-                });
-            }
-            else {
-                res.status(200).json({
-                    success: false,
-                    upcoming: false
-                })
-            }
+        if (existUpcomingLecture) {
+            res.status(200).json({
+                success: true,
+                upcoming: true,
+                subject: upcomingLecture._id,
+                diffH: minDiff / 60,
+                diffM: minDiff % 60
+            });
+        }
+        else {
+            res.status(200).json({
+                success: false
+            })
         }
     });
 });

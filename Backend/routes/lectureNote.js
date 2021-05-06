@@ -170,4 +170,103 @@ router.post('/create', professorAuth, (req, res)=>{
     })
 })
 
+router.put('/update', professorAuth, (req, res)=>{
+    /*  #swagger.tags = ['LectureNote']
+        #swagger.path = '/lectureNote/update' 
+         #swagger.responses[200] = {
+            description: '정상적으로 공지를 수정했을 경우',
+            schema: {
+                success: true,
+                lectureNote: {
+                    _id: 0,
+                    subject: 0,
+                    title: '오늘은 여기까지만...',
+                    content: '힘들드아',
+                    fileURL: '',
+                    date: '2021-05-05T15:38:19.424Z',
+                    comments: [],
+                    emotions: []
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        }
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.responses[404] = {
+            description: '해당 lectureNote가 존재하지 않는 경우',
+            schema: {
+                success: false,
+                existLectureNote: false
+            }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                id: 0,
+                title: '오늘은 여기까지만...',
+                content: '힘들드아',
+                fileURL: ''
+            }
+        } */
+    LectureNote.findOneAndUpdate({ _id: req.body.id }, {
+        title: req.body.title,
+        content: req.body.content,
+        fileURL: req.body.fileURL
+    }, { new: true }, (err, lectureNote)=>{
+        if (err) return res.status(500).json(err);
+        if (lectureNote === null) return res.status(404).json({
+            success: false,
+            existLectureNote: false
+        })
+
+        res.status(200).json({
+            success: true,
+            lectureNote: lectureNote
+        })
+    })
+})
+
+router.delete('/delete/:id', professorAuth, (req, res)=>{
+    /*  #swagger.tags = ['LectureNote']
+        #swagger.path = '/lectureNote/delete/{id}' 
+         #swagger.responses[200] = {
+            description: '정상적으로 공지를 삭제했을 경우',
+            schema: {
+                success: true
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        }
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.responses[404] = {
+            description: '해당 lectureNote가 존재하지 않는 경우',
+            schema: {
+                success: false,
+                existLectureNote: false
+            }
+        } */
+    LectureNote.findOneAndDelete({ _id: req.params.id }, (err, lectureNote)=>{
+        if (err) return res.status(500).json(err);
+        if (lectureNote === null) return res.status(404).json({
+            success: false,
+            existLectureNote: false
+        })
+
+        res.status(200).json({
+            success: true
+        })
+    })
+})
+
 module.exports = router;

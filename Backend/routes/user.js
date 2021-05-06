@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/users');
 
+const { auth } = require('../middleware/authentication');
+
 router.get('/get/current', (req, res)=>{
     // #swagger.tags = ['User']
     // #swagger.path = '/user/get/current'
@@ -30,6 +32,29 @@ router.get('/get/student', (req, res)=>{
         if(err) return res.status(500).json(err);
 
         res.status(200).json(user);
+    })
+})
+
+router.get('/get/:id', (req, res)=>{
+    // #swagger.tags = ['User']
+    // #swagger.path = '/user/get/{id}'
+    User.findOne({ _id: req.params.id }).populate('subject').exec((err, user)=>{
+        if (err) return res.status(500).json(err);
+
+        res.status(200).json(user);
+    })
+})
+
+router.delete('/delete', auth, (req, res)=>{
+    // #swagger.tags = ['User']
+    // #swagger.path = '/user/delete'
+    User.findOneAndDelete({ _id: req.session._id }, (err, user)=>{
+        if (err) return res.status(500).json(err);
+
+        return res.status(200).json({
+            success: true,
+            user: user
+        });
     })
 })
 

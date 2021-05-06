@@ -262,6 +262,50 @@
         }
       }
     },
+    "/user/get/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/delete": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/subject/create": {
       "post": {
         "tags": [
@@ -280,17 +324,36 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "성공시 success, code 반환"
-          },
           "201": {
-            "description": "Created"
+            "description": "성공적으로 해당 subject를 개설했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "code": {
+                  "type": "string",
+                  "example": "519hi32hkjifb12"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -326,16 +389,139 @@
         ],
         "responses": {
           "200": {
-            "description": "성공시 success, subject 객체 반환"
+            "description": "성공시 success, subject 객체 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "subject": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "캡스톤디자인"
+                    },
+                    "start_period": {
+                      "type": "string",
+                      "example": "2021-03-02"
+                    },
+                    "end_period": {
+                      "type": "string",
+                      "example": "2021-06-30"
+                    },
+                    "start_time": {
+                      "type": "array",
+                      "example": [
+                        "16:30",
+                        "18:00",
+                        "19:30"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "end_time": {
+                      "type": "array",
+                      "example": [
+                        "18:00",
+                        "19:30",
+                        "21:00"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "days": {
+                      "type": "array",
+                      "example": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "519hi32hkjifb12"
+                    },
+                    "lectures": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "students": {
+                      "type": "array",
+                      "example": [
+                        0
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "introURL": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "404": {
-            "description": "해당하는 코드의 강의가 없을 시, success: false, codeValidation: false 반환"
+            "description": "해당하는 코드의 강의가 없는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "codeValidation": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "409": {
-            "description": "이미 참여한 수업일 경우, success: false, subjectExist 반환"
+            "description": "이미 참여한 수업일 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "subjectExist": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -359,16 +545,126 @@
         ],
         "responses": {
           "200": {
-            "description": "성공 시, success, 해당 강의를 subject로 반환"
+            "description": "성공적으로 해당 강의 정보 받아온 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "subject": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "캡스톤디자인"
+                    },
+                    "start_period": {
+                      "type": "string",
+                      "example": "2021-03-02"
+                    },
+                    "end_period": {
+                      "type": "string",
+                      "example": "2021-06-30"
+                    },
+                    "start_time": {
+                      "type": "array",
+                      "example": [
+                        "16:30",
+                        "18:00",
+                        "19:30"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "end_time": {
+                      "type": "array",
+                      "example": [
+                        "18:00",
+                        "19:30",
+                        "21:00"
+                      ],
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "days": {
+                      "type": "array",
+                      "example": [
+                        1,
+                        1,
+                        1
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "519hi32hkjifb12"
+                    },
+                    "lectures": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "students": {
+                      "type": "array",
+                      "example": [
+                        0
+                      ],
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "introURL": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "404": {
-            "description": "해당 subject가 존재하지 않으면, success: false, existSubject: false 반환"
+            "description": "해당 subject가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existSubject": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -429,16 +725,138 @@
         ],
         "responses": {
           "200": {
-            "description": "성공 시, success, subject 객체 반환"
+            "description": "성공적으로 해당 강의 정보를 수정했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "number",
+                  "example": 0
+                },
+                "name": {
+                  "type": "string",
+                  "example": "캡스톤디자인"
+                },
+                "start_period": {
+                  "type": "string",
+                  "example": "2021-03-02"
+                },
+                "end_period": {
+                  "type": "string",
+                  "example": "2021-06-30"
+                },
+                "start_time": {
+                  "type": "array",
+                  "example": [
+                    "16:30",
+                    "18:00",
+                    "19:30"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "end_time": {
+                  "type": "array",
+                  "example": [
+                    "18:00",
+                    "19:30",
+                    "21:00"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "days": {
+                  "type": "array",
+                  "example": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "code": {
+                  "type": "string",
+                  "example": "519hi32hkjifb12"
+                },
+                "lectures": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                },
+                "students": {
+                  "type": "array",
+                  "example": [
+                    0
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "introURL": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우,  \n해당 과목을 만든 본인이 아닐 경우, success: false, isValidProfessor: false 반환"
+            "description": "type이 professor가 아닌 경우,  \n해당 과목을 만든 본인이 아닐 경우, success: false, isValidProfessor: false 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "교수아님": {
+                  "$ref": "#/definitions/proAuthFailed"
+                },
+                "본인아님": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "isValidProfessor": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
-            "description": "success: false, existSubject: false 반환"
+            "description": "해당 강의가 존재하지 않을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existSubject": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -455,10 +873,104 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "성공 시, 본인이 수강하고 있는 강의들을 subjects로 반환"
+            "description": "성공 시, 본인이 수강하고 있는 강의들을 subjects로 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "subjects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "캡스톤디자인"
+                      },
+                      "start_period": {
+                        "type": "string",
+                        "example": "2021-03-02"
+                      },
+                      "end_period": {
+                        "type": "string",
+                        "example": "2021-06-30"
+                      },
+                      "start_time": {
+                        "type": "array",
+                        "example": [
+                          "16:30",
+                          "18:00",
+                          "19:30"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "end_time": {
+                        "type": "array",
+                        "example": [
+                          "18:00",
+                          "19:30",
+                          "21:00"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "days": {
+                        "type": "array",
+                        "example": [
+                          1,
+                          1,
+                          1
+                        ],
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "code": {
+                        "type": "string",
+                        "example": "519hi32hkjifb12"
+                      },
+                      "lectures": {
+                        "type": "array",
+                        "example": [],
+                        "items": {}
+                      },
+                      "students": {
+                        "type": "array",
+                        "example": [
+                          0
+                        ],
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "introURL": {
+                        "type": "string",
+                        "example": ""
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -475,10 +987,80 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "현재 진행중인 수업이 있을 경우, inProgress, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 있을 경우, upcoming, subject: subjectId, diffH, diffM 반환  \n오늘 내에 강의가 없을 경우, upcoming: false 반환"
+            "description": "현재 진행중인 수업이 있을 경우  \n오늘 내에 강의가 있을 경우  \n오늘 내에 강의가 없을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "진행중": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "inProgress": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "subject": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "diffH": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "diffM": {
+                      "type": "number",
+                      "example": -15
+                    }
+                  }
+                },
+                "곧있음": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "upcoming": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "subject": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "diffH": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "diffM": {
+                      "type": "number",
+                      "example": 30
+                    }
+                  }
+                },
+                "없음": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1176,7 +1758,7 @@
                       },
                       "answer": {
                         "type": "string",
-                        "example": "웅"
+                        "example": "O"
                       }
                     },
                     "required": [
@@ -1184,10 +1766,6 @@
                       "answer"
                     ]
                   }
-                },
-                "status": {
-                  "type": "string",
-                  "example": "pending"
                 },
                 "type": {
                   "type": "string",
@@ -1198,7 +1776,6 @@
                 "name",
                 "subjectId",
                 "answerSheets",
-                "status",
                 "type"
               ]
             }
@@ -1206,13 +1783,99 @@
         ],
         "responses": {
           "201": {
-            "description": "success, quiz 객체 반환"
+            "description": "퀴즈가 정상적으로 생성된 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "answerSheets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "answer": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer",
+                          "points"
+                        ]
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  },
+                  "required": [
+                    "answerSheets",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1236,16 +1899,102 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "success, quizzes 객체 반환"
+            "description": "해당 과목에 속하는 quiz 전부 정상적으로 받아온 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quizzes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "중간점검 OX"
+                      },
+                      "subjectId": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": ""
+                      },
+                      "deadLine": {
+                        "type": "string",
+                        "example": ""
+                      },
+                      "answerSheets": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "question": {
+                              "type": "string",
+                              "example": "배고파?"
+                            },
+                            "answer": {
+                              "type": "string",
+                              "example": "O"
+                            },
+                            "points": {
+                              "type": "number",
+                              "example": 5
+                            }
+                          },
+                          "required": [
+                            "question",
+                            "answer",
+                            "points"
+                          ]
+                        }
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "pending"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "ox"
+                      },
+                      "responses": {
+                        "type": "array",
+                        "example": [],
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "answerSheets",
+                      "status",
+                      "type"
+                    ]
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1269,13 +2018,91 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "success, quizzes 객체 반환"
+            "description": "정상적으로 학생이 열람가능한 퀴즈들에서 본인과 관련된 정보만을 받아왔을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quizzes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "quizId": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "중간점검 OX"
+                      },
+                      "subjectId": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "questions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "question": {
+                              "type": "string",
+                              "example": "배고파?"
+                            },
+                            "points": {
+                              "type": "number",
+                              "example": 5
+                            }
+                          },
+                          "required": [
+                            "question",
+                            "points"
+                          ]
+                        }
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2021-05-05T15:38:19.424Z"
+                      },
+                      "deadLine": {
+                        "type": "string",
+                        "example": "2021-05-05T16:00:00.000Z"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "open"
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "ox"
+                      },
+                      "responses": {
+                        "type": "array",
+                        "example": [],
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "questions",
+                      "status",
+                      "type"
+                    ]
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1299,16 +2126,118 @@
         ],
         "responses": {
           "200": {
-            "description": "success, quiz 객체 반환"
+            "description": "해당 id의 퀴즈를 정상적으로 받아올 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "answerSheets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "answer": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer",
+                          "points"
+                        ]
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  },
+                  "required": [
+                    "answerSheets",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "해당 id를 지니는 퀴즈가 존재하지 않을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existQuiz": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1332,10 +2261,98 @@
         ],
         "responses": {
           "200": {
-            "description": "success, quiz 객체 반환"
+            "description": "해당 퀴즈에서 정상적으로 본인과 관련된 정보만을 받아왔을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "quizId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "name": {
+                  "type": "string",
+                  "example": "중간점검 OX"
+                },
+                "subjectId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "questions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "string",
+                        "example": "배고파?"
+                      },
+                      "points": {
+                        "type": "number",
+                        "example": 5
+                      }
+                    },
+                    "required": [
+                      "question",
+                      "points"
+                    ]
+                  }
+                },
+                "date": {
+                  "type": "string",
+                  "example": "2021-05-05T15:38:19.424Z"
+                },
+                "deadLine": {
+                  "type": "string",
+                  "example": "2021-05-05T16:00:00.000Z"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "open"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "ox"
+                },
+                "responses": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
+                }
+              },
+              "required": [
+                "questions",
+                "status",
+                "type"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "409": {
+            "description": "해당 quiz의 status가 학생이 열람하기에 허용되지 않은 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "isPending": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1353,30 +2370,120 @@
           {
             "name": "obj",
             "in": "body",
+            "type": "object",
             "schema": {
               "type": "object",
               "properties": {
                 "id": {
-                  "type": "string",
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "deadLine": {
                   "type": "string",
-                  "example": "any"
+                  "example": "2021-05-05T16:00:00.000Z"
                 }
-              }
+              },
+              "required": [
+                "id"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "success, quiz 객체 반환"
+            "description": "정상적으로 퀴즈가 학생들에게 개방되었을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": "2021-05-05T16:00:00.000Z"
+                    },
+                    "answerSheets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "answer": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer",
+                          "points"
+                        ]
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "open"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  },
+                  "required": [
+                    "answerSheets",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1407,13 +2514,99 @@
         ],
         "responses": {
           "200": {
-            "description": "success, quiz 객체 반환"
+            "description": "정상적으로 퀴즈가 마감되었을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": "2021-05-05T16:01:38.237Z"
+                    },
+                    "answerSheets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "answer": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer",
+                          "points"
+                        ]
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "done"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  },
+                  "required": [
+                    "answerSheets",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "403": {
-            "description": "type이 professor가 아닌 경우"
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1452,13 +2645,280 @@
         ],
         "responses": {
           "200": {
-            "description": "success, quiz 반환"
+            "description": "학생이 해당 퀴즈에 대한 답을 정상적으로 제출한 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "quizId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "points"
+                        ]
+                      }
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": "2021-05-05T16:00:00.000Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "open"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "example": "2021-05-05T15:59:19.424Z"
+                          },
+                          "student": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "response": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "answer": {
+                                  "type": "string",
+                                  "example": "O"
+                                },
+                                "correctness": {
+                                  "type": "boolean",
+                                  "example": true
+                                }
+                              }
+                            }
+                          },
+                          "score": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "questions",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "user가 로그인이 되지 않은 경우"
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
           },
           "409": {
-            "description": "quiz의 deadLine이 지났을 경우 success: false, isOver 반환"
+            "description": "quiz의 status가 done일 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "isOver": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Quiz"
+        ],
+        "description": "status는 pending/open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, quiz 반환",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "quiz": {
+                  "type": "object",
+                  "properties": {
+                    "quizId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간점검 OX"
+                    },
+                    "subjectId": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "example": "배고파?"
+                          },
+                          "points": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "points"
+                        ]
+                      }
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": "2021-05-05T16:00:00.000Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "open"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "ox"
+                    },
+                    "responses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "example": "2021-05-05T15:59:19.424Z"
+                          },
+                          "student": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "response": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "answer": {
+                                  "type": "string",
+                                  "example": "O"
+                                },
+                                "correctness": {
+                                  "type": "boolean",
+                                  "example": true
+                                }
+                              }
+                            }
+                          },
+                          "score": {
+                            "type": "number",
+                            "example": 5
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "questions",
+                    "status",
+                    "type"
+                  ]
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
           },
           "500": {
             "description": "Internal Server Error"
@@ -1805,6 +3265,199 @@
         }
       }
     },
+    "/lectureNote/update": {
+      "put": {
+        "tags": [
+          "LectureNote"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 0
+                },
+                "title": {
+                  "type": "string",
+                  "example": "오늘은 여기까지만..."
+                },
+                "content": {
+                  "type": "string",
+                  "example": "힘들드아"
+                },
+                "fileURL": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적으로 공지를 수정했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "lectureNote": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "subject": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "오늘은 여기까지만..."
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "힘들드아"
+                    },
+                    "fileURL": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "emotions": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "404": {
+            "description": "해당 lectureNote가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existLectureNote": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lectureNote/delete/{id}": {
+      "delete": {
+        "tags": [
+          "LectureNote"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적으로 공지를 삭제했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "404": {
+            "description": "해당 lectureNote가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existLectureNote": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/notice/get/all": {
       "get": {
         "tags": [
@@ -1837,6 +3490,10 @@
                           "name": {
                             "type": "string",
                             "example": "캡스톤디자인"
+                          },
+                          "professor": {
+                            "type": "number",
+                            "example": 0
                           },
                           "start_period": {
                             "type": "string",
@@ -1978,6 +3635,78 @@
                       "id": {
                         "type": "number",
                         "example": 0
+                      },
+                      "subject": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "example": "캡스톤디자인"
+                          },
+                          "start_period": {
+                            "type": "string",
+                            "example": "2021-03-02"
+                          },
+                          "end_period": {
+                            "type": "string",
+                            "example": "2021-06-30"
+                          },
+                          "start_time": {
+                            "type": "array",
+                            "example": [
+                              "16:30",
+                              "18:00",
+                              "19:30"
+                            ],
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "end_time": {
+                            "type": "array",
+                            "example": [
+                              "18:00",
+                              "19:30",
+                              "21:00"
+                            ],
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "days": {
+                            "type": "array",
+                            "example": [
+                              1,
+                              1,
+                              1
+                            ],
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "code": {
+                            "type": "string",
+                            "example": "519hi32hkjifb12"
+                          },
+                          "lectures": {
+                            "type": "array",
+                            "example": [],
+                            "items": {}
+                          },
+                          "students": {
+                            "type": "array",
+                            "example": [
+                              0
+                            ],
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "introURL": {
+                            "type": "string",
+                            "example": ""
+                          }
+                        }
                       },
                       "title": {
                         "type": "string",
@@ -2341,6 +4070,191 @@
             "description": "type이 professor가 아닌 경우",
             "schema": {
               "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/update": {
+      "put": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 0
+                },
+                "title": {
+                  "type": "string",
+                  "example": "오늘은 여기까지만..."
+                },
+                "content": {
+                  "type": "string",
+                  "example": "힘들드아"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적으로 공지를 수정했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "notice": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "subject": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "오늘은 여기까지만..."
+                    },
+                    "content": {
+                      "type": "string",
+                      "example": "힘들드아"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "emotions": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "404": {
+            "description": "해당 notice가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existNotice": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notice/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Notice"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "정상적으로 공지를 삭제했을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "404": {
+            "description": "해당 notice가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existNotice": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
             }
           },
           "500": {

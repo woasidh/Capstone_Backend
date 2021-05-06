@@ -14,13 +14,33 @@ router.post('/create', professorAuth, (req, res)=>{
         #swagger.path = '/quiz/create' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[201] = {
-            description: 'success, quiz 객체 반환'
+            description: '퀴즈가 정상적으로 생성된 경우',
+            schema: {
+                success: true,
+                quiz: {
+                    _id: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    date: '',
+                    deadLine: '',
+                    $answerSheets: [{
+                        $question: '배고파?',
+                        $answer: 'O',
+                        $points: 5
+                    }],
+                    $status: 'pending',
+                    $type: 'ox',
+                    responses: []
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
         }
         #swagger.parameters['obj'] = {
             in: 'body',
@@ -30,9 +50,8 @@ router.post('/create', professorAuth, (req, res)=>{
                 $subjectId: 0,
                 $answerSheets: [{
                     $question: '배고파?',
-                    $answer: '웅'
+                    $answer: 'O'
                 }],
-                $status: 'pending',
                 $type: 'ox'
             }
         } */
@@ -58,14 +77,34 @@ router.get('/get/subject/:id', professorAuth, (req, res)=>{
     /*  #swagger.tags = ['Quiz']
         #swagger.path = '/quiz/get/subject/{id}' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
-        #swagger.responses[201] = {
-            description: 'success, quizzes 객체 반환'
+        #swagger.responses[200] = {
+            description: '해당 과목에 속하는 quiz 전부 정상적으로 받아온 경우',
+            schema: {
+                success: true,
+                quizzes: [{
+                    _id: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    date: '',
+                    deadLine: '',
+                    $answerSheets: [{
+                        $question: '배고파?',
+                        $answer: 'O',
+                        $points: 5
+                    }],
+                    $status: 'pending',
+                    $type: 'ox',
+                    responses: []
+                }]
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
         } */
     Quiz.find({ subject: req.params.id }, (err, quizzes)=>{
         if (err) return res.status(500).json(err);
@@ -81,11 +120,29 @@ router.get('/get/student/subject/:id', auth, (req, res)=>{
     /*  #swagger.tags = ['Quiz']
         #swagger.path = '/quiz/get/student/subject/{id}' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
-        #swagger.responses[201] = {
-            description: 'success, quizzes 객체 반환'
+        #swagger.responses[200] = {
+            description: '정상적으로 학생이 열람가능한 퀴즈들에서 본인과 관련된 정보만을 받아왔을 경우',
+            schema: {
+                success: true,
+                quizzes: [{
+                    quizId: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    $questions: [{
+                        $question: '배고파?',
+                        $points: 5
+                    }],
+                    date: '2021-05-05T15:38:19.424Z',
+                    deadLine: '2021-05-05T16:00:00.000Z',
+                    $status: 'open',
+                    $type: 'ox',
+                    responses: []
+                }]
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         } */
     Quiz.find({
         subject: req.params.id,
@@ -107,6 +164,7 @@ router.get('/get/student/subject/:id', auth, (req, res)=>{
             })
 
             const quizForStudentForm = {
+                quizId: quiz._id,
                 name: quiz.name,
                 subjectId: quiz.subject,
                 questions: problemSheets,
@@ -131,13 +189,40 @@ router.get('/get/:id', professorAuth, (req, res)=>{
         #swagger.path = '/quiz/get/{id}' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: 'success, quiz 객체 반환'
+            description: '해당 id의 퀴즈를 정상적으로 받아올 경우',
+            schema: {
+                success: true,
+                quiz: {
+                    _id: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    date: '',
+                    deadLine: '',
+                    $answerSheets: [{
+                        $question: '배고파?',
+                        $answer: 'O',
+                        $points: 5
+                    }],
+                    $status: 'pending',
+                    $type: 'ox',
+                    responses: []
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.responses[404] = {
+            description: '해당 id를 지니는 퀴즈가 존재하지 않을 경우',
+            schema: {
+                success: false,
+                existQuiz: false
+            }
         } */
     Quiz.findOne({ _id: req.params.id }).populate('user').exec((err, quiz)=>{
         if (err) return res.status(500).json(err);
@@ -158,13 +243,39 @@ router.get('/get/student/:id', auth, (req, res)=>{
         #swagger.path = '/quiz/get/student/{id}' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: 'success, quiz 객체 반환'
+            description: '해당 퀴즈에서 정상적으로 본인과 관련된 정보만을 받아왔을 경우',
+            schema: {
+                quizId: 0,
+                name: '중간점검 OX',
+                subjectId: 0,
+                $questions: [{
+                    $question: '배고파?',
+                    $points: 5
+                }],
+                date: '2021-05-05T15:38:19.424Z',
+                deadLine: '2021-05-05T16:00:00.000Z',
+                $status: 'open',
+                $type: 'ox',
+                responses: []
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        }
+        #swagger.responses[409] = {
+            description: '해당 quiz의 status가 학생이 열람하기에 허용되지 않은 경우',
+            schema: {
+                success: false,
+                isPending: true
+            }
         } */
     Quiz.findOne({ _id: req.params.id }, (err, quiz)=>{
         if (err) return res.status(500).json(err);
+        if (quiz.status === 'pending') return res.status(409).json({
+            success: false,
+            isPending: true
+        })
 
         const response = quiz.responses.filter(response=>response.student === req.session._id);
 
@@ -178,6 +289,7 @@ router.get('/get/student/:id', auth, (req, res)=>{
         })
 
         const quizForStudentForm = {
+            quizId: quiz._id,
             name: quiz.name,
             subjectId: quiz.subject,
             questions: problemSheets,
@@ -201,13 +313,41 @@ router.put('/open', professorAuth, (req, res)=>{
         #swagger.path = '/quiz/open' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: 'success, quiz 객체 반환'
+            description: '정상적으로 퀴즈가 학생들에게 개방되었을 경우',
+            schema: {
+                success: true,
+                quiz: {
+                    _id: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    date: '2021-05-05T15:38:19.424Z',
+                    deadLine: '2021-05-05T16:00:00.000Z',
+                    $answerSheets: [{
+                        $question: '배고파?',
+                        $answer: 'O',
+                        $points: 5
+                    }],
+                    $status: 'open',
+                    $type: 'ox',
+                    responses: []
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $id: 0,
+                deadLine: '2021-05-05T16:00:00.000Z'
+            }
         } */
     Quiz.findOneAndUpdate({ _id: req.body.id }, {
         status: 'open',
@@ -229,13 +369,33 @@ router.put('/close', professorAuth, (req, res)=>{
         #swagger.path = '/quiz/close' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: 'success, quiz 객체 반환'
+            description: '정상적으로 퀴즈가 마감되었을 경우',
+            schema: {
+                success: true,
+                quiz: {
+                    _id: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    date: '2021-05-05T15:38:19.424Z',
+                    deadLine: '2021-05-05T16:01:38.237Z',
+                    $answerSheets: [{
+                        $question: '배고파?',
+                        $answer: 'O',
+                        $points: 5
+                    }],
+                    $status: 'done',
+                    $type: 'ox',
+                    responses: []
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         }
         #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우'
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
         } */
     Quiz.findOneAndUpdate({ _id: req.body.id }, {
         status: 'done',
@@ -256,13 +416,43 @@ router.put('/submit', auth, (req, res)=>{
         #swagger.path = '/quiz/submit' 
         #swagger.description = 'status는 pending/open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: 'success, quiz 반환'
+            description: '학생이 해당 퀴즈에 대한 답을 정상적으로 제출한 경우',
+            schema: {
+                success: true,
+                quiz: {
+                    quizId: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    $questions: [{
+                        $question: '배고파?',
+                        $points: 5
+                    }],
+                    date: '2021-05-05T15:38:19.424Z',
+                    deadLine: '2021-05-05T16:00:00.000Z',
+                    $status: 'open',
+                    $type: 'ox',
+                    responses: [{
+                        date: '2021-05-05T15:59:19.424Z',
+                        student: 0,
+                        response: [{
+                            answer: 'O',
+                            correctness: true
+                        }],
+                        score: 5
+                    }]
+                }
+            }
         }
         #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우'
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
         } 
         #swagger.responses[409] = {
-            description: 'quiz의 deadLine이 지났을 경우 success: false, isOver 반환'
+            description: 'quiz의 status가 done일 경우',
+            schema: {
+                success: true,
+                isOver: true
+            }
         } */
         
     const now = moment();
@@ -311,6 +501,7 @@ router.put('/submit', auth, (req, res)=>{
             })
 
             const responseForm = {
+                quizId: doc._id,
                 name: doc.name,
                 subjectName: quiz.subject.name,
                 questions: problemSheets,
@@ -326,6 +517,56 @@ router.put('/submit', auth, (req, res)=>{
                 quiz: responseForm
             });
         })
+    })
+})
+
+router.delete('/delete/:id', professorAuth, (req, res)=>{
+    /*  #swagger.tags = ['Quiz']
+        #swagger.path = '/quiz/delete/{id}' 
+        #swagger.description = 'status는 pending/open/done으로 나뉨'
+        #swagger.responses[200] = {
+            description: 'success, quiz 반환',
+            schema: {
+                success: true,
+                quiz: {
+                    quizId: 0,
+                    name: '중간점검 OX',
+                    subjectId: 0,
+                    $questions: [{
+                        $question: '배고파?',
+                        $points: 5
+                    }],
+                    date: '2021-05-05T15:38:19.424Z',
+                    deadLine: '2021-05-05T16:00:00.000Z',
+                    $status: 'open',
+                    $type: 'ox',
+                    responses: [{
+                        date: '2021-05-05T15:59:19.424Z',
+                        student: 0,
+                        response: [{
+                            answer: 'O',
+                            correctness: true
+                        }],
+                        score: 5
+                    }]
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        } 
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        } */
+    Quiz.findOneAndDelete({ _id: req.params.id }, (err, quiz)=>{
+        if (err) return res.status(500).json(err);
+        
+        res.status(200).json({
+            success: true,
+            quiz: quiz
+        });
     })
 })
 
