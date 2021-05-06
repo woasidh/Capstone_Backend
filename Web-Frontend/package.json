@@ -4,6 +4,8 @@
   "private": false,
   "proxy": "http://13.125.234.161:3000",
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^27.1.0",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
@@ -21,6 +23,7 @@
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
+    "react-html-parser": "^2.0.2",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -53,6 +56,7 @@
     ]
   },
   "devDependencies": {
+    "@ckeditor/ckeditor5-dev-webpack-plugin": "^24.4.2",
     "@types/styled-components": "^5.1.9"
   }
 }

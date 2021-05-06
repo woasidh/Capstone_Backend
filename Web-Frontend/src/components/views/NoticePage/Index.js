@@ -187,16 +187,15 @@ function Index({match}) {
 
     const displayAll = (list) => {
         console.log(list);
-        list.map((all, index) => { 
-            console.log(all.subject.name);
-            console.log(all.notices);
-            return (all.notices.length) == 0 ? '' : display(all.notices, all.subject.name);
-        });
+        return (
+            <div>
+                {list.map((all, index) => <>{all.notices.length != 0 && display(all.notices, all.subject.name)}</>)}                
+             </div>
+        );
     }
 
 
     const display = (noticeList, subjectName) => {
-        console.log("display in");
         return(
             <div>
                 {isEmpty ? "등록된 공지 사항이 없습니다." : noticeList.map((value, index) =>
