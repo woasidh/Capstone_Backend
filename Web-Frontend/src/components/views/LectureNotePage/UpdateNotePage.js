@@ -9,8 +9,6 @@ const Container = styled.div`
 width : 100%;
 height : 100%;
 display : block;
-//align-items : center;
-//justify-content : center;
 `
 const Title = styled.div`
 font-size : 30px;
@@ -35,15 +33,31 @@ margin : 10px 0px;
 
 
 function Index({match}){
-    const [isAll, setIsAll] = useState(false);
-
-    const [subject, setSubject] = useState({
-        id: match.params.subject,
-        name: match.params.name
-    });
+    const subjectID = String(match.params.subject);
+    const subjectName = String(match.params.name);
+    const noteID = String(match.params.id)
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState();
+    const [fileURL, setFileURL] = useState("");
+
+    const [isLoading, setisLoading] = useState(false);
+
+    const getData = () => {
+        const url = '/api/lectureNote/get/' + noteID;
+        axios.get(url)
+        .then((response) => {
+            const result = response.data;
+            console.log(result);
+            setTitle(result.lectureNote.title);
+            setContent(result.lectureNote.content);
+            setFileURL(result.lectureNote.fileURL);
+            setisLoading(true);
+        })
+        .catch((response) => {
+            console.log('Error: ' + response);
+        })
+    }
 
     const getTitle = (e) => {
         setTitle(e.target.value);
@@ -51,17 +65,19 @@ function Index({match}){
     }
 
     const submitBtn = () => {
+        console.log(subjectID);
         console.log("title: " + title);
         console.log("content: " + content);
 
-        axios.post('/api/notice/create',{
-            subject : subject.id,
+        axios.put('/api/lectureNote/update',{
+            id : noteID,
             title : title,
-            content : content             
+            content : content,
+            fileURL : fileURL             
         })
         .then((response) => {
             console.log(response);
-            return window.location.href=`/main/${subject.id}/${subject.name}/notice/`;
+            return window.location.href=`/main/${subjectID}/${subjectName}/note/`;
         })
         .catch((response) => {
             console.log('Error: ' + response);
@@ -71,17 +87,16 @@ function Index({match}){
     const display = () => {
         return(
             <Container>
-                <Title>Notice</Title>
+                <Title>Lecture Note</Title>
                     <div style={{width: "100%", display: "block"}}>
-                        {isAll && <div style={{fontSize: "16px", float: "left"}}>종합공지사항</div>}
-                        {!isAll && <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subject.name} / 공지 사항 작성</div>}                
+                        <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subjectName} / 강의 노트 수정</div>
                         <SubmitBtn onClick={submitBtn} style={{display: "inline-block", float:"right"}}>저장하기</SubmitBtn>
                     </div>
                     <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
-                    <TitleInput type="text" name="title" onChange={getTitle} placeholder="제목"/>
+                    <TitleInput type="text" name="title" onChange={getTitle} placeholder={title}/>
                     <CKEditor
                     editor={ ClassicEditor }
-                    data=""
+                    data={content}
                     onReady={ editor => {
                         // You can store the "editor" and use when it is needed.
                         console.log( 'Editor is ready to use!', editor );
@@ -101,9 +116,13 @@ function Index({match}){
             </Container>
         )
     }
+
+    useEffect(() => {
+        getData();
+    },[])
+
     return(
-        
-        <div>{display()}</div>
+        <div>{isLoading && display()}</div>
     );
 }
 

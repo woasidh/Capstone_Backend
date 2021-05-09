@@ -15,6 +15,7 @@ import LectureChartPage from '../components/views/LectureChartPage/Index'
 import LectureInfoPage from '../components/views/LectureInfoPage/Index'
 import JoinLecturePage from '../components/views/JoinLecturePage/Index'
 import NoticePage from '../components/views/NoticePage/Index'
+import LectureNotePage from '../components/views/LectureNotePage/Index'
 
 
 const baseUrl = "/main/";
@@ -44,6 +45,7 @@ function Index() {
                             <Route path= {baseUrl+":subject/join"} component={JoinLecturePage} />
                             <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
                             <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
+                            <Route path= {baseUrl+":subject/:name/note"} component={LectureNotePage}/>
                             <Route path= {baseUrl+":subject/chart"} component={LectureChartPage} />
                         </Switch>
                     </Router>
