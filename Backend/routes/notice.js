@@ -94,18 +94,7 @@ router.get('/get/subject/:id', auth, (req, res)=>{
                 success: true,
                 notices: [{
                     id: 0,
-                    subject: {
-                        name: '캡스톤디자인',
-                        start_period: '2021-03-02',
-                        end_period: '2021-06-30',
-                        start_time: ['16:30', '18:00', '19:30'],
-                        end_time: ['18:00', '19:30', '21:00'],
-                        days: [1, 1, 1],
-                        code: '519hi32hkjifb12',
-                        lectures: [],
-                        students: [0],
-                        introURL: ''
-                    },
+                    subject: 0,
                     title: '중간발표 5월 20일 ㅋㅋ',
                     content: '제발 동영상만 내세요! PPT 필요 없습니다!',
                     date: '2021-05-05T15:38:19.424Z',
@@ -118,7 +107,7 @@ router.get('/get/subject/:id', auth, (req, res)=>{
             description: 'user가 로그인이 되지 않은 경우',
             schema: { $ref: "#/definitions/authFailed" }
         } */
-    Notice.find({ subject: req.params.id }).sort({date: -1}).populate('subject').exec((err, notices)=>{
+    Notice.find({ subject: req.params.id }).sort({date: -1}).exec((err, notices)=>{
         if (err) return res.status(500).json(err);
 
         const noticeArray = [];
@@ -189,8 +178,13 @@ router.get('/get/:id', auth, (req, res)=>{
                 existNotice: false
             }
         } */
-    Notice.findOne({ _id: req.params.id }).populate('subject')
-    .populate('user').exec((err, notice)=>{
+    Notice.findOne({ _id: req.params.id }).populate('subject').populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+            model: 'user'
+        }
+    }).exec((err, notice)=>{
         if (err) return res.status(500).json(err);
         if (notice === null) return res.status(404).json({
             success: false,

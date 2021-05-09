@@ -33,6 +33,9 @@
     },
     {
       "name": "Emotion"
+    },
+    {
+      "name": "Understanding"
     }
   ],
   "schemes": [
@@ -2627,7 +2630,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
+                "quizId": {
                   "type": "string",
                   "example": "any"
                 },
@@ -2956,6 +2959,10 @@
                     "type": "object",
                     "properties": {
                       "_id": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "subject": {
                         "type": "number",
                         "example": 0
                       },
@@ -3637,76 +3644,8 @@
                         "example": 0
                       },
                       "subject": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "캡스톤디자인"
-                          },
-                          "start_period": {
-                            "type": "string",
-                            "example": "2021-03-02"
-                          },
-                          "end_period": {
-                            "type": "string",
-                            "example": "2021-06-30"
-                          },
-                          "start_time": {
-                            "type": "array",
-                            "example": [
-                              "16:30",
-                              "18:00",
-                              "19:30"
-                            ],
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "end_time": {
-                            "type": "array",
-                            "example": [
-                              "18:00",
-                              "19:30",
-                              "21:00"
-                            ],
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "days": {
-                            "type": "array",
-                            "example": [
-                              1,
-                              1,
-                              1
-                            ],
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          "code": {
-                            "type": "string",
-                            "example": "519hi32hkjifb12"
-                          },
-                          "lectures": {
-                            "type": "array",
-                            "example": [],
-                            "items": {}
-                          },
-                          "students": {
-                            "type": "array",
-                            "example": [
-                              0
-                            ],
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          "introURL": {
-                            "type": "string",
-                            "example": ""
-                          }
-                        }
+                        "type": "number",
+                        "example": 0
                       },
                       "title": {
                         "type": "string",
@@ -4758,6 +4697,149 @@
                 "name": "main"
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/understanding/create": {
+      "post": {
+        "tags": [
+          "Understanding"
+        ],
+        "description": "status는 open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "중간이해도평가"
+                },
+                "lectureId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "type": {
+                  "type": "string",
+                  "example": "OX"
+                }
+              },
+              "required": [
+                "name",
+                "lectureId",
+                "type"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "이해도평가가 정상적으로 생성된 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/understanding/submit": {
+      "put": {
+        "tags": [
+          "Understanding"
+        ],
+        "description": "status는 open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "udId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "response": {
+                  "type": "array",
+                  "example": [
+                    "O"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "udId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "이해도평가가 정상적으로 제출된 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "409": {
+            "description": "Conflict"
           },
           "500": {
             "description": "Internal Server Error"

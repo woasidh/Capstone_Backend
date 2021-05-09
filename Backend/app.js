@@ -74,6 +74,7 @@ const lectureNoteRouter = require('./routes/lectureNote');
 const quizRouter = require('./routes/quiz');
 const commentRouter = require('./routes/comment');
 const emotionRouter = require('./routes/emotion');
+const understandingRouter = require('./routes/understanding');
 
 // Passport for OAuth
 // app.use(passport.initialize());
@@ -95,6 +96,7 @@ app.use('/lectureNote', lectureNoteRouter);
 app.use('/quiz', quizRouter);
 app.use('/comment', commentRouter);
 app.use('/emotion', emotionRouter);
+app.use('/understanding', understandingRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

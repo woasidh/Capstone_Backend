@@ -309,7 +309,13 @@ router.get('/get/mySubjects', auth, (req, res) => {
             schema: { $ref: "#/definitions/authFailed" }
         }
     */
-    User.findOne({ email: req.session.email }).populate('subjects').exec((err, user)=>{
+    User.findOne({ email: req.session.email }).populate({
+        path: 'subjects',
+        populate: { 
+            path: 'professor',
+            model: 'user'
+        }
+    }).exec((err, user)=>{
         if(err) return res.status(500).json(err);
 
         res.status(200).json({

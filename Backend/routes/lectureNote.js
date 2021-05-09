@@ -17,6 +17,7 @@ router.get('/get/subject/:id', auth, (req, res)=>{
                 success: true,
                 lectureNotes: [{
                     _id: 0,
+                    subject: 0,
                     title: '아니 인공지능',
                     content: '아니 인공지능 성적 언제 나옴???',
                     fileURL: '',
@@ -99,8 +100,13 @@ router.get('/get/:id', auth, (req, res)=>{
                 existLectureNote: false
             }
         } */
-    LectureNote.findOne({ _id: req.params.id }).populate('subject')
-    .populate('user').exec((err, lectureNote)=>{
+    LectureNote.findOne({ _id: req.params.id }).populate('subject').populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+            model: 'user'
+        }
+    }).exec((err, lectureNote)=>{
         if (err) return res.status(500).json(err);
         if (lectureNote === null) return res.status(404).json({
             success: false,

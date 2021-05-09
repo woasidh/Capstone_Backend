@@ -43,11 +43,13 @@ const questionSchema = new Schema({
 
 const understandingSchema = new Schema({
     type: { type: String, required: true },
+    name: { type: String },
+    status: { type: String },
     lecture: { type: Number, ref: 'lecture' },
     responses: [{
         student: { type: Number, ref: 'user' },
-        answer: { type: String, required: true },
-        time: { type: String }
+        response: { type: String },
+        date: { type: Date }
     }]
 });
 

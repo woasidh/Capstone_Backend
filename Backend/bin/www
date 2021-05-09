@@ -9,7 +9,6 @@ var debug = require('debug')('backend:server');
 var http = require('http');
 
 const moment = require('moment');
-const { Socket } = require('net');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -34,8 +33,6 @@ const socket = require('socket.io')(server);
 
 socket.on('connection', (soc)=>{
   console.log('a user connected');
-
-  socket.set('transports', ['websocket']);
 
   // 수업 참가 시, 참가자 갱신
   soc.on('user', (data)=>{
@@ -100,6 +97,8 @@ socket.on('connection', (soc)=>{
       name: 'SERVER',
       message: soc.name
     })
+
+    soc.leave(soc.code);
   })
 
   // 퀴즈 학생들에게 뿌리기
@@ -115,6 +114,12 @@ socket.on('connection', (soc)=>{
 
     soc.broadcast.to(soc.code).emit('sendQuiz', data); 
   });
+
+  soc.on('understanding', (data)=>{
+    data.name = soc.name;
+
+    soc.broadcast.to(soc.code).emit('sendU', data);
+  })
 });
 
 /**

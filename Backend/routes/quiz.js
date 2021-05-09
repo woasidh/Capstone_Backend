@@ -457,7 +457,7 @@ router.put('/submit', auth, (req, res)=>{
         
     const now = moment();
 
-    Quiz.findOne({ _id: req.body.id }).populate('subject').exec((err, quiz)=>{
+    Quiz.findOne({ _id: req.body.quizId }).populate('subject').exec((err, quiz)=>{
         if (err) return res.status(500).json(err);
         if (quiz.status==='done') {
             return res.status(409).json({
@@ -483,7 +483,7 @@ router.put('/submit', auth, (req, res)=>{
 
         quiz.responses.push({
             date: now,
-            student: req.body.studentId,
+            student: req.session._id,
             response: response
         });
         quiz.save((err, doc)=>{
