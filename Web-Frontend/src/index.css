@@ -1,30 +1,30 @@
 *{
-    box-sizing : border-box;
+  box-sizing : border-box;
 }
 
 body{
-    background-color: #233044;
-    margin : 0;
-    height : 100%;
+  background-color: #233044;
+  margin : 0;
+  height : 100%;
 }
 
 html{
-    height : 100%;
+  height : 100%;
 }
 
 input{
-    outline: none;
+  outline: none;
 }
 
 button{
-    background-color: transparent;
-    border : none;
-    outline : none;
-    cursor: pointer;
-    padding: 0;
+  background-color: transparent;
+  border : none;
+  outline : none;
+  cursor: pointer;
+  padding: 0;
 }
 
 a{
-    color : inherit;
-    text-decoration: none;
+  color : inherit;
+  text-decoration: none;
 }
