@@ -3,7 +3,6 @@ import React, {useEffect, useRef} from 'react';
 import {useHistory} from 'react-router';
 import styled from 'styled-components';
 import logoImg from '../../../images/logo/mainlogo1.png';
-import Text from './Text.tsx'
 import axios from "axios"
 
 const Container = styled.div`
@@ -127,7 +126,6 @@ function Login() {
             <span className="buttonText">SIGN IN WITH GOOGLE</span>
           </div>
         </GoogleBtn>
-        <Text/>
       </div>
     </Container>
   );
