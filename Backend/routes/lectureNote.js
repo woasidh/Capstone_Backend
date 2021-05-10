@@ -17,15 +17,14 @@ router.get('/get/subject/:id', auth, (req, res)=>{
                 success: true,
                 lectureNotes: [{
                     _id: 0,
-                    subject: 0,
+                    subject: { $ref: "#/definitions/subject" },
                     title: '아니 인공지능',
                     content: '아니 인공지능 성적 언제 나옴???',
-                    fileURL: '',
                     date: '2021-05-05T15:38:19.424Z',
                     comments: [{
-                        user: 0,
+                        user: { $ref: "#/definitions/user" },
                         content: '진심 몇 일째냐고~~~~~',
-                        date: '2021-05-05T15:38:19.424Z'
+                        date: '2021-05-05T15:40:19.424Z'
                     }],
                     emotions: [{
                         user: 0,
@@ -38,7 +37,13 @@ router.get('/get/subject/:id', auth, (req, res)=>{
             description: 'user가 로그인이 되지 않은 경우',
             schema: { $ref: "#/definitions/authFailed" }
         } */
-    LectureNote.find({ subject: req.params.id }).sort({date: -1}).exec((err, lectureNotes)=>{
+    LectureNote.find({ subject: req.params.id }).sort({date: -1}).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+            model: 'user'
+        }
+    }).exec((err, lectureNotes)=>{
         if (err) return res.status(500).json(err);
 
         const lectureNoteArray = [];
@@ -72,15 +77,14 @@ router.get('/get/:id', auth, (req, res)=>{
                 success: true,
                 lectureNote: {
                     _id: 0,
-                    subject: 0,
+                    subject: { $ref: "#/definitions/subject" },
                     title: '아~ 이제 이거 너무 귀찮은데',
                     content: '그래도 해야겠지ㅠ',
-                    fileURL: '',
                     date: '2021-05-05T15:38:19.424Z',
                     comments: [{
-                        user: 1,
+                        user: { $ref: "#/definitions/user" },
                         content: 'ㅋㅋ',
-                        date: '2021-05-05T15:38:19.424Z'
+                        date: '2021-05-05T15:40:19.424Z'
                     }],
                     emotions: [{
                         user: 1,

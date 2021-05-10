@@ -72,8 +72,8 @@ socket.on('connection', (soc)=>{
     data.name = soc.name;
 
     console.log('name: ', data.name, 'message: ', data.content, 'time: ', data.time);
-    // soc.broadcast.to(soc.code).emit('sendMsg', data);
-    soc.to(soc.code).emit('sendMsg', data);
+    soc.broadcast.to(soc.code).emit('sendMsg', data);
+    // soc.to(soc.code).emit('sendMsg', data);
   });
 
   soc.on('question', (data)=>{
@@ -108,7 +108,7 @@ socket.on('connection', (soc)=>{
       const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
 
       setTimeout(()=>{
-        soc.broadcast.to(soc.code).emit('timeOver');
+        soc.to(soc.code).emit('timeOver');
       }, timeLeft);
     }
 

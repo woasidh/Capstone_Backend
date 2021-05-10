@@ -76,19 +76,7 @@ router.put('/join', auth, (req, res) => {
             description: '성공시 success, subject 객체 반환',
             schema: {
                 success: true,
-                subject: {
-                    _id: 0,
-                    name: '캡스톤디자인',
-                    start_period: '2021-03-02',
-                    end_period: '2021-06-30',
-                    start_time: ['16:30', '18:00', '19:30'],
-                    end_time: ['18:00', '19:30', '21:00'],
-                    days: [1, 1, 1],
-                    code: '519hi32hkjifb12',
-                    lectures: [],
-                    students: [0],
-                    introURL: ''
-                }
+                subject: { $ref : "#/definitions/subject "}
             }
         }
         #swagger.responses[401] = {
@@ -160,19 +148,7 @@ router.get('/info/:id', auth, (req, res)=>{
             description: '성공적으로 해당 강의 정보 받아온 경우',
             schema: {
                 success: true,
-                subject: {
-                    _id: 0,
-                    name: '캡스톤디자인',
-                    start_period: '2021-03-02',
-                    end_period: '2021-06-30',
-                    start_time: ['16:30', '18:00', '19:30'],
-                    end_time: ['18:00', '19:30', '21:00'],
-                    days: [1, 1, 1],
-                    code: '519hi32hkjifb12',
-                    lectures: [],
-                    students: [0],
-                    introURL: ''
-                }
+                subject: { $ref : "#/definitions/subject "}
             }
         }
         #swagger.responses[401] = {
@@ -211,19 +187,7 @@ router.put('/info/update/:id', professorAuth, (req, res)=>{
         #swagger.path = '/subject/info/update/{id}' 
         #swagger.responses[200] = {
             description: '성공적으로 해당 강의 정보를 수정했을 경우',
-            schema: {
-                _id: 0,
-                name: '캡스톤디자인',
-                start_period: '2021-03-02',
-                end_period: '2021-06-30',
-                start_time: ['16:30', '18:00', '19:30'],
-                end_time: ['18:00', '19:30', '21:00'],
-                days: [1, 1, 1],
-                code: '519hi32hkjifb12',
-                lectures: [],
-                students: [0],
-                introURL: ''
-            }
+            schema: { $ref : "#/definitions/subject "}
         }
         #swagger.responses[401] = {
             description: 'user가 로그인이 되지 않은 경우',
@@ -289,19 +253,7 @@ router.get('/get/mySubjects', auth, (req, res) => {
             description: '성공 시, 본인이 수강하고 있는 강의들을 subjects로 반환',
             schema: {
                 success: true,
-                subjects: [{
-                    _id: 0,
-                    name: '캡스톤디자인',
-                    start_period: '2021-03-02',
-                    end_period: '2021-06-30',
-                    start_time: ['16:30', '18:00', '19:30'],
-                    end_time: ['18:00', '19:30', '21:00'],
-                    days: [1, 1, 1],
-                    code: '519hi32hkjifb12',
-                    lectures: [],
-                    students: [0],
-                    introURL: ''
-                }]
+                subjects: [{ $ref : "#/definitions/subject "}]
             }
         }
         #swagger.responses[401] = {

@@ -401,80 +401,7 @@
                   "example": true
                 },
                 "subject": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "캡스톤디자인"
-                    },
-                    "start_period": {
-                      "type": "string",
-                      "example": "2021-03-02"
-                    },
-                    "end_period": {
-                      "type": "string",
-                      "example": "2021-06-30"
-                    },
-                    "start_time": {
-                      "type": "array",
-                      "example": [
-                        "16:30",
-                        "18:00",
-                        "19:30"
-                      ],
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "end_time": {
-                      "type": "array",
-                      "example": [
-                        "18:00",
-                        "19:30",
-                        "21:00"
-                      ],
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "days": {
-                      "type": "array",
-                      "example": [
-                        1,
-                        1,
-                        1
-                      ],
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    "code": {
-                      "type": "string",
-                      "example": "519hi32hkjifb12"
-                    },
-                    "lectures": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    },
-                    "students": {
-                      "type": "array",
-                      "example": [
-                        0
-                      ],
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    "introURL": {
-                      "type": "string",
-                      "example": ""
-                    }
-                  }
+                  "$ref": "#/definitions/subject "
                 }
               },
               "xml": {
@@ -557,80 +484,7 @@
                   "example": true
                 },
                 "subject": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "캡스톤디자인"
-                    },
-                    "start_period": {
-                      "type": "string",
-                      "example": "2021-03-02"
-                    },
-                    "end_period": {
-                      "type": "string",
-                      "example": "2021-06-30"
-                    },
-                    "start_time": {
-                      "type": "array",
-                      "example": [
-                        "16:30",
-                        "18:00",
-                        "19:30"
-                      ],
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "end_time": {
-                      "type": "array",
-                      "example": [
-                        "18:00",
-                        "19:30",
-                        "21:00"
-                      ],
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "days": {
-                      "type": "array",
-                      "example": [
-                        1,
-                        1,
-                        1
-                      ],
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    "code": {
-                      "type": "string",
-                      "example": "519hi32hkjifb12"
-                    },
-                    "lectures": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    },
-                    "students": {
-                      "type": "array",
-                      "example": [
-                        0
-                      ],
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    "introURL": {
-                      "type": "string",
-                      "example": ""
-                    }
-                  }
+                  "$ref": "#/definitions/subject "
                 }
               },
               "xml": {
@@ -730,83 +584,7 @@
           "200": {
             "description": "성공적으로 해당 강의 정보를 수정했을 경우",
             "schema": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "number",
-                  "example": 0
-                },
-                "name": {
-                  "type": "string",
-                  "example": "캡스톤디자인"
-                },
-                "start_period": {
-                  "type": "string",
-                  "example": "2021-03-02"
-                },
-                "end_period": {
-                  "type": "string",
-                  "example": "2021-06-30"
-                },
-                "start_time": {
-                  "type": "array",
-                  "example": [
-                    "16:30",
-                    "18:00",
-                    "19:30"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "end_time": {
-                  "type": "array",
-                  "example": [
-                    "18:00",
-                    "19:30",
-                    "21:00"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "days": {
-                  "type": "array",
-                  "example": [
-                    1,
-                    1,
-                    1
-                  ],
-                  "items": {
-                    "type": "number"
-                  }
-                },
-                "code": {
-                  "type": "string",
-                  "example": "519hi32hkjifb12"
-                },
-                "lectures": {
-                  "type": "array",
-                  "example": [],
-                  "items": {}
-                },
-                "students": {
-                  "type": "array",
-                  "example": [
-                    0
-                  ],
-                  "items": {
-                    "type": "number"
-                  }
-                },
-                "introURL": {
-                  "type": "string",
-                  "example": ""
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
+              "$ref": "#/definitions/subject "
             }
           },
           "401": {
@@ -887,80 +665,7 @@
                 "subjects": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "_id": {
-                        "type": "number",
-                        "example": 0
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "캡스톤디자인"
-                      },
-                      "start_period": {
-                        "type": "string",
-                        "example": "2021-03-02"
-                      },
-                      "end_period": {
-                        "type": "string",
-                        "example": "2021-06-30"
-                      },
-                      "start_time": {
-                        "type": "array",
-                        "example": [
-                          "16:30",
-                          "18:00",
-                          "19:30"
-                        ],
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "end_time": {
-                        "type": "array",
-                        "example": [
-                          "18:00",
-                          "19:30",
-                          "21:00"
-                        ],
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "days": {
-                        "type": "array",
-                        "example": [
-                          1,
-                          1,
-                          1
-                        ],
-                        "items": {
-                          "type": "number"
-                        }
-                      },
-                      "code": {
-                        "type": "string",
-                        "example": "519hi32hkjifb12"
-                      },
-                      "lectures": {
-                        "type": "array",
-                        "example": [],
-                        "items": {}
-                      },
-                      "students": {
-                        "type": "array",
-                        "example": [
-                          0
-                        ],
-                        "items": {
-                          "type": "number"
-                        }
-                      },
-                      "introURL": {
-                        "type": "string",
-                        "example": ""
-                      }
-                    }
+                    "$ref": "#/definitions/subject "
                   }
                 }
               },
@@ -1136,46 +841,7 @@
                   "example": true
                 },
                 "lecture": {
-                  "type": "object",
-                  "properties": {
-                    "date": {
-                      "type": "number",
-                      "example": 2011
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "inProgress"
-                    },
-                    "start_time": {
-                      "type": "string",
-                      "example": "11:00"
-                    },
-                    "subject": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "options": {
-                      "type": "object",
-                      "properties": {
-                        "subtitle": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "record": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "attendance": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "limit": {
-                          "type": "number",
-                          "example": 5
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/definitions/lecture"
                 }
               },
               "xml": {
@@ -1228,66 +894,7 @@
                   "example": true
                 },
                 "lecture": {
-                  "type": "object",
-                  "properties": {
-                    "date": {
-                      "type": "number",
-                      "example": 2011
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "done"
-                    },
-                    "start_time": {
-                      "type": "string",
-                      "example": "11:00"
-                    },
-                    "end_time": {
-                      "type": "string",
-                      "example": "12:00"
-                    },
-                    "subject": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "options": {
-                      "type": "object",
-                      "properties": {
-                        "subtitle": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "record": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "attendance": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "limit": {
-                          "type": "number",
-                          "example": 5
-                        }
-                      }
-                    },
-                    "students": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "student": {
-                            "type": "number",
-                            "example": 0
-                          },
-                          "attendance": {
-                            "type": "boolean",
-                            "example": true
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/definitions/lecture"
                 }
               },
               "xml": {
@@ -1333,73 +940,8 @@
                       "type": "boolean",
                       "example": true
                     },
-                    "lectures": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "_id": {
-                            "type": "number",
-                            "example": 2
-                          },
-                          "date": {
-                            "type": "number",
-                            "example": 2011
-                          },
-                          "status": {
-                            "type": "string",
-                            "example": "inProgress"
-                          },
-                          "start_time": {
-                            "type": "string",
-                            "example": "11:30"
-                          },
-                          "end_time": {
-                            "type": "string",
-                            "example": ""
-                          },
-                          "subject": {
-                            "type": "number",
-                            "example": 1
-                          },
-                          "options": {
-                            "type": "object",
-                            "properties": {
-                              "subtitle": {
-                                "type": "boolean",
-                                "example": true
-                              },
-                              "record": {
-                                "type": "boolean",
-                                "example": true
-                              },
-                              "attendance": {
-                                "type": "boolean",
-                                "example": true
-                              },
-                              "limit": {
-                                "type": "number",
-                                "example": 10
-                              }
-                            }
-                          },
-                          "students": {
-                            "type": "array",
-                            "example": [],
-                            "items": {}
-                          },
-                          "chatting": {
-                            "type": "array",
-                            "example": [],
-                            "items": {}
-                          },
-                          "questions": {
-                            "type": "array",
-                            "example": [],
-                            "items": {}
-                          }
-                        }
-                      }
+                    "lecture": {
+                      "$ref": "#/definitions/lecture"
                     }
                   }
                 },
@@ -1475,69 +1017,7 @@
                       "example": true
                     },
                     "lecture": {
-                      "type": "object",
-                      "properties": {
-                        "_id": {
-                          "type": "number",
-                          "example": 0
-                        },
-                        "date": {
-                          "type": "number",
-                          "example": 2011
-                        },
-                        "status": {
-                          "type": "string",
-                          "example": "inProgress"
-                        },
-                        "start_time": {
-                          "type": "string",
-                          "example": "11:00"
-                        },
-                        "end_time": {
-                          "type": "string",
-                          "example": ""
-                        },
-                        "subject": {
-                          "type": "number",
-                          "example": 0
-                        },
-                        "options": {
-                          "type": "object",
-                          "properties": {
-                            "subtitle": {
-                              "type": "boolean",
-                              "example": false
-                            },
-                            "record": {
-                              "type": "boolean",
-                              "example": false
-                            },
-                            "attendance": {
-                              "type": "boolean",
-                              "example": false
-                            },
-                            "limit": {
-                              "type": "number",
-                              "example": 5
-                            }
-                          }
-                        },
-                        "students": {
-                          "type": "array",
-                          "example": [],
-                          "items": {}
-                        },
-                        "chatting": {
-                          "type": "array",
-                          "example": [],
-                          "items": {}
-                        },
-                        "questions": {
-                          "type": "array",
-                          "example": [],
-                          "items": {}
-                        }
-                      }
+                      "$ref": "#/definitions/lecture"
                     }
                   }
                 },
@@ -1597,80 +1077,7 @@
                   "example": true
                 },
                 "lecture": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "date": {
-                      "type": "number",
-                      "example": 2011
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "inProgress"
-                    },
-                    "start_time": {
-                      "type": "string",
-                      "example": "11:00"
-                    },
-                    "end_time": {
-                      "type": "string",
-                      "example": ""
-                    },
-                    "subject": {
-                      "type": "number",
-                      "example": 0
-                    },
-                    "options": {
-                      "type": "object",
-                      "properties": {
-                        "subtitle": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "record": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "attendance": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "limit": {
-                          "type": "number",
-                          "example": 5
-                        }
-                      }
-                    },
-                    "student": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "student": {
-                            "type": "number",
-                            "example": 0
-                          },
-                          "attendance": {
-                            "type": "boolean",
-                            "example": true
-                          }
-                        }
-                      }
-                    },
-                    "chatting": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    },
-                    "questions": {
-                      "type": "array",
-                      "example": [],
-                      "items": {}
-                    }
-                  }
+                  "$ref": "#/definitions/lecture"
                 }
               },
               "xml": {
@@ -2637,10 +2044,6 @@
                 "response": {
                   "type": "string",
                   "example": "any"
-                },
-                "studentId": {
-                  "type": "string",
-                  "example": "any"
                 }
               }
             }
@@ -2963,8 +2366,7 @@
                         "example": 0
                       },
                       "subject": {
-                        "type": "number",
-                        "example": 0
+                        "$ref": "#/definitions/subject"
                       },
                       "title": {
                         "type": "string",
@@ -2973,10 +2375,6 @@
                       "content": {
                         "type": "string",
                         "example": "아니 인공지능 성적 언제 나옴???"
-                      },
-                      "fileURL": {
-                        "type": "string",
-                        "example": ""
                       },
                       "date": {
                         "type": "string",
@@ -2988,8 +2386,7 @@
                           "type": "object",
                           "properties": {
                             "user": {
-                              "type": "number",
-                              "example": 0
+                              "$ref": "#/definitions/user"
                             },
                             "content": {
                               "type": "string",
@@ -2997,7 +2394,7 @@
                             },
                             "date": {
                               "type": "string",
-                              "example": "2021-05-05T15:38:19.424Z"
+                              "example": "2021-05-05T15:40:19.424Z"
                             }
                           }
                         }
@@ -3071,8 +2468,7 @@
                       "example": 0
                     },
                     "subject": {
-                      "type": "number",
-                      "example": 0
+                      "$ref": "#/definitions/subject"
                     },
                     "title": {
                       "type": "string",
@@ -3081,10 +2477,6 @@
                     "content": {
                       "type": "string",
                       "example": "그래도 해야겠지ㅠ"
-                    },
-                    "fileURL": {
-                      "type": "string",
-                      "example": ""
                     },
                     "date": {
                       "type": "string",
@@ -3096,8 +2488,7 @@
                         "type": "object",
                         "properties": {
                           "user": {
-                            "type": "number",
-                            "example": 1
+                            "$ref": "#/definitions/user"
                           },
                           "content": {
                             "type": "string",
@@ -3105,7 +2496,7 @@
                           },
                           "date": {
                             "type": "string",
-                            "example": "2021-05-05T15:38:19.424Z"
+                            "example": "2021-05-05T15:40:19.424Z"
                           }
                         }
                       }
@@ -3487,107 +2878,45 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "_id": {
-                        "type": "number",
-                        "example": 0
-                      },
                       "subject": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "캡스톤디자인"
-                          },
-                          "professor": {
-                            "type": "number",
-                            "example": 0
-                          },
-                          "start_period": {
-                            "type": "string",
-                            "example": "2021-03-02"
-                          },
-                          "end_period": {
-                            "type": "string",
-                            "example": "2021-06-30"
-                          },
-                          "start_time": {
-                            "type": "array",
-                            "example": [
-                              "16:30",
-                              "18:00",
-                              "19:30"
-                            ],
-                            "items": {
-                              "type": "string"
+                        "$ref": "#/definitions/subject2"
+                      },
+                      "notices": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "subject": {
+                              "$ref": "#/definitions/subject2"
+                            },
+                            "title": {
+                              "type": "string",
+                              "example": "과제물 6 공지"
+                            },
+                            "content": {
+                              "type": "string",
+                              "example": "또 과제임 ㅋㅋ"
+                            },
+                            "date": {
+                              "type": "string",
+                              "example": "2021-05-06T15:38:19.424Z"
+                            },
+                            "comments": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
+                            },
+                            "emotions": {
+                              "type": "array",
+                              "example": [],
+                              "items": {}
                             }
-                          },
-                          "end_time": {
-                            "type": "array",
-                            "example": [
-                              "18:00",
-                              "19:30",
-                              "21:00"
-                            ],
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "days": {
-                            "type": "array",
-                            "example": [
-                              1,
-                              1,
-                              1
-                            ],
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          "code": {
-                            "type": "string",
-                            "example": "519hi32hkjifb12"
-                          },
-                          "lectures": {
-                            "type": "array",
-                            "example": [],
-                            "items": {}
-                          },
-                          "students": {
-                            "type": "array",
-                            "example": [
-                              0
-                            ],
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          "introURL": {
-                            "type": "string",
-                            "example": ""
                           }
                         }
-                      },
-                      "title": {
-                        "type": "string",
-                        "example": "중간발표 5월 20일 ㅋㅋ"
-                      },
-                      "content": {
-                        "type": "string",
-                        "example": "제발 동영상만 내세요! PPT 필요 없습니다!"
-                      },
-                      "date": {
-                        "type": "string",
-                        "example": "2021-05-05T15:38:19.424Z"
-                      },
-                      "comments": {
-                        "type": "array",
-                        "example": [],
-                        "items": {}
-                      },
-                      "emotions": {
-                        "type": "array",
-                        "example": [],
-                        "items": {}
                       }
                     }
                   }
@@ -3644,8 +2973,7 @@
                         "example": 0
                       },
                       "subject": {
-                        "type": "number",
-                        "example": 0
+                        "$ref": "#/definitions/subject"
                       },
                       "title": {
                         "type": "string",
@@ -4946,10 +4274,7 @@
       "required": [
         "name",
         "start_period",
-        "end_period",
-        "start_time",
-        "end_time",
-        "days"
+        "end_period"
       ]
     },
     "closeLecture": {
@@ -5040,6 +4365,243 @@
         "isProfessor": {
           "type": "boolean",
           "example": false
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number",
+          "example": 0
+        },
+        "name": {
+          "type": "string",
+          "example": "캡스톤디자인"
+        },
+        "start_period": {
+          "type": "string",
+          "example": "2021-03-02"
+        },
+        "end_period": {
+          "type": "string",
+          "example": "2021-06-30"
+        },
+        "start_time": {
+          "type": "array",
+          "example": [
+            "16:30",
+            "18:00",
+            "19:30"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "end_time": {
+          "type": "array",
+          "example": [
+            "18:00",
+            "19:30",
+            "21:00"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "days": {
+          "type": "array",
+          "example": [
+            1,
+            1,
+            1
+          ],
+          "items": {
+            "type": "number"
+          }
+        },
+        "code": {
+          "type": "string",
+          "example": "519hi32hkjifb12"
+        },
+        "lectures": {
+          "type": "array",
+          "example": [],
+          "items": {}
+        },
+        "students": {
+          "type": "array",
+          "example": [
+            0
+          ],
+          "items": {
+            "type": "number"
+          }
+        },
+        "introURL": {
+          "type": "string",
+          "example": ""
+        }
+      }
+    },
+    "subject2": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "인공지능"
+        },
+        "start_period": {
+          "type": "string",
+          "example": "2021-03-02"
+        },
+        "end_period": {
+          "type": "string",
+          "example": "2021-06-30"
+        },
+        "start_time": {
+          "type": "array",
+          "example": [
+            "12:00",
+            "13:30"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "end_time": {
+          "type": "array",
+          "example": [
+            "13:30",
+            "15:00"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "days": {
+          "type": "array",
+          "example": [
+            1,
+            3
+          ],
+          "items": {
+            "type": "number"
+          }
+        },
+        "code": {
+          "type": "string",
+          "example": "235afwkjk153445"
+        },
+        "lectures": {
+          "type": "array",
+          "example": [],
+          "items": {}
+        },
+        "students": {
+          "type": "array",
+          "example": [
+            0
+          ],
+          "items": {
+            "type": "number"
+          }
+        },
+        "introURL": {
+          "type": "string",
+          "example": ""
+        }
+      }
+    },
+    "lecture": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number",
+          "example": 0
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-05-05T00:00:00:000Z"
+        },
+        "status": {
+          "type": "string",
+          "example": "inProgress"
+        },
+        "start_time": {
+          "type": "string",
+          "example": "11:00"
+        },
+        "subject": {
+          "type": "number",
+          "example": 0
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "subtitle": {
+              "type": "boolean",
+              "example": false
+            },
+            "record": {
+              "type": "boolean",
+              "example": false
+            },
+            "attendance": {
+              "type": "boolean",
+              "example": false
+            },
+            "limit": {
+              "type": "number",
+              "example": 5
+            }
+          }
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "number",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "ㄱㄴㄷ"
+        },
+        "email": {
+          "type": "string",
+          "example": "amola@ajou.ac.kr"
+        },
+        "school": {
+          "type": "string",
+          "example": "아주대학교"
+        },
+        "identityID": {
+          "type": "string",
+          "example": "201620817"
+        },
+        "major": {
+          "type": "string",
+          "example": "컴퓨터공학"
+        },
+        "type": {
+          "type": "string",
+          "example": "student"
+        },
+        "subject": {
+          "type": "array",
+          "example": [
+            0
+          ],
+          "items": {
+            "type": "number"
+          }
         }
       }
     }

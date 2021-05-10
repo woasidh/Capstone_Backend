@@ -17,17 +17,10 @@ router.post('/start', professorAuth, (req, res)=>{
             description: '성공적으로 수업을 시작한 경우',
             schema: {
                 success: true,
-                lecture: {
-                    date: 2021-05-05,
-                    status: 'inProgress',
-                    start_time: '11:00',
-                    subject: 0,
-                    options: {
-                        subtitle: false,
-                        record: false,
-                        attendance: false,
-                        limit: 5
-                    }
+                lecture: { 
+                    $ref: "#/definitions/lecture",
+                    students: [],
+                    chatting: []
                 }
             }
         }
@@ -94,22 +87,15 @@ router.put('/close', professorAuth, (req, res)=>{
             description: 'success, lecture 객체 반환',
             schema: {
                 success: true,
-                lecture: {
-                    date: 2021-05-05,
+                lecture: { 
+                    $ref: "#/definitions/lecture",
                     status: 'done',
-                    start_time: '11:00',
                     end_time: '12:00',
-                    subject: 0,
-                    options: {
-                        subtitle: false,
-                        record: false,
-                        attendance: false,
-                        limit: 5
-                    },
                     students: [{
                         student: 0,
                         attendance: true
-                    }]
+                    }],
+                    chatting: []
                 }
             }
         }
@@ -173,40 +159,12 @@ router.put('/get/inProgress', auth, (req, res)=>{
             schema: {
                 있음: {
                     success: true,
-                    lectures: [{
-                        _id: 0,
-                        date: 2021-05-05,
-                        status: 'inProgress',
-                        start_time: '11:00',
-                        end_time: '',
-                        subject: 0,
-                        options: {
-                            subtitle: false,
-                            record: false,
-                            attendance: false,
-                            limit: 5
-                        },
+                    lecture: {
+                        $ref: "#/definitions/lecture",
+                        subject: { $ref : "#/definitions/subject "},
                         students: [],
-                        chatting: [],
-                        questions: []
-                    },
-                    {
-                        _id: 2,
-                        date: 2021-05-05,
-                        status: 'inProgress',
-                        start_time: '11:30',
-                        end_time: '',
-                        subject: 1,
-                        options: {
-                            subtitle: true,
-                            record: true,
-                            attendance: true,
-                            limit: 10
-                        },
-                        students: [],
-                        chatting: [],
-                        questions: []
-                    }]
+                        chatting: []
+                    }
                 },
                 없음: {
                     success: false,
@@ -222,14 +180,16 @@ router.put('/get/inProgress', auth, (req, res)=>{
     Lecture.find({ status: 'inProgress' }).populate('subject').exec((err, lectures)=>{
         if (err) return  res.status(500).json(err);
 
-        let lectureList = [];
+        let targetLecture;
 
-        lectures.forEach((lec)=>{
-            if (lec.subject.students.includes(req.session._id))
-                lectureList.push(lec);
+        lectures.some((lec)=>{
+            if (lec.subject.students.includes(req.session._id)) {
+                targetLecture = lec;
+                return true;
+            }
         })
 
-        if (!lectureList.length) {
+        if (targetLecture === undefined) {
             res.status(200).json({
                 success: false,
                 existInProgressLecture: false
@@ -238,7 +198,7 @@ router.put('/get/inProgress', auth, (req, res)=>{
         else {
             res.status(200).json({
                 success: true,
-                lectures: lectureList
+                lecture: targetLecture
             });
         }
     });
@@ -255,21 +215,9 @@ router.get('/get/inProgress/subject/:id', auth, (req, res)=>{
                 있음: {
                     success: true,
                     lecture: {
-                        _id: 0,
-                        date: 2021-05-05,
-                        status: 'inProgress',
-                        start_time: '11:00',
-                        end_time: '',
-                        subject: 0,
-                        options: {
-                            subtitle: false,
-                            record: false,
-                            attendance: false,
-                            limit: 5
-                        },
+                        $ref: "#/definitions/lecture",
                         students: [],
                         chatting: [],
-                        questions: []
                     }
                 },
                 없음: {
@@ -311,24 +259,12 @@ router.put('/join/:id', auth, (req, res)=>{
             schema: {
                 success: true,
                 lecture: {
-                    _id: 0,
-                    date: 2021-05-05,
-                    status: 'inProgress',
-                    start_time: '11:00',
-                    end_time: '',
-                    subject: 0,
-                    options: {
-                        subtitle: false,
-                        record: false,
-                        attendance: false,
-                        limit: 5
-                    },
+                    $ref: "#/definitions/lecture",
                     student: [{
                         student: 0,
                         attendance: true
                     }],
-                    chatting: [],
-                    questions: []
+                    chatting: []
                 }
             }
         }

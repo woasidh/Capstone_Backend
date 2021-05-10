@@ -35,9 +35,9 @@ const doc = {
             $name: '캡스톤디자인',
             $start_period: '2021-03-02',
             $end_period: '2021-06-30',
-            $start_time: ['16:30', '18:00', '19:30'],
-            $end_time: ['18:00', '19:30', '21:00'],
-            $days: [1, 1, 1],
+            start_time: ['16:30', '18:00', '19:30'],
+            end_time: ['18:00', '19:30', '21:00'],
+            days: [1, 1, 1],
         },
         closeLecture: {
             chatting: [{
@@ -73,6 +73,55 @@ const doc = {
             success: false,
             isProfessor: false
         },
+        subject: {
+            _id: 0,
+            name: '캡스톤디자인',
+            start_period: '2021-03-02',
+            end_period: '2021-06-30',
+            start_time: ['16:30', '18:00', '19:30'],
+            end_time: ['18:00', '19:30', '21:00'],
+            days: [1, 1, 1],
+            code: '519hi32hkjifb12',
+            lectures: [],
+            students: [0],
+            introURL: ''
+        },
+        subject2: {
+            _id: 1,
+            name: '인공지능',
+            start_period: '2021-03-02',
+            end_period: '2021-06-30',
+            start_time: ['12:00', '13:30'],
+            end_time: ['13:30', '15:00'],
+            days: [1, 3],
+            code: '235afwkjk153445',
+            lectures: [],
+            students: [0],
+            introURL: ''
+        },
+        lecture: {
+            _id: 0,
+            date: '2021-05-05T00:00:00:000Z',
+            status: 'inProgress',
+            start_time: '11:00',
+            subject: 0,
+            options: {
+                subtitle: false,
+                record: false,
+                attendance: false,
+                limit: 5
+            },
+        },
+        user: {
+            _id: 1,
+            name: 'ㄱㄴㄷ',
+            email: 'amola@ajou.ac.kr',
+            school: '아주대학교',
+            identityID: '201620817',
+            major: '컴퓨터공학',
+            type: 'student',
+            subject: [0]
+        }
     }
 }
 
