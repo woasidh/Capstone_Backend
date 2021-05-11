@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Understanding } = require('../models/models');
+const { UnderstandingStu, UnderstandingPro } = require('../models/models');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
@@ -35,7 +35,7 @@ router.post('/create', professorAuth, (req, res)=>{
                 $type: 'OX',
             }
         } */
-    const understanding = new Understanding({
+    const understanding = new UnderstandingPro({
         type: req.body.type,
         name: req.body.name,
         date: new moment(),
@@ -90,7 +90,7 @@ router.put('/submit', auth, (req, res)=>{
         } */
     const now = moment();
 
-    Understanding.findOne({ _id: req.body.udId }, (err, ud)=>{
+    UnderstandingPro.findOne({ _id: req.body.udId }, (err, ud)=>{
         if (err) return res.status(500).json(err);
         if (ud.status === 'done') {
             return res.status(409).json({
@@ -125,7 +125,7 @@ router.put('/close/:id', professorAuth, (req, res)=>{
         #swagger.path = '/understanding/close/{id}' 
         #swagger.description = 'status는 open/done으로 나뉨'
         #swagger.responses[200] = {
-            description: '이해도평가가 정상적으로 생성된 경우',
+            description: '이해도평가가 정상적으로 종료되었을 경우',
             schema: {
                 success: true,
                 understanding: {
@@ -151,7 +151,7 @@ router.put('/close/:id', professorAuth, (req, res)=>{
             description: 'type이 professor가 아닌 경우',
             schema: { $ref: "#/definitions/proAuthFailed" }
         } */
-    Understanding.findOneAndUpdate({ _id: req.params.udId }, {
+    UnderstandingPro.findOneAndUpdate({ _id: req.params.udId }, {
         status: 'done',
         deadLine: new moment()
     }, { new: true }, (err, ud)=>{
@@ -163,5 +163,84 @@ router.put('/close/:id', professorAuth, (req, res)=>{
         });
     })
 });
+
+router.post('/send', auth, (req, res)=>{
+    /*  #swagger.tags = ['Understanding']
+        #swagger.path = '/understanding/send' 
+        #swagger.description = '학생이 주도적으로 교수님에게 "이해 안됨" 표시를 날릴 때 정보를 저장해주는 API'
+        #swagger.responses[201] = {
+            description: '학생의 이해 여부가 정상적으로 생성된 경우',
+            schema: {
+                success: true,
+                understanding: {
+                    student: 0,
+                    lecture: 0,
+                    response: false,
+                    time: '0:23'
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        }
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $isUnderstood: false,
+                $lectureId: 0,
+                $lectureStartTime: '12:00',
+            }
+        } */
+    const now = moment();
+    const currHour = now.hours();
+    const currMinute = now.minutes();
+
+    const startTime = req.body.lectureStartTime.split(":");
+    const startHour = Number(startTime[0]);
+    const startMinute = Number(startTime[1]);
+
+    let hours;
+    let minutes;
+    let understandingForm = {};
+
+    const needBorrowing = currMinute-startMinute < 0 
+
+    if (needBorrowing) {
+        hours = (currHour-startHour-1);
+        minutes = (currMinute-startMinute+60);
+    }
+    else {
+        hours = (currHour-startHour);
+        minutes = (currMinute-startMinute);
+    }
+    
+    const time = hours + ":" + minutes;
+
+    const understanding = new UnderstandingStu({
+        student: req.session._id,
+        lecture: req.body.lectureId,
+        response: req.body.isUnderstood,
+        hours: hours,
+        minutes: minutes
+    });
+    understanding.save((err, ud)=>{
+        if (err) return res.status(500).json(err);
+
+        understandingForm = {
+            student: ud._id,
+            lecture: ud.lecture,
+            response: ud.response,
+            time: time
+        }
+    });
+
+    
+})
 
 module.exports = router;

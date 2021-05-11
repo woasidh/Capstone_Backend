@@ -59,14 +59,7 @@ io.on('connection', (socket)=>{
 
     const needBorrowing = currMinute-startMinute < 0 
 
-    let time;
-
-    if (needBorrowing) {
-      time = (currHour-startHour-1) + ':' + (currMinute-startMinute+60);
-    }
-    else {
-      time = (currHour-startHour) + ':' + (currMinute-startMinute);
-    }
+    const time = (needBorrowing) ? ((currHour-startHour-1) + ':' + (currMinute-startMinute+60)) : ((currHour-startHour) + ':' + (currMinute-startMinute));
 
     data.time = time;
     data.name = socket.name;
@@ -102,7 +95,7 @@ io.on('connection', (socket)=>{
     socket.broadcast.to(socket.code).emit('sendQuiz', data); 
   });
 
-  socket.on('understanding', (data)=>{
+  socket.on('understandingPro', (data)=>{
     if (data.deadLine) {
       const now = moment();
       const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
@@ -112,7 +105,13 @@ io.on('connection', (socket)=>{
       }, timeLeft);
     }
 
-    socket.broadcast.to(socket.code).emit('sendU', data);
+    socket.broadcast.to(socket.code).emit('sendUnderstandingSheet', data);
+  });
+
+  socket.on('understandingStu', (data)=>{
+    data.name = socket.name;
+
+    socket.broadcast.to(socket.code).emit('sendIsUnderstood', data);
   })
 
   // 수업 퇴장 시, 참가자 갱신
