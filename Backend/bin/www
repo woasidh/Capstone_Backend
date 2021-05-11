@@ -26,7 +26,7 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * Create socket Communication
+ * Create Socket Communication
  */
 
 const io = require('socket.io')(server, {transports: ['websocket']});
@@ -103,7 +103,14 @@ io.on('connection', (socket)=>{
   });
 
   socket.on('understanding', (data)=>{
-    data.name = socket.name;
+    if (data.deadLine) {
+      const now = moment();
+      const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
+
+      setTimeout(()=>{
+        io.to(socket.code).emit('timeOver');
+      }, timeLeft);
+    }
 
     socket.broadcast.to(socket.code).emit('sendU', data);
   })

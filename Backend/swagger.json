@@ -4137,9 +4137,6 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
             "description": "이해도평가가 정상적으로 제출된 경우",
             "schema": {
               "type": "object",
@@ -4160,14 +4157,140 @@
               "$ref": "#/definitions/authFailed"
             }
           },
+          "404": {
+            "description": "udId에 해당하는 이해도평가가 존재하지 않는 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "existUd": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "409": {
+            "description": "이해도평가가 이미 종료된 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "isOver": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/understanding/close/{id}": {
+      "put": {
+        "tags": [
+          "Understanding"
+        ],
+        "description": "status는 open/done으로 나뉨",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "이해도평가가 정상적으로 생성된 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "understanding": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "OX"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "중간이해도평가"
+                    },
+                    "date": {
+                      "type": "string",
+                      "example": "2021-05-05T15:38:19.424Z"
+                    },
+                    "deadLine": {
+                      "type": "string",
+                      "example": "2021-05-05T16:00:00.000Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "done"
+                    },
+                    "lecture": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "responses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "student": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "response": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "date": {
+                            "type": "string",
+                            "example": "2021-05-05T15:40:48.473Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
           "403": {
             "description": "type이 professor가 아닌 경우",
             "schema": {
               "$ref": "#/definitions/proAuthFailed"
             }
-          },
-          "409": {
-            "description": "Conflict"
           },
           "500": {
             "description": "Internal Server Error"

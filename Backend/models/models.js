@@ -44,6 +44,8 @@ const questionSchema = new Schema({
 const understandingSchema = new Schema({
     type: { type: String, required: true },
     name: { type: String },
+    date: { type: Date },
+    deadLine: { type: Date },
     status: { type: String },
     lecture: { type: Number, ref: 'lecture' },
     responses: [{
