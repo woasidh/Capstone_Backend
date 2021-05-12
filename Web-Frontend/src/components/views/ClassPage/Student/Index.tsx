@@ -422,7 +422,7 @@ function Index(props: TestProps) {
         <Active2Cnt>
           <Active2ContentCnt>
             <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub socket = {socket}/></ContentWrapper>
             <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
