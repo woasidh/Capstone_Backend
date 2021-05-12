@@ -29,26 +29,33 @@ var server = http.createServer(app);
  * Create Socket Communication
  */
 
-const socket = require('socket.io')(server);
+const socketOpt = {
+  cors: {
+    origin: '*'
+  }
+}
 
-socket.on('connection', (soc)=>{
+const io = require('socket.io')(server, socketOpt);
+
+io.on('connection', (socket)=>{
+  console.log(socket.handshake);
   console.log('a user connected');
 
   // 수업 참가 시, 참가자 갱신
-  soc.on('user', (data)=>{
-    soc.name = data.name;
-    soc.code = data.code;
+  socket.on('user', (data)=>{
+    socket.name = data.name;
+    socket.code = data.code;
 
-    soc.join(soc.code);
+    socket.join(socket.code);
 
-    socket.to(soc.code).emit('newUser', {
+    io.to(socket.code).emit('newUser', {
       type: 'connect', 
       name: 'SERVER', 
-      message: soc.name
+      message: socket.name
     });
   });
 
-  soc.on('msg', (data)=>{
+  socket.on('msg', (data)=>{
     const now = moment();
     const currHour = now.hours();
     const currMinute = now.minutes();
@@ -59,66 +66,72 @@ socket.on('connection', (soc)=>{
 
     const needBorrowing = currMinute-startMinute < 0 
 
-    let time;
-
-    if (needBorrowing) {
-      time = (currHour-startHour-1) + ':' + (currMinute-startMinute+60);
-    }
-    else {
-      time = (currHour-startHour) + ':' + (currMinute-startMinute);
-    }
+    const time = (needBorrowing) ? ((currHour-startHour-1) + ':' + (currMinute-startMinute+60)) : ((currHour-startHour) + ':' + (currMinute-startMinute));
 
     data.time = time;
-    data.name = soc.name;
+    data.name = socket.name;
 
     console.log('name: ', data.name, 'message: ', data.content, 'time: ', data.time);
-    soc.broadcast.to(soc.code).emit('sendMsg', data);
-    // soc.to(soc.code).emit('sendMsg', data);
+    socket.broadcast.to(socket.code).emit('sendMsg', data);
+    // socket.to(socket.code).emit('sendMsg', data);
   });
 
-  soc.on('question', (data)=>{
-    data.name = soc.name;
+  socket.on('question', (data)=>{
+    data.name = socket.name;
 
-    soc.broadcast.to(soc.code).emit('sendQ', data);
+    socket.broadcast.to(socket.code).emit('sendQ', data);
   });
 
-  soc.on('answer', (data)=>{
-    data.name = soc.name;
+  socket.on('answer', (data)=>{
+    data.name = socket.name;
 
-    soc.broadcast.to(soc.code).emit('sendA', data);
-  })
-
-  // 수업 퇴장 시, 참가자 갱신
-  soc.on('disconnect', ()=>{
-    console.log('user disconnected');
-
-    soc.broadcast.to(soc.code).emit('disConnected', {
-      type: 'disconnect',
-      name: 'SERVER',
-      message: soc.name
-    })
-
-    soc.leave(soc.code);
+    socket.broadcast.to(socket.code).emit('sendA', data);
   })
 
   // 퀴즈 학생들에게 뿌리기
-  soc.on('quiz', (data)=>{
+  socket.on('quiz', (data)=>{
     if (data.deadLine) {
       const now = moment();
       const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
 
       setTimeout(()=>{
-        soc.to(soc.code).emit('timeOver');
+        io.to(socket.code).emit('timeOver');
       }, timeLeft);
     }
 
-    soc.broadcast.to(soc.code).emit('sendQuiz', data); 
+    socket.broadcast.to(socket.code).emit('sendQuiz', data); 
   });
 
-  soc.on('understanding', (data)=>{
-    data.name = soc.name;
+  socket.on('understandingPro', (data)=>{
+    if (data.deadLine) {
+      const now = moment();
+      const timeLeft = moment.duration(data.deadLine - now).asMilliseconds;
 
-    soc.broadcast.to(soc.code).emit('sendU', data);
+      setTimeout(()=>{
+        io.to(socket.code).emit('timeOver');
+      }, timeLeft);
+    }
+
+    socket.broadcast.to(socket.code).emit('sendUnderstandingSheet', data);
+  });
+
+  socket.on('understandingStu', (data)=>{
+    data.name = socket.name;
+
+    socket.broadcast.to(socket.code).emit('sendIsUnderstood', data);
+  })
+
+  // 수업 퇴장 시, 참가자 갱신
+  socket.on('disconnect', ()=>{
+    console.log('user disconnected');
+
+    socket.broadcast.to(socket.code).emit('disConnected', {
+      type: 'disconnect',
+      name: 'SERVER',
+      message: socket.name
+    })
+
+    socket.leave(socket.code);
   })
 });
 

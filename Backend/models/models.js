@@ -41,9 +41,11 @@ const questionSchema = new Schema({
 //     content: { type: String, required: true }
 // });
 
-const understandingSchema = new Schema({
+const understandingProSchema = new Schema({
     type: { type: String, required: true },
     name: { type: String },
+    date: { type: Date },
+    deadLine: { type: Date },
     status: { type: String },
     lecture: { type: Number, ref: 'lecture' },
     responses: [{
@@ -52,6 +54,14 @@ const understandingSchema = new Schema({
         date: { type: Date }
     }]
 });
+
+const understandingStuSchema = new Schema({
+    student: { type: Number, ref: 'user' },
+    lecture: { type: Number, ref: 'lecture' },
+    response: { type: Boolean },
+    hours: { type: Number },
+    minutes: { type: Number }
+})
 
 const subtitleSchema = new Schema({
     lecture: { type: Number, ref: 'lecture' },
@@ -137,7 +147,8 @@ const recordSchema = new Schema({
 quizSchema.plugin(mongooseAutoInc.plugin, 'quiz');
 questionSchema.plugin(mongooseAutoInc.plugin, 'question');
 // chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
-understandingSchema.plugin(mongooseAutoInc.plugin, 'understanding');
+understandingProSchema.plugin(mongooseAutoInc.plugin, 'understandingPro');
+understandingStuSchema.plugin(mongooseAutoInc.plugin, 'understandingStu');
 subtitleSchema.plugin(mongooseAutoInc.plugin, 'subtitle');
 noticeSchema.plugin(mongooseAutoInc.plugin, 'notice');
 lectureNoteSchema.plugin(mongooseAutoInc.plugin, 'lectureNote');
@@ -148,7 +159,8 @@ recordSchema.plugin(mongooseAutoInc.plugin, 'record');
 const quizModel = model('quiz', quizSchema);
 const questionModel = model('question', questionSchema);
 // const chattingModel = model('chatting', chattingSchema);
-const understandingModel = model('understanding', understandingSchema);
+const understandingProModel = model('understandingPro', understandingProSchema);
+const understandingStuModel = model('understandingStu', understandingStuSchema);
 const subtitleModel = model('subtitle', subtitleSchema);
 const noticeModel = model('notice', noticeSchema);
 const lectureNoteModel = model('lectureNote', lectureNoteSchema);
@@ -160,7 +172,8 @@ module.exports = {
     Quiz : quizModel,
     Question : questionModel,
     // Chatting : chattingModel,
-    Understanding : understandingModel,
+    UnderstandingPro : understandingProModel,
+    UnderstandingStu : understandingStuModel,
     Subtitle : subtitleModel,
     Notice : noticeModel,
     LectureNote : lectureNoteModel,
