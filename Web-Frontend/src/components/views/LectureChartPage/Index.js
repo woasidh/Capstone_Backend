@@ -183,7 +183,6 @@ const legend = {
     },
   };
 
-
 function Index({match}){
 	const user = JSON.parse(window.sessionStorage.userInfo);
     const subjectID = match.params.subject;
@@ -195,7 +194,7 @@ function Index({match}){
 
 	const [dayList, setDayList] = useState([]);
 	const [studentList, setStudentList] = useState([]);
-	
+
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
 
