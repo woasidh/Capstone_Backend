@@ -29,9 +29,16 @@ var server = http.createServer(app);
  * Create Socket Communication
  */
 
-const io = require('socket.io')(server, {transports: ['websocket']});
+const socketOpt = {
+  cors: {
+    origin: '*'
+  }
+}
+
+const io = require('socket.io')(server, socketOpt);
 
 io.on('connection', (socket)=>{
+  console.log(socket.handshake);
   console.log('a user connected');
 
   // 수업 참가 시, 참가자 갱신

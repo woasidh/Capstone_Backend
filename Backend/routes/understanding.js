@@ -221,7 +221,7 @@ router.post('/send', auth, (req, res)=>{
     }
     
     const time = hours + ":" + minutes;
-
+    
     const understanding = new UnderstandingStu({
         student: req.session._id,
         lecture: req.body.lectureId,
