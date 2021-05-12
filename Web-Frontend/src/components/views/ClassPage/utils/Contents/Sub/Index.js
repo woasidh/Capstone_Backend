@@ -47,8 +47,8 @@ function Index() {
             console.log('error', event);
         };
         rec.onresult = event => {
-            const text = event.results[event.results.length-1][0].transcript;
-            console.log('transcript', text);
+            let text = event.results[event.results.length-1][0].transcript;
+            if(text.charAt(0)==' ') text = text.substring(1, text.length);
             addSub(text);
         };
     }, [])
@@ -76,6 +76,10 @@ function Index() {
     return (
         <SubContainer>
             <SubFlexBox ref = {flexRef}>
+                <div className = "subBox">
+                    <span>00:00</span>
+                    <span> 가나다</span>
+                </div>
             </SubFlexBox>
             <button style ={{width : '200px', height : '50px', backgroundClip : 'black'}} onClick = {startListen}></button>
         </SubContainer>
