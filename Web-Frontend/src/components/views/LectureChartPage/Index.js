@@ -182,6 +182,8 @@ const legend = {
       ],
     },
   };
+
+
 function Index(){
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
