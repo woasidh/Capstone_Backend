@@ -1,0 +1,23 @@
+#canvas0{
+    background-color : #222222;
+}
+
+#canvas1{
+    background-color : #222222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#canvas2{
+    background-color : #222222;
+}
+
+#canvas3{
+    display : none;
+}
+
+
+button{
+    display : block;
+}

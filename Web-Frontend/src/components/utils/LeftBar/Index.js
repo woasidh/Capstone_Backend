@@ -102,6 +102,7 @@ function Index() {
         }
         axios.get('/api/subject/get/mySubjects')
         .then((response)=>{
+            console.log(response.data);
             setSubjectList(response.data.subjects);
         })
         .catch((error)=>{
@@ -147,8 +148,8 @@ function Index() {
                     {subjectList.map((subject) => 
                     <SubMenu>{'>'}{subject.name}
                         <SubjectMenu>
-                            {isStudent && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/join`}>{'>'}실시간 강의 참여</SubjectMenuCom></li>}
-                            {isProfessor && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/open`}>{'>'}실시간 강의 시작</SubjectMenuCom></li>}
+                            {isStudent && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/class/st/${subject.code}`}>{'>'}실시간 강의 참여</SubjectMenuCom></li>}
+                            {isProfessor && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/class/pf/${subject.code}`}>{'>'}실시간 강의 시작</SubjectMenuCom></li>}
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/info`}>{'>'}강의 정보</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/notice`}>{'>'}공지 사항</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/note`}>{'>'}강의 노트</SubjectMenuCom></li>
