@@ -4,14 +4,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-} from "react-router-dom";
-import Login from './views/LoginPage/Login.js';
-import { ThemeProvider } from "styled-components";
+} from "react-router-dom"
+import Login from './views/LoginPage/Login.js'
+import { ThemeProvider } from "styled-components"
 import Theme from "../styles/Theme"
 import MainPage from './views/MainPage/Index.js'
 import Routes from '../Routes/Index'
-/* import TestPage from './views/TestPage/IndexT.tsx' */
-import SignUp from '../Routes/signup';
+import TestPage from './views/TestPage/Index'
+import SignUp from '../Routes/signup'
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/main" component={Routes} />
-          {/* <Route path="/test/:id" component={TestPage} /> */}
+          <Route path="/test/:id" component={TestPage} />
           <Route path="/signup" component={SignUp} />
           <Route path="/" component={Login} />
         </Switch>
