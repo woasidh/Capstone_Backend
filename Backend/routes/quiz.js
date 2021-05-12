@@ -20,9 +20,7 @@ router.post('/create', professorAuth, (req, res)=>{
                 quiz: {
                     _id: 0,
                     name: '중간점검 OX',
-                    subjectId: 0,
-                    date: '',
-                    deadLine: '',
+                    subject: 0,
                     $answerSheets: [{
                         $question: '배고파?',
                         $answer: 'O',
@@ -471,11 +469,11 @@ router.put('/submit', auth, (req, res)=>{
 
         quiz.answerSheets.forEach((answerSheet, index)=>{
             if (answerSheet.answer == response[index].answer) {
-                response[index].correct = true;
+                response[index].correctness = true;
                 score += answerSheet.points;
             }
             else {
-                response[index].correct = false;
+                response[index].correctness = false;
             }
         });
 

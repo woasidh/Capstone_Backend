@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon ./bin/www --exec babel-node",
     "start": "nodemon ./bin/www",
-    "swagger": "node ./config/swagger.js"
+    "swagger": "node ./config/swagger.js",
+    "test": "mocha"
   },
   "dependencies": {
     "@giorgosavgeris/passport-zoom-oauth2": "^1.1.0",
@@ -33,6 +34,7 @@
     "@babel/core": "^7.13.10",
     "@babel/node": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
+    "mocha": "^8.4.0",
     "swagger-jsdoc": "^6.0.0",
     "swagger-ui-express": "^4.1.6"
   }
