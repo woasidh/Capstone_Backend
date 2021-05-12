@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import styled, { css } from 'styled-components'
 import socketio from 'socket.io-client'
-import { RenderCanvas, ToggleCanvas, SetCanvasSize } from './utils/SetCanvas/Index'
-import MediaController from './utils/MediaController/Index'
-import Loading from './utils/Loading/Index'
-import { generateInstantToken } from './utils/Auth/Index'
+import { RenderCanvas, ToggleCanvas, SetCanvasSize } from '../utils/SetCanvas/Index'
+import MediaController from '../utils/MediaController/Index'
+import Loading from '../utils/Loading/Index'
+import { generateInstantToken } from '../utils/Auth/Index'
 import ZoomInstant from "@zoomus/instantsdk"
-import Chat from './utils/Contents/Chat/Index';
-import Participant from './utils/Contents/Participant/Index';
-import Question from './utils/Contents/Question/Index'
-import Etc from './utils/Contents/Etc/Index'
-import Comp from './utils/Contents/Comp/Index'
-import Sub from './utils/Contents/Sub/Index.js'
+import Chat from '../utils/Contents/Chat/Index';
+import Participant from '../utils/Contents/Participant/Index';
+import Question from '../utils/Contents/Question/Index'
+import Etc from '../utils/Contents/Etc/Index'
+import Comp from '../utils/Contents/Comp/Index'
+import Sub from '../utils/Contents/Sub/Index.js'
 import './Index.css'
 
 const MainCnt = styled.div`
@@ -198,7 +198,7 @@ visibility : hidden;
 interface TestProps {
   match: {
     params: {
-      id: number
+      class_code : string,
     }
   }
 }
@@ -386,7 +386,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     socket.emit('user', {
-      name: props.match.params.id.toString(),
+      name: props.match.params.class_code,
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
