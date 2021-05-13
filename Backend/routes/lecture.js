@@ -273,7 +273,13 @@ router.put('/join/:id', auth, (req, res)=>{
             }
         }
     */
-    Lecture.findOne({ _id: req.params.id }).populate('students').populate('questions').exec((err, lecture)=>{
+    Lecture.findOne({ _id: req.params.id }).populate({
+        path: 'subjects',
+        populate: {
+            path: 'professor',
+            model: 'user'
+        }
+    }).populate('students').populate('questions').exec((err, lecture)=>{
         if (err) return res.status(500).json(err);
         if (lecture === null) return res.status(404).json({
             success: false,
