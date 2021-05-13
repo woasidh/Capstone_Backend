@@ -44,7 +44,7 @@ services:
       container_name: jenkins
       user: root
       build:
-         context: ./jenkins
+         context: ./Jenkins
          dockerfile: Dockerfile
       ports:
          - '8080:8080'
