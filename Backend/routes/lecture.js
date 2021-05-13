@@ -274,7 +274,7 @@ router.put('/join/:id', auth, (req, res)=>{
         }
     */
     Lecture.findOne({ _id: req.params.id }).populate({
-        path: 'subjects',
+        path: 'subject',
         populate: {
             path: 'professor',
             model: 'user'
