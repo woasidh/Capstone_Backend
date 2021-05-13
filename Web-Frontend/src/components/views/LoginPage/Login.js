@@ -123,7 +123,7 @@ function Login() {
           <span class="label" />
           <div ref={googleLoginBtn} id="customBtn" className="customGPlusSignIn">
             <span className="icon"></span>
-            <span className="buttonText">SIGN IN WITH GOOGLE</span>
+            <span className="buttonText">SIGN INs WITH GOOGLE</span>
           </div>
         </GoogleBtn>
       </div>
