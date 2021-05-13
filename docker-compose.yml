@@ -44,7 +44,7 @@ services:
       container_name: jenkins
       user: root
       build:
-         content: ./jenkins
+         context: ./jenkins
          dockerfile: Dockerfile
       ports:
          - '8080:8080'
@@ -61,4 +61,3 @@ services:
 networks: 
   network:
     driver: bridge
-    
