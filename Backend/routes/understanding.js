@@ -261,7 +261,7 @@ router.post('/send', auth, (req, res)=>{
 
         const now = ud.minutes;
         let alarm = false;
-        let alarmType = 'None';
+        let alarmType = 'none';
         let studentArray = [new Set(), new Set()];
 
         const understandingForm = {
