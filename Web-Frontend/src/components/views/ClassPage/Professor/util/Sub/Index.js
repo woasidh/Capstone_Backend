@@ -33,9 +33,11 @@ line-height : 5vh;
 const StopBtn = styled.button`
 width : 30%;
 border : 1px solid black;
+line-height : 5vh;
 `
 
 const Listen = styled.div`
+text-align : center;
 width : 30%;
 border : 1px solid black;
 line-height : 5vh;
@@ -46,6 +48,7 @@ const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = new Recognition();
 function Index(props) {
     const socket = props.socket;
+    const type = props.type;
 
     const [flexRef, setflexRef] = useState(React.createRef());
     const [isListening, setisListening] = useState(false);
@@ -55,7 +58,7 @@ function Index(props) {
     }, [])
 
     useEffect(() => {
-        rec.lang = 'ko-KR';
+        rec.lang =  type==1 ? 'ko-KR' : 'en-US';
         rec.continuous = true;
         rec.interimResults = false;
         rec.maxAlternative = 1;
