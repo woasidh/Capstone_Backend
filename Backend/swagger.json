@@ -1135,6 +1135,91 @@
         }
       }
     },
+    "/lecture/question/create": {
+      "post": {
+        "tags": [
+          "Lecture"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "lectureId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "name": {
+                  "type": "string",
+                  "example": "김민건"
+                },
+                "questionContent": {
+                  "type": "string",
+                  "example": "ang?"
+                }
+              },
+              "required": [
+                "lectureId",
+                "name"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "성공적으로 질문을 등록한 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "question": {
+                  "type": "object",
+                  "properties": {
+                    "lecture": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "questioner": {
+                      "type": "string",
+                      "example": "김민건"
+                    },
+                    "questionContent": {
+                      "type": "string",
+                      "example": "ang?"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/quiz/create": {
       "post": {
         "tags": [
@@ -1212,17 +1297,9 @@
                       "type": "string",
                       "example": "중간점검 OX"
                     },
-                    "subjectId": {
+                    "subject": {
                       "type": "number",
                       "example": 0
-                    },
-                    "date": {
-                      "type": "string",
-                      "example": ""
-                    },
-                    "deadLine": {
-                      "type": "string",
-                      "example": ""
                     },
                     "answerSheets": {
                       "type": "array",
@@ -4217,7 +4294,7 @@
         ],
         "responses": {
           "200": {
-            "description": "이해도평가가 정상적으로 생성된 경우",
+            "description": "이해도평가가 정상적으로 종료되었을 경우",
             "schema": {
               "type": "object",
               "properties": {
@@ -4271,6 +4348,189 @@
                           }
                         }
                       }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/understanding/send": {
+      "post": {
+        "tags": [
+          "Understanding"
+        ],
+        "description": "학생이 주도적으로 교수님에게 \"이해 안됨\" 표시를 날릴 때 정보를 저장해주는 API",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isUnderstood": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "lectureId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "lectureStartTime": {
+                  "type": "string",
+                  "example": "12:00"
+                },
+                "limit": {
+                  "type": "number",
+                  "example": 5
+                }
+              },
+              "required": [
+                "isUnderstood",
+                "lectureId",
+                "lectureStartTime"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "학생의 이해 여부가 정상적으로 생성된 경우  \n알람을 보낼지 말지에 따라 케이스 분류",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "알람없음": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "understanding": {
+                      "type": "object",
+                      "properties": {
+                        "student": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "lecture": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "response": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "time": {
+                          "type": "string",
+                          "example": "0:23"
+                        }
+                      }
+                    },
+                    "alarm": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "alarmType": {
+                      "type": "string",
+                      "example": "none"
+                    }
+                  }
+                },
+                "긍정": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "understanding": {
+                      "type": "object",
+                      "properties": {
+                        "student": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "lecture": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "response": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "time": {
+                          "type": "string",
+                          "example": "0:23"
+                        }
+                      }
+                    },
+                    "alarm": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "alarmType": {
+                      "type": "string",
+                      "example": "positive"
+                    }
+                  }
+                },
+                "부정": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "understanding": {
+                      "type": "object",
+                      "properties": {
+                        "student": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "lecture": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "response": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "time": {
+                          "type": "string",
+                          "example": "0:23"
+                        }
+                      }
+                    },
+                    "alarm": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "alarmType": {
+                      "type": "string",
+                      "example": "negative"
                     }
                   }
                 }
@@ -4403,7 +4663,7 @@
     "closeLecture": {
       "type": "object",
       "properties": {
-        "chatting": {
+        "chattings": {
           "type": "array",
           "items": {
             "type": "object",
@@ -4419,42 +4679,6 @@
               "content": {
                 "type": "string",
                 "example": "혹시 제 말 안 들렸어요?"
-              }
-            }
-          }
-        },
-        "question": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "lecture": {
-                "type": "number",
-                "example": 0
-              },
-              "questioner": {
-                "type": "string",
-                "example": "김민건"
-              },
-              "questionContent": {
-                "type": "string",
-                "example": "아 몰랑 안해"
-              },
-              "answers": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "respondent": {
-                      "type": "string",
-                      "example": "김수민"
-                    },
-                    "content": {
-                      "type": "string",
-                      "example": "아니 그게 아니라니까?"
-                    }
-                  }
-                }
               }
             }
           }

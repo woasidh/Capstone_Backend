@@ -32,7 +32,7 @@ const lectureSchema = new Schema({
         },
         attendance: { type: Boolean }
     }],
-    chatting: [{
+    chattings: [{
         time: { type: String },
         name: { type: String },
         content: { type: String }

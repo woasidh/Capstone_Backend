@@ -40,7 +40,7 @@ const doc = {
             days: [1, 1, 1],
         },
         closeLecture: {
-            chatting: [{
+            chattings: [{
                 time: '09:00',
                 name: '노민도',
                 content: '담타 ㄱㄱ?'
@@ -49,19 +49,6 @@ const doc = {
                 time: '09:10',
                 name: '윤다연',
                 content: '혹시 제 말 안 들렸어요?'
-            }],
-            question: [{
-                lecture: 0,
-                questioner: '김민건',
-                questionContent: '아 몰랑 안해',
-                answers: [{
-                    respondent: '최민우',
-                    content: '아 나도 몰랑 안해'
-                },
-                {
-                    respondent: '김수민',
-                    content: '아니 그게 아니라니까?'
-                }]
             }],
             lectureId: 0
         },

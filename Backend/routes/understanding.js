@@ -169,10 +169,10 @@ router.post('/send', auth, (req, res)=>{
         #swagger.path = '/understanding/send' 
         #swagger.description = '학생이 주도적으로 교수님에게 "이해 안됨" 표시를 날릴 때 정보를 저장해주는 API'
         #swagger.responses[201] = {
-            description: '학생의 이해 여부가 정상적으로 생성된 경우\n
-                알람을 보낼지 말지에 따라 케이스 분류',
+            description: '학생의 이해 여부가 정상적으로 생성된 경우
+                \n알람을 보낼지 말지에 따라 케이스 분류',
             schema: {
-                알람 안 보냄: {
+                알람없음: {
                     success: true,
                     understanding: {
                         student: 0,
@@ -181,7 +181,7 @@ router.post('/send', auth, (req, res)=>{
                         time: '0:23'
                     },
                     alarm: false,
-                    alarmType: 'None'
+                    alarmType: 'none'
                 },
                 긍정: {
                     success: true,
@@ -205,7 +205,6 @@ router.post('/send', auth, (req, res)=>{
                     alarm: true,
                     alarmType: 'negative'
                 }
-                
             }
         }
         #swagger.responses[401] = {
