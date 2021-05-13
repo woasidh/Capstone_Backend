@@ -121,6 +121,25 @@ io.on('connection', (socket)=>{
     socket.broadcast.to(socket.code).emit('sendIsUnderstood', data);
   })
 
+  socket.on('subtitle', (data)=>{
+    const now = moment();
+    const currHour = now.hours();
+    const currMinute = now.minutes();
+
+    const startTime = data.time.split(":");
+    const startHour = startTime[0];
+    const startMinute = startTime[1];
+
+    const needBorrowing = currMinute-startMinute < 0 
+
+    const time = (needBorrowing) ? ((currHour-startHour-1) + ':' + (currMinute-startMinute+60)) : ((currHour-startHour) + ':' + (currMinute-startMinute));
+
+    data.time = time;
+    data.name = socket.name;
+
+    socket.broadcast.to(socket.code).emit('sendSubtitle', data);
+  })
+
   // 수업 퇴장 시, 참가자 갱신
   socket.on('disconnect', ()=>{
     console.log('user disconnected');

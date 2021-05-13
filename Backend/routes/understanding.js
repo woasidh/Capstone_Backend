@@ -169,15 +169,43 @@ router.post('/send', auth, (req, res)=>{
         #swagger.path = '/understanding/send' 
         #swagger.description = '학생이 주도적으로 교수님에게 "이해 안됨" 표시를 날릴 때 정보를 저장해주는 API'
         #swagger.responses[201] = {
-            description: '학생의 이해 여부가 정상적으로 생성된 경우',
+            description: '학생의 이해 여부가 정상적으로 생성된 경우\n
+                알람을 보낼지 말지에 따라 케이스 분류',
             schema: {
-                success: true,
-                understanding: {
-                    student: 0,
-                    lecture: 0,
-                    response: false,
-                    time: '0:23'
+                알람 안 보냄: {
+                    success: true,
+                    understanding: {
+                        student: 0,
+                        lecture: 0,
+                        response: false,
+                        time: '0:23'
+                    },
+                    alarm: false,
+                    alarmType: 'None'
+                },
+                긍정: {
+                    success: true,
+                    understanding: {
+                        student: 0,
+                        lecture: 0,
+                        response: true,
+                        time: '0:23'
+                    },
+                    alarm: true,
+                    alarmType: 'positive'
+                },
+                부정: {
+                    success: true,
+                    understanding: {
+                        student: 0,
+                        lecture: 0,
+                        response: false,
+                        time: '0:23'
+                    },
+                    alarm: true,
+                    alarmType: 'negative'
                 }
+                
             }
         }
         #swagger.responses[401] = {
@@ -195,6 +223,7 @@ router.post('/send', auth, (req, res)=>{
                 $isUnderstood: false,
                 $lectureId: 0,
                 $lectureStartTime: '12:00',
+                limit: 5
             }
         } */
     const now = moment();
@@ -207,7 +236,6 @@ router.post('/send', auth, (req, res)=>{
 
     let hours;
     let minutes;
-    let understandingForm = {};
 
     const needBorrowing = currMinute-startMinute < 0 
 
@@ -226,21 +254,56 @@ router.post('/send', auth, (req, res)=>{
         student: req.session._id,
         lecture: req.body.lectureId,
         response: req.body.isUnderstood,
-        hours: hours,
-        minutes: minutes
+        minutes: hours*60 + minutes,
+        isCounted: false
     });
     understanding.save((err, ud)=>{
         if (err) return res.status(500).json(err);
 
-        understandingForm = {
+        const now = ud.minutes;
+        let alarm = false;
+        let alarmType = 'None';
+        let studentArray = [new Set(), new Set()];
+
+        const understandingForm = {
             student: ud._id,
             lecture: ud.lecture,
             response: ud.response,
             time: time
         }
-    });
 
-    
+        UnderstandingStu.find({ lecture: req.body.lectureId }).sort({ minutes: -1 }).exec((err, docs)=>{
+            if (err) return res.status(500).json(err);
+
+            docs.some((doc)=>{
+                if (now - doc.minutes <= 5) {
+                    if (doc.response) studentArray[0].add(doc.student);
+                    else studentArray[1].add(doc.student);
+
+                    doc.isCounted = true;
+                }
+                else return true;
+            })
+
+            studentArray.forEach((set, idx)=>{
+                if (set.size === req.body.limit) {
+                    docs.save((err)=>{
+                        if (err) return res.status(500).json(err);
+
+                        alarm = true;
+                        alarmType = (idx) ? 'positive' : 'negative';
+                    })
+                }
+            })
+        })
+
+        res.status(201).json({
+            success: true,
+            understanding: understandingForm,
+            alarm: alarm,
+            alarmType = alarmType
+        })
+    });
 })
 
 module.exports = router;
