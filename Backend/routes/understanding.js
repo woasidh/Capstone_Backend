@@ -301,7 +301,7 @@ router.post('/send', auth, (req, res)=>{
             success: true,
             understanding: understandingForm,
             alarm: alarm,
-            alarmType = alarmType
+            alarmType: alarmType
         })
     });
 })
