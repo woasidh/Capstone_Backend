@@ -46,7 +46,7 @@ function Index() {
                             <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
                             <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
                             <Route path= {baseUrl+":subject/:name/lectureNote"} component={LectureNotePage}/>
-                            <Route path= {baseUrl+":subject/chart"} component={LectureChartPage} />
+                            <Route path= {baseUrl+":subject/:name/chart"} component={LectureChartPage} />
                         </Switch>
                     </Router>
                 }

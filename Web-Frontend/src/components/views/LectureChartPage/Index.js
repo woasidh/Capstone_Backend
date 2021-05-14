@@ -1,23 +1,24 @@
-import styled, { css } from 'styled-components'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import styled, {css} from 'styled-components';
+import moment from 'moment';
 import 'antd/dist/antd.css';
-import { Select } from 'antd';
-import { useState } from 'react';
-import { Line } from "react-chartjs-2";
+import { Select, Progress } from 'antd';
+import { Line, Bar } from "react-chartjs-2";
 
 const {Option} = Select;
 
 const Container = styled.div`
 width : 100%;
-height : 100%;
-display :flex;
+display :block;
 //align-items : center;
 justify-content : center;
 `
 const Title = styled.div`
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
+//height : 80px;
+line-height : 40px;
 font-style : italic;
 `
 const SubTitle = styled.div`
@@ -33,25 +34,22 @@ color : #757575;
 font-size : 30px;
 font-weight: bold;
 `
-const RateBoxRed = styled.div`
-width : 60px;
+
+const RateBox = css`
 text-align: center;
 border-radius:5px;
 padding : 5px;
 font-size : 12px;
 display : inline;
 bottom : 0px;
+`
+const RateBoxRed = styled.div`
+${RateBox}
 color : #f44a4b;
 background : #feeceb;
 `
 const RateBoxGreen = styled.div`
-width : 60px;
-text-align: center;
-border-radius:5px;
-padding : 5px;
-font-size : 12px;
-display : inline;
-bottom : 0px;
+${RateBox}
 color : #4caf54;
 background : #edf7ed;
 `
@@ -72,7 +70,6 @@ top: 0;
 `
 
 const Box = styled.td`
-//display: inline-block;
 background: white;
 border-radius: 5px;
 padding: 10px;
@@ -81,7 +78,7 @@ margin: 10px;
 `
 const SelectCust = styled.select`
 font-size: 16px;
-width: 100px; /* 원하는 너비설정 */
+width: 80px; /* 원하는 너비설정 */
 margin-right: 5px;
 padding: .3em .3em; /* 여백으로 높이 설정 */
 //font-family: inherit;  /* 폰트 상속 */
@@ -91,7 +88,7 @@ border-radius: 5px; /* iOS 둥근모서리 제거 */
 appearance: none;
 `
 
-const data = {
+const lineData = {
 	labels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
     datasets: [
 		//원소 1
@@ -117,7 +114,7 @@ const data = {
     ],
   };
 
-const legend = {
+const lineLegend = {
     display: true,
     labels: {
       fontColor: "black",
@@ -125,7 +122,7 @@ const legend = {
     position: "bottom", //label를 넣어주지 않으면 position이 먹히지 않음
   };
 
-  const options = {
+const lineOptions = {
     //responsive: true,
     //maintainAspectRatio: false,
 //tooltips 사용시
@@ -184,6 +181,27 @@ const legend = {
   };
 
 
+const barOptions = {
+    legend: {
+        display: false, // label 숨기기
+    },
+    scales: {
+        yAxes: [{
+            ticks: { 
+                min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
+                stepSize: 20, // 스케일에 대한 사용자 고정 정의 값
+            }
+        }]
+    },
+    //maintainAspectRatio: false // false로 설정 시 사용자 정의 크기에 따라 그래프 크기가 결정됨.
+}
+
+let rankColor = ["#1890ff"]
+
+function Understanding({}){
+
+}
+
 function Index({match}){
 	const user = JSON.parse(window.sessionStorage.userInfo);
     const subjectID = match.params.subject;
@@ -193,85 +211,121 @@ function Index({match}){
 	const [isLoading, setisLoading] = useState(false);
     const [isEmpty, setisEmpty] = useState(false);
 
-	const [dayList, setDayList] = useState([]);
-	const [studentList, setStudentList] = useState([]);
+	const [dayList, setDayList] = useState(["2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14"]);
+	const [studentList, setStudentList] = useState(["학생1", "학생2"]);
 	
+	const [day, setDay] = useState(dayList[0]);
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
 
+	const barData = {
+		labels: dayList.map((value) => moment(value).format('M월 DD일')),
+		datasets: 
+		[
+		  {
+			backgroundColor: rankColor,
+			borderColor: rankColor,
+			borderWidth: 1,
+			hoverBackgroundColor: rankColor,
+			hoverBorderColor: rankColor,
+			data: [10, 20, 30, 40],
+			label: "참여점수"
+		  }
+		]
+	  }; 
+	
+
+
+
 	return (
 		<Container>
-			<div style={{width: "95%", display: "block"}}>
 				<div style={{width: "100%"}}>
 					<Title>Lecture</Title>
-					<div style={{fontSize: "16px"}}>내강의/강의명/학습분석차트</div>
+					<div style={{float: 'left', marginRight: "20px", color: "#233044", fontSize: "16px", fontWeight: "700"}}>내강의/{subjectName}/학습분석차트</div>
 					<div style={{bottom: "0px", display: "flex", alignItems: "flex-end", justifyContent:"flex-end"}}>
 						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}}>
-							<option>전체</option>
-							<option>학생1</option>
+							{isProfessor ? <option>전체</option> : <option>{user.name}</option>}
+							{isProfessor && studentList.map((value) => <option>{value}</option>)}
 						</SelectCust>
-						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}}>
-							<option>3월 12일</option>
-							<option>3월 13일</option>
+						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}} onChange={(e) => setDay(e.target.value)}>
+							{dayList.map((value, Index) => <option value={value}>{moment(value).format('M월 DD일')}</option>)}
 						</SelectCust>
 					</div>
 				</div>
 				<hr style={{width: "100%", margin: "10px 0px"}}/>
-				<table style={{width: "100%", borderSpacing: "10px", borderCollapse: "separate"}}>
+				<table style={{width: "100%", borderSpacing: "10px", borderCollapse: "separate", margin: "20px auto"}}>
 				<tbody>
 				<tr>
 				<Box style={{}}>
 					<SubTitle>이해가 잘돼요</SubTitle>
-					<DayBox>3월 12일</DayBox>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate > 0 ? <RateBoxGreen>{rate}%</RateBoxGreen>:<RateBoxRed>{rate}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box style={{}}>
 					<SubTitle>이해가 안돼요</SubTitle>
-					<DayBox>3월 12일</DayBox>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
-				<Box rowSpan="2">
+				<Box rowSpan="2" colSpan="2">
 					<SubTitle>시간별 보기</SubTitle>
-					<DayBox>3월 12일</DayBox>
-					<Line data={data} legend={legend} options={options}/>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
+					<Line data={lineData} legend={lineLegend} width={200} height={80} options={lineOptions}/>
 				</Box>
 				</tr>
 				<tr>
 				<Box>
 					<SubTitle>참여 점수</SubTitle>
-					<DayBox>3월 12일</DayBox>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box>
 					<SubTitle>출석 비율</SubTitle>
-					<DayBox>3월 12일</DayBox>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				</tr>
 				<tr>
-				<Box colSpan="2">
-					<SubTitle>학생별 점수</SubTitle>
-					<DayBox>3월 12일</DayBox>
-					<table>
-						<tr><th>이름</th><th>점수</th><th>전날 대비</th><th>학생</th></tr>
+				<Box colSpan="2" >
+					<SubTitle style={{}}>학생별 점수</SubTitle>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
+					<table style={{width: "100%", margin: "10px auto", borderTop: "1px solid #D5D5D5"}}>
+						<thead style={{borderBottom: "1px solid #D5D5D5"}}><tr>
+							<th style={{padding: "10px 0", width: "15%"}}>이름</th>
+							<th style={{padding: "10px 0", width: "15%"}}>점수</th>
+							<th style={{padding: "10px 0", width: "20%"}}>전날 대비</th>
+							<th style={{padding: "10px 0", width: "50%"}}>%학생</th></tr></thead>
+						<tbody>
+							<tr>
+								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>이이름</td>
+								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>점수</td>
+								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}</td>
+								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}><Progress percent={50} status="active"/></td>
+							</tr>
+						</tbody>
 					</table>
 				</Box>
 				<Box colSpan="2">
 					<SubTitle>날짜별 보기</SubTitle>
-					<DayBox>3월 12일</DayBox>
+					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
+					<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0", float: "right", fontSize: "14px"}}>
+							<option>참여점수</option>
+							<option>몰입</option>
+							<option>이해가 됨</option>
+							<option>이해가 안됨</option>
+					</SelectCust>
+					<Bar data={barData} width={200} height={80} options={barOptions}/>
 				</Box>
 				</tr>
 				</tbody>
 				</table>
-			</div>			
 
 		</Container>
 	)

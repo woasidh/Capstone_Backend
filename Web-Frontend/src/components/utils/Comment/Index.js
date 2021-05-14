@@ -39,9 +39,69 @@ padding : 10px;
 resize: none;
 border : 1px solid ${props => props.theme.color.gray4};
 `
+function ShowComment ({value, index, postId, subjectId, subjectName, userId, type}){
+    const [isEditing, setisEditing] = useState(false);
+    const [comment, setComment] = useState('');
+
+    const editComment = (e, commenetId) => {
+        axios.put('/api/comment/edit', {
+            postType : type,
+            postId : postId,
+            commentIndex : commenetId,
+            content : comment
+        })
+        .then((response)=>{
+            const result = response.data;
+            console.log(result);
+            if(result.success){
+                setComment('');
+                alert("댓글 수정을 완료했습니다.");
+                return window.location.href = `/main/${subjectId}/${subjectName}/${type}`;                
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+
+    }
+
+    const deleteComment = (e, commenetId) => {
+        axios.put('/api/comment/delete', {
+            postType : type, 
+            postId : postId,
+            commentIndex : commenetId
+        })
+        .then((response)=>{
+            const result = response.data;
+            console.log(result);
+            if(result.success){
+                alert("댓글 삭제를 완료했습니다.");
+                return window.location.href = `/main/${subjectId}/${subjectName}/${type}`;                
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+    }
+
+    return(
+        <>
+        {isEditing ? 
+            <div style={{position: "relative"}}>
+                <CommentInputBox onChange={(e) => setComment(e.target.value)} style={{resize : "none"}} placeholder={value.content}/>
+                <CommentBtn onClick={(e) => editComment(e, index)}>수정</CommentBtn>
+            </div>:
+            <div>
+                <div style={{display: "inline-block"}}>{value.user.name} : {value.content}</div>
+                {value.user._id == userId && <div style={{float:"right"}}>
+                    <SmallBtn onClick={(e) => {setisEditing(!isEditing); setComment(value.content)}}>수정</SmallBtn>
+                    <SmallBtn onClick={(e) => deleteComment(e, index)}>삭제</SmallBtn></div>}                               
+            </div>}
+        </>
+    )
+}
 
 function Index({commentList, emotionList, postId, subjectId, subjectName, userId, type}){
-    const [isEditing, setisEditing] = useState(false);
     const [isShowing, setisShowing] = useState(false);
     const [comment, setComment] = useState('');
     const [isRed, setisRed] = useState(false);
@@ -118,69 +178,8 @@ function Index({commentList, emotionList, postId, subjectId, subjectName, userId
         });
     }
 
-    const editComment = (e, commenetId) => {
-            axios.put('/api/comment/edit', {
-                postType : type,
-                postId : postId,
-                commentIndex : commenetId,
-                content : comment
-            })
-            .then((response)=>{
-                const result = response.data;
-                console.log(result);
-                if(result.success){
-                    setisEditing(!isEditing);
-                    setComment('');
-                    alert("댓글 수정을 완료했습니다.");
-                    return window.location.href = `/main/${subjectId}/${subjectName}/${type}`;                
-                }
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
-
-    }
-
-    const deleteComment = (e, commenetId) => {
-        axios.put('/api/comment/delete', {
-            postType : type, 
-            postId : postId,
-            commentIndex : commenetId
-        })
-        .then((response)=>{
-            const result = response.data;
-            console.log(result);
-            if(result.success){
-                alert("댓글 삭제를 완료했습니다.");
-                return window.location.href = `/main/${subjectId}/${subjectName}/${type}`;                
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
-    }
-
-    const showCommentList = () => {
-        return(
-            commentList.map((value, index) => <div style={{display: "block", width: "100%", margin: "10px auto"}}>
-                {isEditing ? 
-                <div style={{position: "relative"}}>
-                    <CommentInputBox onChange={(e) => setComment(e.target.value)} style={{resize : "none"}} placeholder={value.content}/>
-                    <CommentBtn onClick={(e) => editComment(e, index)}>수정</CommentBtn>
-                </div>:
-                <div>
-                    <div style={{display: "inline-block"}}>{value.user.name} : {value.content}</div>
-                    {value.user._id == userId && <div style={{float:"right"}}>
-                        <SmallBtn onClick={(e) => {setisEditing(!isEditing); setComment(value.content)}}>수정</SmallBtn>
-                        <SmallBtn onClick={(e) => deleteComment(e, index)}>삭제</SmallBtn></div>}                               
-                </div>
-                }
-            </div>)
-        );
-    }
     useEffect(() => {
         checkEmotion();
-        console.log(type);
     },[])
 
     return(
@@ -189,7 +188,13 @@ function Index({commentList, emotionList, postId, subjectId, subjectName, userId
             <CommentImg width="15px" height="15px"/>댓글({commentList.length})</ReactBtn>
         <ReactBtn onClick={(e)=> (isRed ? deleteEmotion() : addEmotion())}>
             <LikeImg width="12px" height="12px" fill={isRed ? "red":"gray"}/> 좋아요({emotionsLength})</ReactBtn>
-        <div style={{width: "100%", marginBottom: "20px", display:"block"}}>{isShowing && showCommentList()}</div>
+        <div style={{width: "100%", marginBottom: "20px", display:"block"}}>
+            {isShowing && commentList.map((value, index) => 
+            <div style={{display: "block", width: "100%", margin: "10px auto"}}>
+                <ShowComment value={value} index ={index} postId={postId} subjectId={subjectId} subjectName={subjectName} userId={userId} type={type}/>
+            </div>)
+            }
+        </div>
         <div style={{width: "100%", display:"block", margin: "0 auto", position: "relative"}}>
             <CommentInputBox onChange={(e) => setComment(e.target.value)} rows={2} style={{resize : "none"}}/>
             <CommentBtn onClick={(e) => submitComment()}>등록</CommentBtn>

@@ -18,9 +18,8 @@ display : block;
 `
 const Title = styled.div`
 font-size : 30px;
-border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
+//border-bottom : 1px solid #F7F9FC;
+//line-height : 30px;
 font-style : italic;
 `
 
@@ -80,7 +79,7 @@ function Index({match}){
     const display = () => {
         return(
             <Container>
-            <Title>강의 정보</Title>
+            <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
                 <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subjectInfo.name} / 강의 정보</div>                
                 {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}

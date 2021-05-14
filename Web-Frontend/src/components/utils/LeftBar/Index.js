@@ -153,6 +153,7 @@ function Index() {
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/info`}>{'>'}강의 정보</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/notice`}>{'>'}공지 사항</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/lectureNote`}>{'>'}강의 노트</SubjectMenuCom></li>
+                            <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/assignment`}>{'>'}과제</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/chart`}>{'>'}학습 분석 차트</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/attendence`}>{'>'}출석</SubjectMenuCom></li>
                             <li><SubjectMenuCom href={`/main/${subject._id}/replay`}>{'>'}강의 다시 보기</SubjectMenuCom></li>

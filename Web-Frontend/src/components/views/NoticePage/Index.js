@@ -60,6 +60,8 @@ color: white;
 border-radius: 5px;
 `
 const NoticeBox = styled.div`
+//position: absolute;
+//margin-top: -50px;
 display: inline-block;
 padding: 5px;
 border-right: 1px solid black; 
@@ -79,6 +81,8 @@ display: block;
 font-size : 14px;
 `
 const NoticeMenuBox = styled.div`
+//position: absolute;
+//margin-right: 50px;
 display: inline-block;
 width : 20%;
 padding : 5px;
@@ -141,7 +145,7 @@ function Index({match}) {
             <div>
                 {isEmpty ? "등록된 공지 사항이 없습니다." : noticeList.map((value, index) =>
                     <Box>
-                        <div style={{display: "inline-block", width: "100%"}}>
+                        <div style={{display: "inline-block", width: "100%", position: "relative"}}>
                             <NoticeBox>
                                 <NoticeTitle>{value.title}</NoticeTitle>
                                 <NoticeContent>
