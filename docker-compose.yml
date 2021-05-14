@@ -4,7 +4,7 @@ services:
       container_name: react
       build:
          context: './Web-Frontend'
-         dockerfile: './Dockerfile.dev'
+         dockerfile: Dockerfile
       networks:
          - network
    backend:
@@ -12,7 +12,7 @@ services:
       restart: always
       build: 
          context: './Backend'
-         dockerfile: './Dockerfile.dev'
+         dockerfile: Dockerfile
       ports:
          - '3000:3000'
       depends_on:
@@ -26,13 +26,12 @@ services:
          - '27017:27017'
       networks:
          - network
-
    nginx:
       restart: always
       build:
-         dockerfile: Dockerfile.dev
+         dockerfile: Dockerfile
          context: ./Nginx
-      volumes:
+      # volumes:
       #    - ../volumes/certbot/conf:/etc/letsencrypt
       #    - ../volumes/certbot/www:/var/www/certbot
       ports:
@@ -41,6 +40,18 @@ services:
       networks:
          - network
       # command : "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+   jenkins:
+      container_name: jenkins
+      user: root
+      build:
+         context: ./Jenkins
+         dockerfile: Dockerfile
+      ports:
+         - '8080:8080'
+      volumes:
+         - /home/jenkins:/var/jenkins_home
+         - /var/run/docker.sock:/var/run/docker.sock
+         - /usr/bin/docker:/usr/bin/docker
    # certbot:
    #    image: certbot/certbot
    #    volumes:

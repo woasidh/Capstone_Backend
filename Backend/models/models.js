@@ -59,8 +59,8 @@ const understandingStuSchema = new Schema({
     student: { type: Number, ref: 'user' },
     lecture: { type: Number, ref: 'lecture' },
     response: { type: Boolean },
-    hours: { type: Number },
-    minutes: { type: Number }
+    minutes: { type: Number },
+    isCounted: { type: Number }
 })
 
 const subtitleSchema = new Schema({

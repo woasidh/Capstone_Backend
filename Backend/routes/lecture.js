@@ -94,8 +94,7 @@ router.put('/close', professorAuth, (req, res)=>{
                     students: [{
                         student: 0,
                         attendance: true
-                    }],
-                    chatting: []
+                    }]
                 }
             }
         }
@@ -112,23 +111,10 @@ router.put('/close', professorAuth, (req, res)=>{
             type: 'object',
             schema: { $ref: "#/definitions/closeLecture" }
         } */
-    let questionIdArr = [];
-    
-    req.body.question.forEach((q)=>{
-        const question = new Question(q);
-
-        question.save((err, doc)=>{
-            if (err) return res.status(500).json(err);
-
-            questionIdArr.push(doc._id);
-        });
-    });
-
     Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
         status: 'done',
         end_time: moment().format('HH:mm'),
-        chatting: req.body.chatting,
-        question: questionIdArr
+        chattings: req.body.chatting
     }, { new: true }, (err, lecture)=>{
         if (err) return res.status(500).json(err);
 
@@ -287,7 +273,13 @@ router.put('/join/:id', auth, (req, res)=>{
             }
         }
     */
-    Lecture.findOne({ _id: req.params.id }).populate('students').exec((err, lecture)=>{
+    Lecture.findOne({ _id: req.params.id }).populate({
+        path: 'subject',
+        populate: {
+            path: 'professor',
+            model: 'user'
+        }
+    }).populate('students').populate('questions').exec((err, lecture)=>{
         if (err) return res.status(500).json(err);
         if (lecture === null) return res.status(404).json({
             success: false,
@@ -310,6 +302,58 @@ router.put('/join/:id', auth, (req, res)=>{
                 lecture
             })
         })
+    })
+})
+
+router.post('/question/create', auth, (req, res)=>{
+    /*  #swagger.tags = ['Lecture']
+        #swagger.path = '/lecture/question/create' 
+        #swagger.responses[201] = {
+            description: '성공적으로 질문을 등록한 경우',
+            schema: {
+                success: true,
+                question: { 
+                    lecture: 0,
+                    questioner: '김민건',
+                    questionContent: 'ang?'
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        }
+        #swagger.responses[403] = {
+            description: 'type이 professor가 아닌 경우',
+            schema: { $ref: "#/definitions/proAuthFailed" }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $lectureId: 0,
+                $name: '김민건',
+                questionContent: 'ang?'
+            }
+        } */
+    const question = new Question({
+        lecture: req.body.lectureId,
+        questioner: req.body.name,
+        questionContent: req.body.questionContent
+    });
+    question.save((err, doc)=>{
+        if (err) return res.status(500).json(err);
+
+        Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
+            $push: { questions: doc._id }
+        }, { new: true }, (err)=>{
+            if (err) return res.status(500).json(err);
+
+            res.status(201).json({
+                success: true,
+                question: doc
+            })
+        });
     })
 })
 

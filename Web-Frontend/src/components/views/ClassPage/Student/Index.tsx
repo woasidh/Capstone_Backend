@@ -206,9 +206,10 @@ interface TestProps {
 const socket = socketio('http://13.125.234.161:3000', {
   transports : ['websocket']
 });
+const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -218,7 +219,7 @@ function Index(props: TestProps) {
   //------useeffect------
 
   //zoom init
-  /* useEffect(() => {
+  useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -227,8 +228,7 @@ function Index(props: TestProps) {
       "RgEUnU0BDoSEozxsw8ySNWs8C0WvTfpDsUxA",
       "harry"
     );
-    console.log(props.match.params.id);
-    client.join("harry", token, props.match.params.id.toString())
+    client.join("harry", token, user.email)
       .then(() => {
         console.log("Successfully joined a session.");
         setclient(client);
@@ -307,7 +307,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -399,11 +399,11 @@ function Index(props: TestProps) {
     <MainCnt>
       <LeftCnt>
         <ScreenMenuCnt>
-          {/* {RenderMenuBtns()} */}
+          {RenderMenuBtns()}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
           {RenderCanvas()}
-          {/* <MediaController client={client} /> */}
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -422,7 +422,7 @@ function Index(props: TestProps) {
         <Active2Cnt>
           <Active2ContentCnt>
             <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub socket = {socket}/></ContentWrapper>
             <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>

@@ -12,7 +12,8 @@ import Participant from '../utils/Contents/Participant/Index';
 import Question from '../utils/Contents/Question/Index'
 import Etc from '../utils/Contents/Etc/Index'
 import Comp from '../utils/Contents/Comp/Index'
-import Sub from '../utils/Contents/Sub/Index.js'
+import Sub from './util/Sub/Index'
+import Popup from './util/Popup/Index'
 import './Index.css'
 
 const MainCnt = styled.div`
@@ -198,14 +199,17 @@ visibility : hidden;
 interface TestProps {
   match: {
     params: {
-      class_code : string,
+      class_code: string,
+      id: string
     }
   }
 }
 
 const socket = socketio('http://13.125.234.161:3000', {
-  transports : ['websocket']
+  transports: ['websocket']
 });
+
+const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
   const [isLoading, setisLoading] = useState<boolean>(false);
@@ -214,6 +218,7 @@ function Index(props: TestProps) {
   const [Active1Num, setActive1Num] = useState<number>(1);
   const [Active2Num, setActive2Num] = useState<number>(1);
   const [ref, setref] = useState<any>(React.createRef());
+  const [subType, setsubType] = useState<number>(1);
 
   //------useeffect------
 
@@ -227,8 +232,7 @@ function Index(props: TestProps) {
       "RgEUnU0BDoSEozxsw8ySNWs8C0WvTfpDsUxA",
       "harry"
     );
-    console.log(props.match.params.id);
-    client.join("harry", token, props.match.params.id.toString())
+    client.join("harry", token, user.email)
       .then(() => {
         console.log("Successfully joined a session.");
         setclient(client);
@@ -395,6 +399,10 @@ function Index(props: TestProps) {
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
+  function setOption(num : number){
+    setsubType(num);
+  }
+
   return (
     <MainCnt>
       <LeftCnt>
@@ -422,7 +430,7 @@ function Index(props: TestProps) {
         <Active2Cnt>
           <Active2ContentCnt>
             <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub socket={socket} type = {subType} /></ContentWrapper>
             <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
@@ -432,6 +440,7 @@ function Index(props: TestProps) {
           </Active2Menu>
         </Active2Cnt>
       </RightCnt>
+      <Popup setOptions = {setOption} />
     </MainCnt>
   )
 }
