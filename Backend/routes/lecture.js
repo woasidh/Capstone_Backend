@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { Subject, Lecture } = require('../models/subjects');
+const { Chatting } = require('../models/models');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
@@ -124,26 +125,34 @@ router.put('/close', professorAuth, (req, res)=>{
             type: 'object',
             schema: { $ref: "#/definitions/closeLecture" }
         } */
-    Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
-        status: 'done',
-        end_time: moment().format('HH:mm'),
-        chattings: req.body.chatting
-    }, { new: true }, (err, lecture)=>{
+    const chatting = new Chatting({
+        lecture: req.body.lectureId,
+        chat: req.body.chatting
+    });
+    chatting.save((err, doc)=>{
         if (err) return res.status(500).json(err);
 
-        const lectureForm = {
-            date: lecture.date,
-            status: lecture.status,
-            start_time: lecture.start_time,
-            end_time: lecture.end_time,
-            subject: lecture.subject,
-            options: lecture.options,
-            students: lecture.students
-        }
-        res.status(200).json({
-            success: true,
-            lecture: lectureForm
-        });
+        Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
+            status: 'done',
+            end_time: moment().format('HH:mm'),
+            chatting: doc._id
+        }, { new: true }, (err, lecture)=>{
+            if (err) return res.status(500).json(err);
+    
+            const lectureForm = {
+                date: lecture.date,
+                status: lecture.status,
+                start_time: lecture.start_time,
+                end_time: lecture.end_time,
+                subject: lecture.subject,
+                options: lecture.options,
+                students: lecture.students
+            }
+            res.status(200).json({
+                success: true,
+                lecture: lectureForm
+            });
+        })
     })
 });
 
@@ -290,7 +299,7 @@ router.put('/join/:id', auth, (req, res)=>{
             path: 'professor',
             model: 'user'
         }
-    }).populate('students').populate('questions').exec((err, lecture)=>{
+    }).populate('students').populate('questions').populate('subtitle').exec((err, lecture)=>{
         if (err) return res.status(500).json(err);
         if (lecture === null) return res.status(404).json({
             success: false,
@@ -316,17 +325,21 @@ router.put('/join/:id', auth, (req, res)=>{
     })
 })
 
-router.post('/question/create', auth, (req, res)=>{
+router.get('/get/subject/:id', auth, (req, res)=>{
     /*  #swagger.tags = ['Lecture']
-        #swagger.path = '/lecture/question/create' 
-        #swagger.responses[201] = {
-            description: '성공적으로 질문을 등록한 경우',
+        #swagger.path = '/lecture/get/subject/{id}' 
+        #swagger.description = '해당 subject에 해당하는 모든 lecture 정보 받아오기',
+        #swagger.responses[200] = {
+            description: '정상적으로 lecture 정보 받아온 경우',
             schema: {
                 success: true,
-                question: { 
-                    lecture: 0,
-                    questioner: '김민건',
-                    questionContent: 'ang?'
+                lecture: {
+                    $ref: "#/definitions/lecture",
+                    student: [{
+                        student: 0,
+                        attendance: true
+                    }],
+                    chatting: []
                 }
             }
         }
@@ -334,38 +347,15 @@ router.post('/question/create', auth, (req, res)=>{
             description: 'user가 로그인이 되지 않은 경우',
             schema: { $ref: "#/definitions/authFailed" }
         }
-        #swagger.responses[403] = {
-            description: 'type이 professor가 아닌 경우',
-            schema: { $ref: "#/definitions/proAuthFailed" }
-        }
-        #swagger.parameters['obj'] = {
-            in: 'body',
-            type: 'object',
-            schema: {
-                $lectureId: 0,
-                $name: '김민건',
-                questionContent: 'ang?'
-            }
-        } */
-    const question = new Question({
-        lecture: req.body.lectureId,
-        questioner: req.body.name,
-        questionContent: req.body.questionContent
-    });
-    question.save((err, doc)=>{
+    */
+    Lecture.find({ subject: req.params.id }, (err, lectures)=>{
         if (err) return res.status(500).json(err);
 
-        Lecture.findOneAndUpdate({ _id: req.body.lectureId }, {
-            $push: { questions: doc._id }
-        }, { new: true }, (err)=>{
-            if (err) return res.status(500).json(err);
-
-            res.status(201).json({
-                success: true,
-                question: doc
-            })
-        });
+        res.status(200).json({
+            success: true,
+            lectures: lectures
+        })
     })
 })
 
-module.exports = router
+module.exports = router;

@@ -32,15 +32,14 @@ const lectureSchema = new Schema({
         },
         attendance: { type: Boolean }
     }],
-    subtitles: [{
-        content: { type: String },
-        time: { type: String }
-    }],
-    chattings: [{
-        time: { type: String },
-        name: { type: String },
-        content: { type: String }
-    }],
+    subtitle: {
+        type: Number,
+        ref: 'subtitle'
+    },
+    chatting: {
+        type: Number,
+        ref: 'chatting'
+    },
     questions: [{
         type: Number,
         ref: 'question'

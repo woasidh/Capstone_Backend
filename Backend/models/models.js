@@ -35,11 +35,14 @@ const questionSchema = new Schema({
     }]
 });
 
-// const chattingSchema = new Schema({
-//     lecture: { type: Number, ref: 'lecture' },
-//     user: { type: Number, ref: 'user' },
-//     content: { type: String, required: true }
-// });
+const chattingSchema = new Schema({
+    lecture: { type: Number, ref: 'lecture' },
+    chat: [{
+        name: { type: String },
+        content: { type: String },
+        time: { type: String }
+    }]
+});
 
 const understandingProSchema = new Schema({
     type: { type: String, required: true },
@@ -63,15 +66,14 @@ const understandingStuSchema = new Schema({
     isCounted: { type: Number }
 })
 
-// const subtitles = new Schema({
-//     lecture: { type: Number, ref: 'lecture' },
-//     contents: [{
-//         content: { type: String },
-//         time: { type: String }
-//     }]
-// })
+const subtitleSchema = new Schema({
+    lecture: { type: Number, ref: 'lecture' },
+    contents: [{
+        content: { type: String },
+        time: { type: String }
+    }]
+})
     
-
 const noticeSchema = new Schema({
     subject: { type: Number, ref: 'subject' },
     title: { type: String, required: true },
@@ -147,10 +149,10 @@ const recordSchema = new Schema({
 
 quizSchema.plugin(mongooseAutoInc.plugin, 'quiz');
 questionSchema.plugin(mongooseAutoInc.plugin, 'question');
-// chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
+chattingSchema.plugin(mongooseAutoInc.plugin, 'chatting');
 understandingProSchema.plugin(mongooseAutoInc.plugin, 'understandingPro');
 understandingStuSchema.plugin(mongooseAutoInc.plugin, 'understandingStu');
-// subtitleSchema.plugin(mongooseAutoInc.plugin, 'subtitle');
+subtitleSchema.plugin(mongooseAutoInc.plugin, 'subtitle');
 noticeSchema.plugin(mongooseAutoInc.plugin, 'notice');
 lectureNoteSchema.plugin(mongooseAutoInc.plugin, 'lectureNote');
 assignmentSchema.plugin(mongooseAutoInc.plugin, 'assignment');
@@ -159,10 +161,10 @@ recordSchema.plugin(mongooseAutoInc.plugin, 'record');
 
 const quizModel = model('quiz', quizSchema);
 const questionModel = model('question', questionSchema);
-// const chattingModel = model('chatting', chattingSchema);
+const chattingModel = model('chatting', chattingSchema);
 const understandingProModel = model('understandingPro', understandingProSchema);
 const understandingStuModel = model('understandingStu', understandingStuSchema);
-// const subtitleModel = model('subtitle', subtitleSchema);
+const subtitleModel = model('subtitle', subtitleSchema);
 const noticeModel = model('notice', noticeSchema);
 const lectureNoteModel = model('lectureNote', lectureNoteSchema);
 const assignmentModel = model('assignment', assignmentSchema);
@@ -172,10 +174,10 @@ const recordModel = model('record', recordSchema);
 module.exports = {
     Quiz : quizModel,
     Question : questionModel,
-    // Chatting : chattingModel,
+    Chatting : chattingModel,
     UnderstandingPro : understandingProModel,
     UnderstandingStu : understandingStuModel,
-    // Subtitle : subtitleModel,
+    Subtitle : subtitleModel,
     Notice : noticeModel,
     LectureNote : lectureNoteModel,
     Assignment : assignmentModel,

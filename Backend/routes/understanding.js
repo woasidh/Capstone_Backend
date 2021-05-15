@@ -305,4 +305,75 @@ router.post('/send', auth, (req, res)=>{
     });
 })
 
+function count(docs) {
+    return docs.reduce((acc, doc)=>{
+        acc[doc.response] = (acc[doc.response]) ? acc[doc.response]++ : 1;
+
+        return acc;
+    }, {});
+}
+
+router.get('/get/lecture/:id', auth, (req, res)=>{
+    /*  #swagger.tags = ['Understanding']
+        #swagger.path = '/understanding/get/lecture/{id}' 
+        #swagger.description = '주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 반환'
+        #swagger.responses[200] = {
+            description: '정상적으로 학생 주관의 이해 평가 반환',
+            schema: {
+                success: true,
+                countResponse: {
+                    O: 50,
+                    X: 30
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        } */
+    UnderstandingStu.find({ lecture: req.params.id }, (err, docs)=>{
+        if (err) return res.status(500).json(err);
+        
+        const countObj = count(docs);
+
+        res.status(200).json({
+            success: true,
+            countResponse: countObj
+        });
+    })
+})
+
+router.get('/get/lecture/:lectureId/student/:studentId', auth, (req, res)=>{
+    /*  #swagger.tags = ['Understanding']
+        #swagger.path = '/understanding/get/lecture/{lectureId}/student/{studentId}' 
+        #swagger.description = '주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 반환'
+        #swagger.responses[200] = {
+            description: '정상적으로 학생 주관의 이해 평가 반환',
+            schema: {
+                success: true,
+                countResponse: {
+                    O: 2,
+                    X: 1
+                }
+            }
+        }
+        #swagger.responses[401] = {
+            description: 'user가 로그인이 되지 않은 경우',
+            schema: { $ref: "#/definitions/authFailed" }
+        } */
+    UnderstandingStu.find({
+        lecture: req.params.lectureId,
+        student: req.params.studentId
+    }, (err, docs)=>{
+        if (err) return res.status(500).json(err);
+
+        const countObj = count(docs);
+
+        res.status(200).json({
+            success: true,
+            countResponse: countObj
+        });
+    })
+})
+
 module.exports = router;
