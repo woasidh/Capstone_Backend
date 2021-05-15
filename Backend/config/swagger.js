@@ -18,7 +18,8 @@ const doc = {
         { "name": "LectureNote" },
         { "name": "Comment" },
         { "name": "Emotion" },
-        { "name": "Understanding" }
+        { "name": "Understanding" },
+        { "name": "Subtitle" }
     ],
     definitions: {
         signUp: {
@@ -89,7 +90,6 @@ const doc = {
         lecture: {
             _id: 0,
             date: '2021-05-05T00:00:00:000Z',
-            status: 'inProgress',
             start_time: '11:00',
             subject: 0,
             options: {
@@ -124,7 +124,8 @@ const endpointsFiles = [
     './routes/notice.js',
     './routes/comment.js',
     './routes/emotion.js',
-    './routes/understanding.js'
+    './routes/understanding.js',
+    './routes/subtitle.js'
 ]
 
 swaggerAutogen(outputFile, endpointsFiles, doc).then(()=>{

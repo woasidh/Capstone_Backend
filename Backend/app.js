@@ -75,6 +75,7 @@ const quizRouter = require('./routes/quiz');
 const commentRouter = require('./routes/comment');
 const emotionRouter = require('./routes/emotion');
 const understandingRouter = require('./routes/understanding');
+const subtitleRouter = require('./routes/subtitle');
 
 // Passport for OAuth
 // app.use(passport.initialize());
@@ -97,6 +98,7 @@ app.use('/quiz', quizRouter);
 app.use('/comment', commentRouter);
 app.use('/emotion', emotionRouter);
 app.use('/understanding', understandingRouter);
+app.use('/subtitle', subtitleRouter);
 
 // Swagger Setting
 const swaggerUi = require('swagger-ui-express');

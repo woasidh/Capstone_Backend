@@ -36,6 +36,9 @@
     },
     {
       "name": "Understanding"
+    },
+    {
+      "name": "Subtitle"
     }
   ],
   "schemes": [
@@ -4557,6 +4560,93 @@
           }
         }
       }
+    },
+    "/subtitle/add": {
+      "put": {
+        "tags": [
+          "Subtitle"
+        ],
+        "description": "기존 수업 전체의 자막에 내용을 추가하는 API",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "type": "object",
+            "description": "socket으로 받아온 정보의 일부를 다시 보내주면 됨",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "lectureId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "content": {
+                  "type": "string",
+                  "example": "아잉"
+                },
+                "time": {
+                  "type": "string",
+                  "example": "18:00"
+                }
+              },
+              "required": [
+                "lectureId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공적으로 자막을 추가하였을 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "user가 로그인이 되지 않은 경우",
+            "schema": {
+              "$ref": "#/definitions/authFailed"
+            }
+          },
+          "403": {
+            "description": "type이 professor가 아닌 경우",
+            "schema": {
+              "$ref": "#/definitions/proAuthFailed"
+            }
+          },
+          "409": {
+            "description": "수업의 자막 설정이 false인 경우",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "subtitleOpt": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -4874,10 +4964,6 @@
         "date": {
           "type": "string",
           "example": "2021-05-05T00:00:00:000Z"
-        },
-        "status": {
-          "type": "string",
-          "example": "inProgress"
         },
         "start_time": {
           "type": "string",

@@ -5,6 +5,7 @@ const { Subject, Lecture } = require('../models/subjects');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
+const { User } = require('../models/users');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -19,6 +20,7 @@ router.post('/start', professorAuth, (req, res)=>{
                 success: true,
                 lecture: { 
                     $ref: "#/definitions/lecture",
+                    status: 'inProgress',
                     students: [],
                     chatting: []
                 }
@@ -51,31 +53,42 @@ router.post('/start', professorAuth, (req, res)=>{
 
         const today = moment();
 
-        const lecture = new Lecture({
+        const lectureForm = {
             date: today.format('YYYY-MM-DD'),
             status: 'inProgress',
             start_time: today.format('HH:mm'),
             subject: subject._id,
             options: {
-                subtitle: req.body.subtitle,
-                record: req.body.record,
-                attendance: req.body.attendance,
-                limit: req.body.limit
+                subtitle: req.body.options.subtitle,
+                record: req.body.options.record,
+                attendance: req.body.options.attendance,
+                limit: req.body.options.limit
             }
-        });
-        lecture.save((err, lecture)=>{
-            if (err) return res.status(500).json(err);
+        };
 
-            subject.lectures.push(lecture._id);
-            subject.save((err)=>{
-                if (err) return res.status(500).json(err);
+        const lecture = new Lecture(lectureForm);
 
+        const promise = ()=>{
+            return new Promise((resolve, reject)=>{
+                lecture.save((err, lecture)=>{
+                    if (err) reject(err);
+
+                    subject.lectures.push(lecture._id);
+                    resolve(lecture);
+                })
+            })
+        }
+        
+        promise().then((lecture)=>{
+            subject.save(()=>{
                 res.status(201).json({
                     success: true,
                     lecture: lecture
-                });
-            });
-        });
+                })
+            })
+        }).catch((err)=>{
+            res.status(500).json(err);
+        })
     })
 });
 
@@ -163,31 +176,29 @@ router.put('/get/inProgress', auth, (req, res)=>{
             schema: { $ref: "#/definitions/authFailed" }
         }
     */
-    Lecture.find({ status: 'inProgress' }).populate('subject').exec((err, lectures)=>{
-        if (err) return  res.status(500).json(err);
+    User.findOne({ _id: req.session._id }, (err, user)=>{
+        if (err) return res.status(500).json(err);
 
-        let targetLecture;
-
-        lectures.some((lec)=>{
-            if (lec.subject.students.includes(req.session._id)) {
-                targetLecture = lec;
-                return true;
+        Lecture.findOne({ 
+            status: 'inProgress',
+            subject: { $in: user.subjects }
+        }).populate('subject').exec((err, lecture)=>{
+            if (err) return  res.status(500).json(err);
+    
+            if (lecture === null) {
+                res.status(200).json({
+                    success: false,
+                    existInProgressLecture: false
+                });
             }
-        })
-
-        if (targetLecture === undefined) {
-            res.status(200).json({
-                success: false,
-                existInProgressLecture: false
-            });
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                lecture: targetLecture
-            });
-        }
-    });
+            else {
+                res.status(200).json({
+                    success: true,
+                    lecture: lectures[0]
+                });
+            }
+        });
+    })
 });
 
 // 해당 과목의 현재 진행중인 수업 받아오기
