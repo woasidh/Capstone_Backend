@@ -30,7 +30,8 @@ const lectureSchema = new Schema({
             type: Number,
             ref: 'user'
         },
-        attendance: { type: Boolean }
+        attendance: { type: String },
+        activeScore: { type: Number }
     }],
     subtitle: {
         type: Number,

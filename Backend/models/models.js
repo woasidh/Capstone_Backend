@@ -4,6 +4,7 @@ const mongooseAutoInc = require('mongoose-auto-increment');
 const quizSchema = new Schema({
     name: { type: String, required: true },
     subject: { type: Number, ref: 'subject' },
+    lecture: { type: Number, ref: 'lecture' },
     date: { type: Date },
     deadLine: { type: Date },
     answerSheets: [{

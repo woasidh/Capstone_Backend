@@ -5,6 +5,7 @@ const { Quiz } = require('../models/models');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
+const { Lecture } = require('../models/subjects');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
 
@@ -343,12 +344,14 @@ router.put('/open', professorAuth, (req, res)=>{
             in: 'body',
             type: 'object',
             schema: {
-                $id: 0,
+                $quizId: 0,
+                lectureId: 0,
                 deadLine: '2021-05-05T16:00:00.000Z'
             }
         } */
-    Quiz.findOneAndUpdate({ _id: req.body.id }, {
+    Quiz.findOneAndUpdate({ _id: req.body.quizId }, {
         status: 'open',
+        lecture: req.body.lectureId,
         date: moment(),
         deadLine: req.body.deadLine
     }, { new: true }, (err, quiz)=>{
@@ -373,7 +376,8 @@ router.put('/close', professorAuth, (req, res)=>{
                 quiz: {
                     _id: 0,
                     name: '중간점검 OX',
-                    subjectId: 0,
+                    subject: 0,
+                    lecture: 0,
                     date: '2021-05-05T15:38:19.424Z',
                     deadLine: '2021-05-05T16:01:38.237Z',
                     $answerSheets: [{
@@ -394,12 +398,36 @@ router.put('/close', professorAuth, (req, res)=>{
         #swagger.responses[403] = {
             description: 'type이 professor가 아닌 경우',
             schema: { $ref: "#/definitions/proAuthFailed" }
-        } */
-    Quiz.findOneAndUpdate({ _id: req.body.id }, {
+        } 
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            description: 'lecture에 정의된 attendance 옵션 값에 따라 퀴즈가 출석에 반영됨',
+            schema: {
+                $quizId: 0,
+                lectureId: 0,
+                attendanceOpt: false
+            }
+        }*/
+    Quiz.findOneAndUpdate({ _id: req.body.quizId }, {
         status: 'done',
         deadLine: moment()
     }, { new: true }).populate('user').exec((err, quiz)=>{
         if (err) return res.status(500).json(err);
+
+        if (req.body.attendanceOpt) {
+            Lecture.findOne({ _id: req.body.lectureId }, (err, lecture)=>{
+                if (err) return res.status(500).json(err);
+
+                lecture.students.forEach((student)=>{
+                    const targetStudent = quiz.responses.find((element)=>element.student === student.student);
+
+                    if (targetStudent === undefined) {
+                        student.attendance = 'XX'
+                    }
+                })
+            })
+        }
 
         res.status(200).json({
             success: true,
@@ -420,7 +448,7 @@ router.put('/submit', auth, (req, res)=>{
                 quiz: {
                     quizId: 0,
                     name: '중간점검 OX',
-                    subjectId: 0,
+                    subjectName: '캡스톤 디자인',
                     $questions: [{
                         $question: '배고파?',
                         $points: 5
@@ -429,7 +457,7 @@ router.put('/submit', auth, (req, res)=>{
                     deadLine: '2021-05-05T16:00:00.000Z',
                     $status: 'open',
                     $type: 'ox',
-                    responses: [{
+                    response: [{
                         date: '2021-05-05T15:59:19.424Z',
                         student: 0,
                         response: [{
@@ -450,6 +478,16 @@ router.put('/submit', auth, (req, res)=>{
             schema: {
                 success: true,
                 isOver: true
+            }
+        }
+        #swagger.parameters['obj'] = {
+            in: 'body',
+            type: 'object',
+            schema: {
+                $quizId: 0,
+                response: [{
+                    answer: 'O'
+                }]
             }
         } */
         

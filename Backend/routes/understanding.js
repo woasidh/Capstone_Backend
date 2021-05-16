@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { UnderstandingStu, UnderstandingPro } = require('../models/models');
+const { Lecture } = require('../models/subjects');
 const { auth, professorAuth } = require('../middleware/authentication');
 
 const moment = require('moment');
@@ -120,9 +121,9 @@ router.put('/submit', auth, (req, res)=>{
     })
 })
 
-router.put('/close/:id', professorAuth, (req, res)=>{
+router.put('/close', professorAuth, (req, res)=>{
     /*  #swagger.tags = ['Understanding']
-        #swagger.path = '/understanding/close/{id}' 
+        #swagger.path = '/understanding/close' 
         #swagger.description = 'status는 open/done으로 나뉨'
         #swagger.responses[200] = {
             description: '이해도평가가 정상적으로 종료되었을 경우',
@@ -151,11 +152,25 @@ router.put('/close/:id', professorAuth, (req, res)=>{
             description: 'type이 professor가 아닌 경우',
             schema: { $ref: "#/definitions/proAuthFailed" }
         } */
-    UnderstandingPro.findOneAndUpdate({ _id: req.params.udId }, {
+    UnderstandingPro.findOneAndUpdate({ _id: req.body.udId }, {
         status: 'done',
         deadLine: new moment()
     }, { new: true }, (err, ud)=>{
         if (err) return res.status(500).json(err);
+
+        if (req.body.attendanceOpt) {
+            Lecture.findOne({ _id: req.body.lectureId }, (err, lecture)=>{
+                if (err) return res.status(500).json(err);
+
+                lecture.students.forEach((student)=>{
+                    const targetStudent = ud.responses.find((element)=>element.student === student.student);
+
+                    if (targetStudent === undefined) {
+                        student.attendance = 'XX'
+                    }
+                })
+            })
+        }
 
         res.status(200).json({
             success: true,
@@ -313,12 +328,12 @@ function count(docs) {
     }, {});
 }
 
-router.get('/get/lecture/:id', auth, (req, res)=>{
+router.get('/count/get/lecture/:id', auth, (req, res)=>{
     /*  #swagger.tags = ['Understanding']
-        #swagger.path = '/understanding/get/lecture/{id}' 
-        #swagger.description = '주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 반환'
+        #swagger.path = '/understanding/count/get/lecture/{id}' 
+        #swagger.description = '주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 수 반환'
         #swagger.responses[200] = {
-            description: '정상적으로 학생 주관의 이해 평가 반환',
+            description: '정상적으로 학생 주관의 이해 평가 count 반환',
             schema: {
                 success: true,
                 countResponse: {
@@ -343,12 +358,12 @@ router.get('/get/lecture/:id', auth, (req, res)=>{
     })
 })
 
-router.get('/get/lecture/:lectureId/student/:studentId', auth, (req, res)=>{
+router.get('/count/get/lecture/:lectureId/student/:studentId', auth, (req, res)=>{
     /*  #swagger.tags = ['Understanding']
-        #swagger.path = '/understanding/get/lecture/{lectureId}/student/{studentId}' 
-        #swagger.description = '주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 반환'
+        #swagger.path = '/understanding/count/get/lecture/{lectureId}/student/{studentId}' 
+        #swagger.description = '주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 count 반환'
         #swagger.responses[200] = {
-            description: '정상적으로 학생 주관의 이해 평가 반환',
+            description: '정상적으로 해당 학생 주관의 이해 평가 count 반환',
             schema: {
                 success: true,
                 countResponse: {

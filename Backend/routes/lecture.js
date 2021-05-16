@@ -54,6 +54,13 @@ router.post('/start', professorAuth, (req, res)=>{
 
         const today = moment();
 
+        const studentsForm = subject.students.map((element)=>{
+            return {
+                student: element,
+                attendance: 'X'
+            }
+        });
+
         const lectureForm = {
             date: today.format('YYYY-MM-DD'),
             status: 'inProgress',
@@ -64,7 +71,8 @@ router.post('/start', professorAuth, (req, res)=>{
                 record: req.body.options.record,
                 attendance: req.body.options.attendance,
                 limit: req.body.options.limit
-            }
+            },
+            students: studentsForm
         };
 
         const lecture = new Lecture(lectureForm);
@@ -268,7 +276,8 @@ router.put('/join/:id', auth, (req, res)=>{
                     $ref: "#/definitions/lecture",
                     student: [{
                         student: 0,
-                        attendance: true
+                        attendance: 'O',
+                        activeScore: 0
                     }],
                     chatting: []
                 }
@@ -310,9 +319,14 @@ router.put('/join/:id', auth, (req, res)=>{
             isInProgress: false
         });
 
-        lecture.students.push({
-            student: req.session._id,
-            attendance: !lecture.options.attendance
+        lecture.students.some((student)=>{
+            if (student.student === req.session._id) {
+                student.activeScore = 0;
+                if (student.attendance === 'X')
+                    student.attendance = 'O';
+
+                return true;
+            }
         });
         lecture.save((err)=>{
             if (err) return res.status(500).json(err);

@@ -1827,7 +1827,11 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
+                "quizId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "lectureId": {
                   "type": "number",
                   "example": 0
                 },
@@ -1837,7 +1841,7 @@
                 }
               },
               "required": [
-                "id"
+                "quizId"
               ]
             }
           }
@@ -1954,14 +1958,27 @@
           {
             "name": "obj",
             "in": "body",
+            "type": "object",
+            "description": "lecture에 정의된 attendance 옵션 값에 따라 퀴즈가 출석에 반영됨",
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "any"
+                "quizId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "lectureId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "attendanceOpt": {
+                  "type": "boolean",
+                  "example": false
                 }
-              }
+              },
+              "required": [
+                "quizId"
+              ]
             }
           }
         ],
@@ -1986,7 +2003,11 @@
                       "type": "string",
                       "example": "중간점검 OX"
                     },
-                    "subjectId": {
+                    "subject": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "lecture": {
                       "type": "number",
                       "example": 0
                     },
@@ -2077,18 +2098,30 @@
           {
             "name": "obj",
             "in": "body",
+            "type": "object",
             "schema": {
               "type": "object",
               "properties": {
                 "quizId": {
-                  "type": "string",
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 },
                 "response": {
-                  "type": "string",
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "answer": {
+                        "type": "string",
+                        "example": "O"
+                      }
+                    }
+                  }
                 }
-              }
+              },
+              "required": [
+                "quizId"
+              ]
             }
           }
         ],
@@ -2113,9 +2146,9 @@
                       "type": "string",
                       "example": "중간점검 OX"
                     },
-                    "subjectId": {
-                      "type": "number",
-                      "example": 0
+                    "subjectName": {
+                      "type": "string",
+                      "example": "캡스톤 디자인"
                     },
                     "questions": {
                       "type": "array",
@@ -2153,7 +2186,7 @@
                       "type": "string",
                       "example": "ox"
                     },
-                    "responses": {
+                    "response": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -4244,7 +4277,7 @@
         }
       }
     },
-    "/understanding/close/{id}": {
+    "/understanding/close": {
       "put": {
         "tags": [
           "Understanding"
@@ -4252,10 +4285,25 @@
         "description": "status는 open/done으로 나뉨",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "udId": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "attendanceOpt": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "lectureId": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -4524,12 +4572,12 @@
         }
       }
     },
-    "/understanding/get/lecture/{id}": {
+    "/understanding/count/get/lecture/{id}": {
       "get": {
         "tags": [
           "Understanding"
         ],
-        "description": "주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 반환",
+        "description": "주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 수 반환",
         "parameters": [
           {
             "name": "id",
@@ -4540,7 +4588,7 @@
         ],
         "responses": {
           "200": {
-            "description": "정상적으로 학생 주관의 이해 평가 반환",
+            "description": "정상적으로 학생 주관의 이해 평가 count 반환",
             "schema": {
               "type": "object",
               "properties": {
@@ -4579,12 +4627,12 @@
         }
       }
     },
-    "/understanding/get/lecture/{lectureId}/student/{studentId}": {
+    "/understanding/count/get/lecture/{lectureId}/student/{studentId}": {
       "get": {
         "tags": [
           "Understanding"
         ],
-        "description": "주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 반환",
+        "description": "주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 count 반환",
         "parameters": [
           {
             "name": "lectureId",
@@ -4601,7 +4649,7 @@
         ],
         "responses": {
           "200": {
-            "description": "정상적으로 학생 주관의 이해 평가 반환",
+            "description": "정상적으로 해당 학생 주관의 이해 평가 count 반환",
             "schema": {
               "type": "object",
               "properties": {
