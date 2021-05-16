@@ -4572,12 +4572,12 @@
         }
       }
     },
-    "/understanding/count/get/lecture/{id}": {
+    "/understanding/get/lecture/{id}": {
       "get": {
         "tags": [
           "Understanding"
         ],
-        "description": "주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 수 반환",
+        "description": "주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 반환",
         "parameters": [
           {
             "name": "id",
@@ -4588,7 +4588,7 @@
         ],
         "responses": {
           "200": {
-            "description": "정상적으로 학생 주관의 이해 평가 count 반환",
+            "description": "정상적으로 학생 주관의 이해 평가 반환",
             "schema": {
               "type": "object",
               "properties": {
@@ -4600,73 +4600,78 @@
                   "type": "object",
                   "properties": {
                     "O": {
-                      "type": "number",
-                      "example": 50
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "student": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "김민건"
+                              }
+                            }
+                          },
+                          "lecture": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "response": {
+                            "type": "string",
+                            "example": "O"
+                          },
+                          "minutes": {
+                            "type": "string",
+                            "example": "10:03"
+                          },
+                          "isCounted": {
+                            "type": "boolean",
+                            "example": false
+                          }
+                        }
+                      }
                     },
                     "X": {
-                      "type": "number",
-                      "example": 30
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "401": {
-            "description": "user가 로그인이 되지 않은 경우",
-            "schema": {
-              "$ref": "#/definitions/authFailed"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/understanding/count/get/lecture/{lectureId}/student/{studentId}": {
-      "get": {
-        "tags": [
-          "Understanding"
-        ],
-        "description": "주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 count 반환",
-        "parameters": [
-          {
-            "name": "lectureId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "studentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "정상적으로 해당 학생 주관의 이해 평가 count 반환",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "countResponse": {
-                  "type": "object",
-                  "properties": {
-                    "O": {
-                      "type": "number",
-                      "example": 2
-                    },
-                    "X": {
-                      "type": "number",
-                      "example": 1
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "student": {
+                            "type": "object",
+                            "properties": {
+                              "_id": {
+                                "type": "number",
+                                "example": 1
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "윤다연"
+                              }
+                            }
+                          },
+                          "lecture": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "response": {
+                            "type": "string",
+                            "example": "X"
+                          },
+                          "minutes": {
+                            "type": "string",
+                            "example": "10:05"
+                          },
+                          "isCounted": {
+                            "type": "boolean",
+                            "example": false
+                          }
+                        }
+                      }
                     }
                   }
                 }

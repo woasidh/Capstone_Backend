@@ -322,23 +322,41 @@ router.post('/send', auth, (req, res)=>{
 
 function count(docs) {
     return docs.reduce((acc, doc)=>{
-        acc[doc.response] = (acc[doc.response]) ? acc[doc.response]++ : 1;
+        acc[doc.response] = (acc[doc.response]) ? acc[doc.response].push(doc) : [doc];
 
         return acc;
     }, {});
 }
 
-router.get('/count/get/lecture/:id', auth, (req, res)=>{
+router.get('/get/lecture/:id', auth, (req, res)=>{
     /*  #swagger.tags = ['Understanding']
-        #swagger.path = '/understanding/count/get/lecture/{id}' 
-        #swagger.description = '주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 수 반환'
+        #swagger.path = '/understanding/get/lecture/{id}' 
+        #swagger.description = '주어진 id의 lecture에 해당하는 학생 주관의 모든 이해 평가 반환'
         #swagger.responses[200] = {
-            description: '정상적으로 학생 주관의 이해 평가 count 반환',
+            description: '정상적으로 학생 주관의 이해 평가 반환',
             schema: {
                 success: true,
                 countResponse: {
-                    O: 50,
-                    X: 30
+                    O: [{
+                        student: {
+                            _id: 0,
+                            name: '김민건'
+                        },
+                        lecture: 0,
+                        response: 'O',
+                        minutes: '10:03',
+                        isCounted: false
+                    }],
+                    X: [{
+                        student: {
+                            _id: 1,
+                            name: '윤다연'
+                        },
+                        lecture: 0,
+                        response: 'X',
+                        minutes: '10:05',
+                        isCounted: false
+                    }]
                 }
             }
         }
@@ -346,42 +364,9 @@ router.get('/count/get/lecture/:id', auth, (req, res)=>{
             description: 'user가 로그인이 되지 않은 경우',
             schema: { $ref: "#/definitions/authFailed" }
         } */
-    UnderstandingStu.find({ lecture: req.params.id }, (err, docs)=>{
+    UnderstandingStu.find({ lecture: req.params.id }).populate('student', { _id: 1, name: 1 }).exec((err, docs)=>{
         if (err) return res.status(500).json(err);
         
-        const countObj = count(docs);
-
-        res.status(200).json({
-            success: true,
-            countResponse: countObj
-        });
-    })
-})
-
-router.get('/count/get/lecture/:lectureId/student/:studentId', auth, (req, res)=>{
-    /*  #swagger.tags = ['Understanding']
-        #swagger.path = '/understanding/count/get/lecture/{lectureId}/student/{studentId}' 
-        #swagger.description = '주어진 id의 lecture와 student에 해당하는 학생 주관의 이해 평가 count 반환'
-        #swagger.responses[200] = {
-            description: '정상적으로 해당 학생 주관의 이해 평가 count 반환',
-            schema: {
-                success: true,
-                countResponse: {
-                    O: 2,
-                    X: 1
-                }
-            }
-        }
-        #swagger.responses[401] = {
-            description: 'user가 로그인이 되지 않은 경우',
-            schema: { $ref: "#/definitions/authFailed" }
-        } */
-    UnderstandingStu.find({
-        lecture: req.params.lectureId,
-        student: req.params.studentId
-    }, (err, docs)=>{
-        if (err) return res.status(500).json(err);
-
         const countObj = count(docs);
 
         res.status(200).json({

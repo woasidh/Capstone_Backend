@@ -349,9 +349,12 @@ router.get('/get/subject/:id', auth, (req, res)=>{
                 success: true,
                 lecture: {
                     $ref: "#/definitions/lecture",
-                    student: [{
-                        student: 0,
-                        attendance: true
+                    students: [{
+                        student: {
+                            _id: 0,
+                            name: '김민건'
+                        },
+                        attendance: false
                     }],
                     chatting: []
                 }
@@ -362,7 +365,9 @@ router.get('/get/subject/:id', auth, (req, res)=>{
             schema: { $ref: "#/definitions/authFailed" }
         }
     */
-    Lecture.find({ subject: req.params.id }, (err, lectures)=>{
+    Lecture.find({ subject: req.params.id }).populate('student', {
+        name: 1, _id: 1
+    }).exec((err, lectures)=>{
         if (err) return res.status(500).json(err);
 
         res.status(200).json({
