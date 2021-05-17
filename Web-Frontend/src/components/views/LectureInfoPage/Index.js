@@ -10,39 +10,29 @@ import {
 import UpdatePage from './UpdateLectureInfo';
 
 const Container = styled.div`
-width : 100%;
-height : 100%;
-display : block;
-//align-items : center;
-//justify-content : center;
+width: 100%;
+display: block;
+justify-content: center;
+align-items: center;
 `
 const Title = styled.div`
-font-size : 30px;
-//border-bottom : 1px solid #F7F9FC;
-//line-height : 30px;
-font-style : italic;
+font-size: 30px;
+font-style: italic;
+text-alignment: left;
 `
-
+const SubTitle = styled.div`
+font-size: 16px;
+display: inline-block;
+color: ${props => props.theme.color.font_dark_gray};
+`
 const WriteBtn = styled.a`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
 color: white;
 border-radius: 5px;
-`
-const TopBox = styled.div`
-width: 100%;
-margin: 0 auto;
-height: 25px;
-border-radius: 5px 5px 0px 0px;
-background: ${props => props.theme.color.light_gray};
-`
-const BottomBox = styled.div`
-width: 100%;
-margin: 0 auto;
-height: 25px;
-border-radius: 0px 0px 5px 5px;
-background: ${props => props.theme.color.light_gray};
 `
 const GrayBox = styled.td`
 padding: 5px;
@@ -81,12 +71,12 @@ function Index({match}){
             <Container>
             <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
-                <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subjectInfo.name} / 강의 정보</div>                
-                {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
+                <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${subjectInfo.name}/home`}>{subjectInfo.name}</a> / 강의 정보</SubTitle>                
+                {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`}> 수정하기</WriteBtn>}
             </div>
-            <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
+            <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
             
-                <table style={{width: "100%", margin: "1px auto", borderSpacing: "1px", borderCollapse: "separate"}}>
+                <table style={{width: "100%", margin: "0 auto", borderSpacing: "1px", borderCollapse: "separate"}}>
                     <tbody>
                     <tr>
                         <GrayBox>강의명</GrayBox>

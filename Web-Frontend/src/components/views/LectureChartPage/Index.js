@@ -9,19 +9,23 @@ import { Line, Bar } from "react-chartjs-2";
 const {Option} = Select;
 
 const Container = styled.div`
-width : 100%;
-display :block;
-//align-items : center;
-justify-content : center;
+width: 100%;
+display: block;
+justify-content: center;
+align-items: center;
 `
 const Title = styled.div`
-font-size : 30px;
-border-bottom : 1px solid #F7F9FC;
-//height : 80px;
-line-height : 40px;
-font-style : italic;
+font-size: 30px;
+font-style: italic;
+text-alignment: left;
 `
 const SubTitle = styled.div`
+font-size: 16px;
+display: inline-block;
+color: ${props => props.theme.color.font_dark_gray};
+margin-top: 3px;
+`
+const BoxTitle = styled.div`
 display: inline-block;
 margin-right: 20px;
 color : #233044;
@@ -80,7 +84,7 @@ const SelectCust = styled.select`
 font-size: 16px;
 width: 80px; /* 원하는 너비설정 */
 margin-right: 5px;
-padding: .3em .3em; /* 여백으로 높이 설정 */
+padding: 3px; /* 여백으로 높이 설정 */
 //font-family: inherit;  /* 폰트 상속 */
 border-radius: 5px; /* iOS 둥근모서리 제거 */
 -webkit-appearance: none; /* 네이티브 외형 감추기 */
@@ -88,97 +92,102 @@ border-radius: 5px; /* iOS 둥근모서리 제거 */
 appearance: none;
 `
 
-const lineData = {
-	labels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-    datasets: [
-		//원소 1
-      {
-        label: "Student",
-        data: [10, 20, 20, 10, 30, 30, 50, 80, 50, 90],
-        lineTension: 0.5,
-        backgroundColor: "rgba(15, 107, 255, 0.1)",
-        borderWidth: 1,
-        borderColor: "#0f6bff",
-        fill: false,
-      },
-	 //원소2
-      {
-        label: "Average",
-        data: [10, 20, 20, 67, 43, 43, 57, 60, 59, 60],
-        lineTension: 0.5,
-        backgroundColor: "rgba(242, 184, 113, 0.1)",
-        borderWidth: 1,
-        borderColor: "#f2b471",
-        fill: false,
-      },
-    ],
-  };
+function LineChart ({studentData, averageData, studentName}){
+	const lineData = {
+		labels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+		datasets: [
+			//원소 1
+		  {
+			label: studentName,
+			data: studentData,
+			lineTension: 0.5,
+			backgroundColor: "rgba(15, 107, 255, 0.1)",
+			borderWidth: 1,
+			borderColor: "#0f6bff",
+			fill: false,
+		  },
+		 //원소2
+		  {
+			label: "Average",
+			data: averageData,
+			lineTension: 0.5,
+			backgroundColor: "rgba(242, 184, 113, 0.1)",
+			borderWidth: 1,
+			borderColor: "#f2b471",
+			fill: false,
+		  },
+		],
+	  }
+	  
+	
+	const lineLegend = {
+		display: true,
+		labels: {
+		  fontColor: "black",
+		},
+		position: "bottom", //label를 넣어주지 않으면 position이 먹히지 않음
+	  };
+	
+	const lineOptions = {
+		//responsive: true,
+		//maintainAspectRatio: false,
+	//tooltips 사용시
+		tooltips: {
+		  enabled: true,
+		  mode: "nearest",
+		  //position: "average",
+		  intersect: false,
+		},
+		scales: {
+		  xAxes: [
+			{
+			  //   position: "top", //default는 bottom
+			  display: true,
+			  scaleLabel: {
+				display: true,
+				labelString: "Time",
+				fontFamily: "Montserrat",
+				fontColor: "black",
+			  },
+			  ticks: {
+				beginAtZero: true,
+				stepSize: 10,
+				min: 0,
+				max:100,
+				//maxTicksLimit: 10 //x축에 표시할 최대 눈금 수
+				callback: function (value) {
+				  return value + "분";
+				}
+			  },
+			},
+		  ],
+		  yAxes: [
+			{
+			  display: true,
+			  //   padding: 10,
+			  scaleLabel: {
+				display: true,
+				labelString: "Attention",
+				fontFamily: "Montserrat",
+				fontColor: "black",
+			  },
+			  ticks: {
+				beginAtZero: true,
+				stepSize: 20,
+				min: 0,
+				max: 100,
+				//y축 scale 값에 % 붙이기 위해 사용
+				callback: function (value) {
+				  return value + "%";
+				},
+			  },
+			},
+		  ],
+		},
+	  };
+	return(<Line data={lineData(studentData, averageData)} legend={lineLegend} width={200} height={80} options={lineOptions}/>)
+}
 
-const lineLegend = {
-    display: true,
-    labels: {
-      fontColor: "black",
-    },
-    position: "bottom", //label를 넣어주지 않으면 position이 먹히지 않음
-  };
-
-const lineOptions = {
-    //responsive: true,
-    //maintainAspectRatio: false,
-//tooltips 사용시
-    tooltips: {
-      enabled: true,
-      mode: "nearest",
-      //position: "average",
-      intersect: false,
-    },
-    scales: {
-      xAxes: [
-        {
-          //   position: "top", //default는 bottom
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: "Time",
-            fontFamily: "Montserrat",
-            fontColor: "black",
-          },
-          ticks: {
-			beginAtZero: true,
-			stepSize: 10,
-			min: 0,
-			max:100,
-			//maxTicksLimit: 10 //x축에 표시할 최대 눈금 수
-			callback: function (value) {
-              return value + "분";
-            }
-          },
-        },
-      ],
-      yAxes: [
-        {
-          display: true,
-          //   padding: 10,
-          scaleLabel: {
-            display: true,
-            labelString: "Attention",
-            fontFamily: "Montserrat",
-            fontColor: "black",
-          },
-          ticks: {
-            beginAtZero: true,
-            stepSize: 20,
-            min: 0,
-            max: 100,
-			//y축 scale 값에 % 붙이기 위해 사용
-            callback: function (value) {
-              return value + "%";
-            },
-          },
-        },
-      ],
-    },
-  };
 
 
 const barOptions = {
@@ -198,25 +207,39 @@ const barOptions = {
 
 let rankColor = ["#1890ff"]
 
-function Understanding({}){
-
-}
 
 function Index({match}){
 	const user = JSON.parse(window.sessionStorage.userInfo);
-    const subjectID = match.params.subject;
+    const subjectId = match.params.subject;
     const subjectName = match.params.name;
     
     const isProfessor = user.type === "professor" ? true : false;
-	const [isLoading, setisLoading] = useState(false);
+	const [isLoading, setisLoading] = useState(true);
     const [isEmpty, setisEmpty] = useState(false);
 
 	const [dayList, setDayList] = useState(["2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14"]);
-	const [studentList, setStudentList] = useState(["학생1", "학생2"]);
+	const [studentNameList, setStudentNameList] = useState(["학생1", "학생2", "학생3", "학생4"]);
+	const [understandingGood, setUnderstandingGood] = useState(0);
+	const [understandingBad, setUnderstandingBad] = useState(0);
 	
 	const [day, setDay] = useState(dayList[0]);
+	const [dayIndex, setDayIndex] = useState(0);
+	const [studentName, setstudentName] = useState(studentNameList[0]);
+	const [studentIndex, setstudentIndex] = useState(0);
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
+	const [studentData, setStudentIndex] = useState(
+			[10, 20, 20, 67, 43, 43, 57, 40, 55, 60],
+			[10, 40, 30, 40, 43, 50, 57, 60, 23, 60], 
+			[10, 30, 20, 67, 20, 50, 57, 40, 59, 55], 
+			[10, 20, 20, 80, 60, 70, 30, 60, 59, 60]	
+	);
+	const [averageData, setAverageData] = useState(
+		[10, 20, 20, 67, 43, 43, 57, 60, 59, 60],
+		[10, 20, 30, 67, 43, 50, 57, 60, 23, 60], 
+		[10, 20, 20, 67, 43, 50, 57, 40, 59, 70], 
+		[10, 20, 20, 80, 60, 70, 57, 60, 59, 60]
+		);
 
 	const barData = {
 		labels: dayList.map((value) => moment(value).format('M월 DD일')),
@@ -233,59 +256,83 @@ function Index({match}){
 		  }
 		]
 	  }; 
-	
 
+	  const getData = () => {
+        axios.get('/api/understanding/get/lecture/' + String(subjectId))
+        .then((response)=>{
+            const result = response.data;
+            console.log(result);
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
 
+		axios.get('/api/subject/info/'+ String(subjectId))
+        .then((response)=>{
+            const result = response.data.subject;
+			console.log(result);
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
 
-	return (
-		<Container>
-				<div style={{width: "100%"}}>
-					<Title>Lecture</Title>
-					<div style={{float: 'left', marginRight: "20px", color: "#233044", fontSize: "16px", fontWeight: "700"}}>내강의/{subjectName}/학습분석차트</div>
-					<div style={{bottom: "0px", display: "flex", alignItems: "flex-end", justifyContent:"flex-end"}}>
-						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}}>
+		axios.get('/api/lecture/get/subject/'+ String(subjectId))
+        .then((response)=>{
+            const result = response.data;
+			console.log(result);
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+	  }
+
+	  const display = () => {
+		  return(<>
+		  <Title>Lecture Chart</Title>
+				<SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 학습 분석 차트</SubTitle>
+					<div style={{display: "inline-block", float:"right"}}>
+						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}} onChange={(e) => setstudentName(e.target.value)}>
 							{isProfessor ? <option>전체</option> : <option>{user.name}</option>}
-							{isProfessor && studentList.map((value) => <option>{value}</option>)}
+							{isProfessor && studentNameList.map((value, index) => <>{setStudentIndex(index)}<option>{value}</option> </>)}
 						</SelectCust>
 						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}} onChange={(e) => setDay(e.target.value)}>
-							{dayList.map((value, Index) => <option value={value}>{moment(value).format('M월 DD일')}</option>)}
+							{dayList.map((value, Index) => <>{setDayIndex(Index)}<option value={value}>{moment(value).format('M월 DD일')}</option></>)}
 						</SelectCust>
 					</div>
-				</div>
 				<hr style={{width: "100%", margin: "10px 0px"}}/>
 				<table style={{width: "100%", borderSpacing: "10px", borderCollapse: "separate", margin: "20px auto"}}>
 				<tbody>
 				<tr>
 				<Box style={{}}>
-					<SubTitle>이해가 잘돼요</SubTitle>
+					<BoxTitle>이해가 잘돼요</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<NumTitle>100</NumTitle>
+					<NumTitle>{understandingGood}</NumTitle>
 					{rate > 0 ? <RateBoxGreen>{rate}%</RateBoxGreen>:<RateBoxRed>{rate}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box style={{}}>
-					<SubTitle>이해가 안돼요</SubTitle>
+					<BoxTitle>이해가 안돼요</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<NumTitle>100</NumTitle>
+					<NumTitle>{understandingBad}</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box rowSpan="2" colSpan="2">
-					<SubTitle>시간별 보기</SubTitle>
+					<BoxTitle>시간별 보기</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<Line data={lineData} legend={lineLegend} width={200} height={80} options={lineOptions}/>
+					<LineChart studentData={studentData[1]} averageData={averageData[0]} studentName={studentName}/>
 				</Box>
 				</tr>
 				<tr>
 				<Box>
-					<SubTitle>참여 점수</SubTitle>
+					<BoxTitle>참여 점수</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box>
-					<SubTitle>출석 비율</SubTitle>
+					<BoxTitle>출석 비율</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<NumTitle>100</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
@@ -293,8 +340,8 @@ function Index({match}){
 				</Box>
 				</tr>
 				<tr>
-				<Box colSpan="2" >
-					<SubTitle style={{}}>학생별 점수</SubTitle>
+				<Box colSpan="2" style={{display: "table-cell", verticalAlign: "top"}}>
+					<BoxTitle style={{}}>학생별 점수</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<table style={{width: "100%", margin: "10px auto", borderTop: "1px solid #D5D5D5"}}>
 						<thead style={{borderBottom: "1px solid #D5D5D5"}}><tr>
@@ -303,17 +350,19 @@ function Index({match}){
 							<th style={{padding: "10px 0", width: "20%"}}>전날 대비</th>
 							<th style={{padding: "10px 0", width: "50%"}}>%학생</th></tr></thead>
 						<tbody>
+							{studentNameList.map((value, Index) => 
 							<tr>
-								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>이이름</td>
+								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>{value}</td>
 								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>점수</td>
 								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}</td>
 								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}><Progress percent={50} status="active"/></td>
 							</tr>
+							)}
 						</tbody>
 					</table>
 				</Box>
 				<Box colSpan="2">
-					<SubTitle>날짜별 보기</SubTitle>
+					<BoxTitle>날짜별 보기</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
 					<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0", float: "right", fontSize: "14px"}}>
 							<option>참여점수</option>
@@ -327,6 +376,17 @@ function Index({match}){
 				</tbody>
 				</table>
 
+		  </>);
+	  }
+
+	  useEffect(() => {
+        getData();
+		console.log(studentData);
+    },[])
+
+	return (
+		<Container>
+			{isLoading && display()}
 		</Container>
 	)
 }

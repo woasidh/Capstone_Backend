@@ -16,6 +16,7 @@ import LectureInfoPage from '../components/views/LectureInfoPage/Index'
 import JoinLecturePage from '../components/views/JoinLecturePage/Index'
 import NoticePage from '../components/views/NoticePage/Index'
 import LectureNotePage from '../components/views/LectureNotePage/Index'
+import SubjectHomePage from '../components/views/LectureHomePage/Index'
 
 
 const baseUrl = "/main/";
@@ -42,6 +43,7 @@ function Index() {
                             <Route path= {baseUrl+"uploadLecture"} component={UploadLecturePage} />
                             <Route path= {baseUrl+"enterLecture"} component={enterLecturePage} />
                             <Route path= {baseUrl+"zoom"} component={ZoomTestPage} />
+                            <Route path= {baseUrl+":subject/:name/home"} component={SubjectHomePage}/>
                             <Route path= {baseUrl+":subject/join"} component={JoinLecturePage} />
                             <Route path= {baseUrl+":subject/info"} component={LectureInfoPage} />
                             <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>

@@ -12,23 +12,20 @@ import UpdatePage from './UpdateNotePage';
 import ShowResponse from "../../utils/Comment/Index"
 
 const Container = styled.div`
-width : 100%;
-height : 100%;
-display : inline-block;
+width: 100%;
+display: block;
+justify-content: center;
+align-items: center;
 `
 const Title = styled.div`
-font-size : 30px;
-border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
-font-style : italic;
+font-size: 30px;
+font-style: italic;
+text-alignment: left;
 `
 const SubTitle = styled.div`
-float: left;
-margin-right: 20px;
-color : #233044;
-font-size : 16px;
-font-weight: 700;
+font-size: 16px;
+display: inline-block;
+color: ${props => props.theme.color.font_dark_gray};
 `
 const Box = styled.div`
 display: block;
@@ -59,6 +56,8 @@ display: block;
 font-size : 14px;
 `
 const WriteBtn = styled.a`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
@@ -159,10 +158,10 @@ function Index({match}) {
                     <Container>
                     <Title>Lecture Note</Title>
                     <div style={{width: "100%", display: "block"}}>
-                        <SubTitle>내 강의 / {subjectName} / 강의 노트</SubTitle>
-                        {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`} style={{display: "inline-block", float:"right"}}>작성하기</WriteBtn>}
+                        <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 강의 노트</SubTitle>
+                        {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`}>작성하기</WriteBtn>}
                     </div>
-                    <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
+                    <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
                     <div>
                         {isLoading && display()}
                     </div>                    

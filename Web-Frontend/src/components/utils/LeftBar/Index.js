@@ -146,7 +146,7 @@ function Index() {
                 </Menu>
                 {ShowMenu2 && <div>
                     {subjectList.map((subject) => 
-                    <SubMenu>{'>'}{subject.name}
+                    <SubMenu href={`/main/${subject._id}/${subject.name}/home`}>{'>'}{subject.name}
                         <SubjectMenu>
                             {isStudent && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/class/st/${subject.code}`}>{'>'}실시간 강의 참여</SubjectMenuCom></li>}
                             {isProfessor && <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/class/pf/${subject.code}`}>{'>'}실시간 강의 시작</SubjectMenuCom></li>}
