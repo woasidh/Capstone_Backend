@@ -10,19 +10,28 @@ import {
 import UpdatePage from './UpdateLectureInfo';
 
 const Container = styled.div`
-width : 100%;
+width : 97%;
 height : 100%;
-display : block;
+display : inline-block;
+//overflow-y: auto;
 //align-items : center;
 //justify-content : center;
 `
 const Title = styled.div`
 font-size : 30px;
-//border-bottom : 1px solid #F7F9FC;
-//line-height : 30px;
+border-bottom : 1px solid #F7F9FC;
+height : 40px;
+line-height : 40px;
 font-style : italic;
 `
-
+const SubTitle = styled.div`
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
+`
 const WriteBtn = styled.a`
 font-size: 16px;
 padding: 5px;
@@ -78,10 +87,10 @@ function Index({match}){
 
     const display = () => {
         return(
-            <Container>
+            <Container  style={{marginLeft: "20px", marginTop: '10px'}}>
             <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
-                <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subjectInfo.name} / 강의 정보</div>                
+                <SubTitle>내 강의 / {subjectInfo.name} / 강의 정보</SubTitle>                
                 {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
             </div>
             <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>

@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "react-date-range": "1.1.3"
+  }
+}

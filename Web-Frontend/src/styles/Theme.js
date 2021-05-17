@@ -8,7 +8,7 @@ export default {
         gray4 : "#bdbdbd",
         gray5 : "#e0e0e0",
         gray6 : "#eeeeee",
-        gray7 : "#f5f5f5",
+        gray7 : "#f3f3f3",
         dark_gray : "#BFBFBF",
         light_gray : "#ECECEC",
         font_light_gray : "#949494",
@@ -20,7 +20,7 @@ export default {
 
     //margin
     margin : {
-        leftBar : "200px"
+        leftBar : "260px"
     }
 
     //boxStyle

@@ -12,23 +12,27 @@ import UpdatePage from './UpdateNotePage';
 import ShowResponse from "../../utils/Comment/Index"
 
 const Container = styled.div`
-width : 100%;
+width : 97%;
 height : 100%;
 display : inline-block;
+//overflow-y: auto;
+//align-items : center;
+//justify-content : center;
 `
 const Title = styled.div`
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
+height : 40px;
+line-height : 40px;
 font-style : italic;
 `
 const SubTitle = styled.div`
 float: left;
+margin-top: 3px;
 margin-right: 20px;
-color : #233044;
-font-size : 16px;
-font-weight: 700;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
 `
 const Box = styled.div`
 display: block;
@@ -156,7 +160,7 @@ function Index({match}) {
                 <Route path="/main/:subject/:name/lectureNote/write" component={WritePage}/>
                 <Route path="/main/:subject/:name/lectureNote/update/:id" component={UpdatePage}/>
                 <Route path="/">
-                    <Container>
+                    <Container style={{marginLeft: "20px", marginTop: '10px'}}>
                     <Title>Lecture Note</Title>
                     <div style={{width: "100%", display: "block"}}>
                         <SubTitle>내 강의 / {subjectName} / 강의 노트</SubTitle>

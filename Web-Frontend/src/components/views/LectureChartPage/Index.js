@@ -9,17 +9,27 @@ import { Line, Bar } from "react-chartjs-2";
 const {Option} = Select;
 
 const Container = styled.div`
-width : 100%;
-display :block;
+width : 97%;
+height : 100%;
+display : inline-block;
+//overflow-y: auto;
 //align-items : center;
-justify-content : center;
+//justify-content : center;
 `
 const Title = styled.div`
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-//height : 80px;
+height : 40px;
 line-height : 40px;
 font-style : italic;
+`
+const SubTitle2 = styled.div`
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
 `
 const SubTitle = styled.div`
 display: inline-block;
@@ -238,10 +248,10 @@ function Index({match}){
 
 
 	return (
-		<Container>
+		<Container style={{marginLeft: "20px", marginTop: '10px'}}>
 				<div style={{width: "100%"}}>
 					<Title>Lecture</Title>
-					<div style={{float: 'left', marginRight: "20px", color: "#233044", fontSize: "16px", fontWeight: "700"}}>내강의/{subjectName}/학습분석차트</div>
+					<SubTitle2>내강의 / {subjectName} / 학습분석차트</SubTitle2>
 					<div style={{bottom: "0px", display: "flex", alignItems: "flex-end", justifyContent:"flex-end"}}>
 						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}}>
 							{isProfessor ? <option>전체</option> : <option>{user.name}</option>}

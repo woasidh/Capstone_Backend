@@ -18,24 +18,43 @@ background-color : white;
 border-radius : 10px;
 border : 1px solid ${props => props.theme.color.gray7};
 box-shadow : 10px 5px 5px ${props => props.theme.color.gray7};
-padding : 1.5rem;
+padding : 1rem;
+padding-bottom : 30px;
 `
 const SubTitless = styled.div`
 color : ${props => props.theme.color.gray1};
 font-size : 16px;
 margin-bottom : 15px;
+font-weight: 1000;
 `
 
 const Title = styled.div`
 font-size : 30px;
 border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
-/* font-style : italic; */
+height : 40px;
+line-height : 40px;
+font-style : italic;
 `
+const SubTitle = styled.div`
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
+`
+const SubTitles = styled.div`
+margin-top: 3px;
+margin-left: 10px;
+margin-right: 20px;
+margin-bottom: 10px;
+color : #8b8b8b;
 
+font-size : 13px;
+font-weight: 400;
+`
 const NameBox = styled.div`
-width : 50%;
+width : 40%;
 ${boxStyle}
 margin-bottom : 25px;
 `
@@ -47,16 +66,17 @@ width : 300px;
 font-size : 20px;
 border-bottom : 1px solid ${props => props.theme.color.gray4};
 color : ${props => props.theme.color.blue};
+margin-left : 10px;
 `
 
 const PeriodBox = styled.div`
-width : 50%;
+width : 40%;
 ${boxStyle}
 margin-bottom : 25px;
 `
 
 const TimeBox = styled.div`
-width : 50%;
+width : 40%;
 ${boxStyle}
 margin-bottom : 25px;
 `
@@ -69,11 +89,12 @@ margin-bottom : 20px;
 `
 
 const Day = styled.div`
-width : 50px;
-height : 50px;
+width : 40px;
+height : 40px;
 border-radius : 10px;
 text-align : center;
-line-height : 50px;
+line-height : 40px;
+backgroud-color : #d5d5d5;
 border : 1px solid ${props => props.theme.color.gray1};
 margin : 0 5px;
 &.active{
@@ -84,7 +105,7 @@ margin : 0 5px;
 `
 
 const SubmitBtn = styled.button`
-width : 50%;
+width : 40%;
 height : 40px;
 border : none;
 background-color: #407AD6;
@@ -94,7 +115,14 @@ line-height : 40px;
 border-radius : 10px;
 `
 
-
+const Container = styled.div`
+width : 100%;
+height : 100%;
+display : inline-block;
+//overflow-y: auto;
+//align-items : center;
+//justify-content : center;
+`
 
 function Index() {
     const [name, setName] = useState('');
@@ -182,19 +210,28 @@ function Index() {
             <Switch>
                 <Route path="/main/uploadLecture/verify/:code" component={VerifyPage} />
                 <Route path="/">
-                    <div className = "sex">
-                        <Title>강의를 개설하세요!</Title>
+                    <div className = "sex" style={{marginLeft: "20px", marginTop: '10px'}}>
+                        
+                        <Container>
+                        <Title>Create Lecture</Title>
+                        <div style={{width: "100%", display: "block"}}>
+                            <SubTitle>강의 / 강의 개설</SubTitle>
+                        </div>
+                        <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
+                        </Container>
                         <NameBox>
                             <SubTitless>강의 이름</SubTitless>
                             <NameInput type="text" name="name" placeholder="강의 이름을 입력해주세요" onChange={onChangeName}/>
                         </NameBox>
                         <PeriodBox>
-                            <SubTitless>강의 범위</SubTitless>
-                            <RangePicker size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange}/>
+                            <SubTitless>강의 기간</SubTitless>
+                            <SubTitles>강의 진행 기간을 입력해주세요</SubTitles>
+                            <RangePicker style={{marginLeft:'10px'}} size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange}/>
                         </PeriodBox>
                         <TimeBox>
                             <SubTitless>강의 시간</SubTitless>
-                            <DayContainer>
+                            <SubTitles>강의 시간을 입력해주세요</SubTitles>
+                            <DayContainer style={{marginLeft:'10px'}}>
                                 <button onClick={(e) => selectDayHandler(e, 1)}><Day>월</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 2)}><Day>화</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 3)}><Day>수</Day></button>

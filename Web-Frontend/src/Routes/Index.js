@@ -34,7 +34,7 @@ function Index() {
         <>
             {isLogined && <LeftBar />}
             {isLogined && <TopBar mode={true}/>}
-            <div className = "maincontainer" style={{height : "100%", marginLeft: '200px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
+            <div className = "maincontainer" style={{height : "100%", marginLeft: '260px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
                 {isLogined &&
                     <Router>
                         <Switch>
