@@ -63,6 +63,8 @@ display: block;
 font-size : 14px;
 `
 const WriteBtn = styled.a`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
@@ -163,10 +165,10 @@ function Index({match}) {
                     <Container style={{marginLeft: "20px", marginTop: '10px'}}>
                     <Title>Lecture Note</Title>
                     <div style={{width: "100%", display: "block"}}>
-                        <SubTitle>내 강의 / {subjectName} / 강의 노트</SubTitle>
-                        {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`} style={{display: "inline-block", float:"right"}}>작성하기</WriteBtn>}
+                        <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 강의 노트</SubTitle>
+                        {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`}>작성하기</WriteBtn>}
                     </div>
-                    <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
+                    <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
                     <div>
                         {isLoading && display()}
                     </div>                    

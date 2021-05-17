@@ -6,20 +6,24 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const Container = styled.div`
-width : 100%;
-height : 100%;
-display : block;
-//align-items : center;
-//justify-content : center;
+width: 100%;
+display: block;
+justify-content: center;
+align-items: center;
 `
 const Title = styled.div`
-font-size : 30px;
-border-bottom : 1px solid #F7F9FC;
-height : 80px;
-line-height : 80px;
-font-style : italic;
+font-size: 30px;
+font-style: italic;
+text-alignment: left;
+`
+const SubTitle = styled.div`
+font-size: 16px;
+display: inline-block;
+color: ${props => props.theme.color.font_dark_gray};
 `
 const SubmitBtn = styled.button`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
@@ -73,11 +77,11 @@ function Index({match}){
             <Container>
                 <Title>Notice</Title>
                     <div style={{width: "100%", display: "block"}}>
-                        {isAll && <div style={{fontSize: "16px", float: "left"}}>종합공지사항</div>}
-                        {!isAll && <div style={{fontSize: "16px", float: "left"}}>내 강의 / {subject.name} / 공지 사항 작성</div>}                
-                        <SubmitBtn onClick={submitBtn} style={{display: "inline-block", float:"right"}}>저장하기</SubmitBtn>
+                        {isAll && <SubTitle>종합공지사항</SubTitle>}
+                        {!isAll && <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subject.id}/${subject.name}/home`}>{subject.name}</a> / 공지 사항 작성</SubTitle>}                
+                        <SubmitBtn onClick={submitBtn}>저장하기</SubmitBtn>
                     </div>
-                    <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
+                    <hr style={{width: "100%", margin: "15px auto", display: "block"}}/>
                     <TitleInput type="text" name="title" onChange={getTitle} placeholder="제목"/>
                     <CKEditor
                     editor={ ClassicEditor }

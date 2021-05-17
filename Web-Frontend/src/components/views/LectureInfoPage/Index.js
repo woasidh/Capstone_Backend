@@ -32,26 +32,15 @@ color : #8b8b8b;
 font-size : 13px;
 font-weight: 400;
 `
+
 const WriteBtn = styled.a`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
 color: white;
 border-radius: 5px;
-`
-const TopBox = styled.div`
-width: 100%;
-margin: 0 auto;
-height: 25px;
-border-radius: 5px 5px 0px 0px;
-background: ${props => props.theme.color.light_gray};
-`
-const BottomBox = styled.div`
-width: 100%;
-margin: 0 auto;
-height: 25px;
-border-radius: 0px 0px 5px 5px;
-background: ${props => props.theme.color.light_gray};
 `
 const GrayBox = styled.td`
 padding: 5px;
@@ -92,10 +81,11 @@ function Index({match}){
             <div style={{width: "100%", display: "block"}}>
                 <SubTitle>내 강의 / {subjectInfo.name} / 강의 정보</SubTitle>                
                 {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
+
             </div>
-            <hr style={{width: "100%", margin: "10px 0px", marginTop: "40px",display:"block"}}/>
+            <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
             
-                <table style={{width: "100%", margin: "1px auto", borderSpacing: "1px", borderCollapse: "separate"}}>
+                <table style={{width: "100%", margin: "0 auto", borderSpacing: "1px", borderCollapse: "separate"}}>
                     <tbody>
                     <tr>
                         <GrayBox>강의명</GrayBox>

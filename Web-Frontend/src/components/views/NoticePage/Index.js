@@ -38,13 +38,15 @@ font-weight: 400;
 const Box = styled.div`
 display: block;
 width: 100%;
-margin : 10px 5px;
+margin : 0px 5px 10px 0px;
 background : white;
 border-radius: 5px;
 padding: 10px;
 box-shadow: 5px 5px #e0e0e0;
 `
 const WriteBtn = styled.a`
+display: inline-block;
+float: right;
 font-size: 16px;
 padding: 5px;
 background-color: ${props => props.theme.color.blue};
@@ -188,6 +190,7 @@ function Index({match}) {
                         {isProfessor && !isAll && <WriteBtn href={`/main/${subjectId}/${subjectName}/notice/write`} style={{display: "inline-block", float:"right"}}>작성하기</WriteBtn>}
                     </div>
                     <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
+
                     <div>
                         {isLoading && <> {isAll ? displayAll(noticeList) : display(noticeList)}</>}
                     </div>                    

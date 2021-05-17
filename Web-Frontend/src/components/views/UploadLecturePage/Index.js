@@ -1,8 +1,8 @@
-import React, {useEffect, useState, component} from 'react'
+import {useState} from 'react'
 import styled, { css } from 'styled-components'
 import theme from '../../../styles/Theme'
 import { DatePicker, TimePicker } from 'antd';
-import 'antd/dist/antd.css';
+//import 'antd/dist/antd.css';
 import {
     BrowserRouter as Router,
     Switch,
@@ -14,6 +14,7 @@ import axios from 'axios';
 const { RangePicker } = DatePicker;
 
 const boxStyle = css`
+width: 475px;
 background-color : white;
 border-radius : 10px;
 border : 1px solid ${props => props.theme.color.gray7};
@@ -68,13 +69,11 @@ border-bottom : 1px solid ${props => props.theme.color.gray4};
 color : ${props => props.theme.color.blue};
 margin-left : 10px;
 `
-
 const PeriodBox = styled.div`
 width : 40%;
 ${boxStyle}
 margin-bottom : 25px;
 `
-
 const TimeBox = styled.div`
 width : 40%;
 ${boxStyle}
@@ -123,7 +122,6 @@ display : inline-block;
 //align-items : center;
 //justify-content : center;
 `
-
 function Index() {
     const [name, setName] = useState('');
     const [startPeriod, setStartPeriod] = useState('');
@@ -131,7 +129,7 @@ function Index() {
     const [startTime, setStartTime] = useState([]);
     const [endTime, setEndTime] = useState([]);
     const [dayList, setDayList] = useState([]);
-    const [week, setWeek] = useState(["월", "화", "수", "목", "금", "토", "일"]);
+    const week = ["월", "화", "수", "목", "금", "토", "일"];
     
     const header = new Headers();
     header.append('Access-Control-Allow-Origin', '*');
@@ -168,14 +166,8 @@ function Index() {
     }
 
     const onChangeTime = (i, dateString) => {
-        console.log(i);
-        console.log(dateString);
-
         startTime[i]=dateString[0];
         endTime[i]=dateString[1];
-        
-        console.log(startTime);
-        console.log(endTime);
     }
 
     const submitHandler = () => {
@@ -240,7 +232,7 @@ function Index() {
                                 <button onClick={(e) => selectDayHandler(e, 6)}><Day>토</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 7)}><Day>일</Day></button>
                             </DayContainer>
-                            {dayList.map((value, index) => <li>{week[value-1]}<TimePicker.RangePicker format="HH:mm"onChange={(value, dateString)=>onChangeTime(index, dateString)}/></li>)}
+                            {dayList.map((value, index) => <li>{week[value-1]} : <TimePicker.RangePicker format="HH:mm" onChange={(value, dateString) => onChangeTime(index, dateString)} /></li>)}
                         </TimeBox>
                         <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
                     </div>

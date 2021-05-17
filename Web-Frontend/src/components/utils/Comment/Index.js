@@ -24,7 +24,6 @@ display: inline-block;
 background-color: ${props => props.theme.color.blue};
 color: white;
 position: absolute;
-//margin-top: -50px;
 width: 10%;
 height: 66px;
 border: solid 1px #ababab;
