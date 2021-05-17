@@ -91,12 +91,10 @@ border-radius: 5px; /* iOS 둥근모서리 제거 */
 -moz-appearance: none;
 appearance: none;
 `
-
 function LineChart ({studentData, averageData, studentName}){
 	const lineData = {
 		labels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
 		datasets: [
-			//원소 1
 		  {
 			label: studentName,
 			data: studentData,
@@ -106,7 +104,6 @@ function LineChart ({studentData, averageData, studentName}){
 			borderColor: "#0f6bff",
 			fill: false,
 		  },
-		 //원소2
 		  {
 			label: "Average",
 			data: averageData,
@@ -117,9 +114,8 @@ function LineChart ({studentData, averageData, studentName}){
 			fill: false,
 		  },
 		],
-	  }
+	  };
 	  
-	
 	const lineLegend = {
 		display: true,
 		labels: {
@@ -130,8 +126,8 @@ function LineChart ({studentData, averageData, studentName}){
 	
 	const lineOptions = {
 		//responsive: true,
-		//maintainAspectRatio: false,
-	//tooltips 사용시
+		//maintainAspectRatio: false,	
+		//tooltips 사용시
 		tooltips: {
 		  enabled: true,
 		  mode: "nearest",
@@ -139,25 +135,25 @@ function LineChart ({studentData, averageData, studentName}){
 		  intersect: false,
 		},
 		scales: {
-		  xAxes: [
+			xAxes: [
 			{
-			  //   position: "top", //default는 bottom
-			  display: true,
-			  scaleLabel: {
+				//position: "top", //default는 bottom
 				display: true,
-				labelString: "Time",
-				fontFamily: "Montserrat",
-				fontColor: "black",
-			  },
-			  ticks: {
-				beginAtZero: true,
-				stepSize: 10,
-				min: 0,
-				max:100,
-				//maxTicksLimit: 10 //x축에 표시할 최대 눈금 수
-				callback: function (value) {
-				  return value + "분";
-				}
+				scaleLabel: {
+					display: true,
+					labelString: "Time",
+					fontFamily: "Montserrat",
+					fontColor: "black",
+				},
+				ticks: {
+					beginAtZero: true,
+					stepSize: 10,
+					min: 0,
+					max:100,
+					//maxTicksLimit: 10 //x축에 표시할 최대 눈금 수
+					callback: function (value) {
+						return value + "분";
+					}
 			  },
 			},
 		  ],
@@ -185,24 +181,44 @@ function LineChart ({studentData, averageData, studentName}){
 		  ],
 		},
 	  };
-	return(<Line data={lineData(studentData, averageData)} legend={lineLegend} width={200} height={80} options={lineOptions}/>)
+
+	return(<Line data={lineData} legend={lineLegend} width={200} height={80} options={lineOptions}/>);
 }
 
+function BarChart ({dayList}){
+	const barOptions = {
+		legend: {
+			display: false, // label 숨기기
+		},
+		scales: {
+			yAxes: [{
+				ticks: { 
+					min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
+					stepSize: 20, // 스케일에 대한 사용자 고정 정의 값
+				}
+			}]
+		},
+		//maintainAspectRatio: false // false로 설정 시 사용자 정의 크기에 따라 그래프 크기가 결정됨.
+	}
 
+	const barData = {
+		labels: dayList.map((value) => moment(value).format('M월 DD일')),
+		datasets: 
+		[
+		  {
+			backgroundColor: rankColor,
+			borderColor: rankColor,
+			borderWidth: 1,
+			hoverBackgroundColor: rankColor,
+			hoverBorderColor: rankColor,
+			data: [10, 20, 30, 40],
+			label: "참여점수"
+		  }
+		]
+	  }; 
+	
 
-const barOptions = {
-    legend: {
-        display: false, // label 숨기기
-    },
-    scales: {
-        yAxes: [{
-            ticks: { 
-                min: 0, // 스케일에 대한 최솟갓 설정, 0 부터 시작
-                stepSize: 20, // 스케일에 대한 사용자 고정 정의 값
-            }
-        }]
-    },
-    //maintainAspectRatio: false // false로 설정 시 사용자 정의 크기에 따라 그래프 크기가 결정됨.
+	return (<Bar data={barData} width={200} height={80} options={barOptions}/>);
 }
 
 let rankColor = ["#1890ff"]
@@ -224,38 +240,41 @@ function Index({match}){
 	
 	const [day, setDay] = useState(dayList[0]);
 	const [dayIndex, setDayIndex] = useState(0);
-	const [studentName, setstudentName] = useState(studentNameList[0]);
-	const [studentIndex, setstudentIndex] = useState(0);
+	const [studentName, setStudentName] = useState(studentNameList[0]);
+	const [studentIndex, setStudentIndex] = useState(0);
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
-	const [studentData, setStudentIndex] = useState(
+	const [studentData, setStudentData] = useState([
 			[10, 20, 20, 67, 43, 43, 57, 40, 55, 60],
-			[10, 40, 30, 40, 43, 50, 57, 60, 23, 60], 
+			[10, 40, 30, 40, 50, 50, 57, 30, 23, 60], 
 			[10, 30, 20, 67, 20, 50, 57, 40, 59, 55], 
-			[10, 20, 20, 80, 60, 70, 30, 60, 59, 60]	
+			[10, 20, 10, 80, 60, 70, 30, 60, 59, 60]
+		]
 	);
-	const [averageData, setAverageData] = useState(
+	const [averageData, setAverageData] = useState([
 		[10, 20, 20, 67, 43, 43, 57, 60, 59, 60],
 		[10, 20, 30, 67, 43, 50, 57, 60, 23, 60], 
 		[10, 20, 20, 67, 43, 50, 57, 40, 59, 70], 
 		[10, 20, 20, 80, 60, 70, 57, 60, 59, 60]
-		);
+		]);
 
-	const barData = {
-		labels: dayList.map((value) => moment(value).format('M월 DD일')),
-		datasets: 
-		[
-		  {
-			backgroundColor: rankColor,
-			borderColor: rankColor,
-			borderWidth: 1,
-			hoverBackgroundColor: rankColor,
-			hoverBorderColor: rankColor,
-			data: [10, 20, 30, 40],
-			label: "참여점수"
-		  }
-		]
-	  }; 
+		const onChangeDay = (e) => {
+			const change = e.target.value;
+			const i = dayList.indexOf(change);
+			setDay(change);
+			setDayIndex(i);
+		}
+
+		const onChangeStudent = (e) => {
+			const change = e.target.value;
+			const i = studentNameList.indexOf(change);
+
+			setStudentName(change);
+			setStudentIndex(i);
+		}
+	
+
+
 
 	  const getData = () => {
         axios.get('/api/understanding/get/lecture/' + String(subjectId))
@@ -291,12 +310,12 @@ function Index({match}){
 		  <Title>Lecture Chart</Title>
 				<SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 학습 분석 차트</SubTitle>
 					<div style={{display: "inline-block", float:"right"}}>
-						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}} onChange={(e) => setstudentName(e.target.value)}>
+						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}} onChange={onChangeStudent}>
 							{isProfessor ? <option>전체</option> : <option>{user.name}</option>}
-							{isProfessor && studentNameList.map((value, index) => <>{setStudentIndex(index)}<option>{value}</option> </>)}
+							{isProfessor && studentNameList.map((value, index) => <option>{value}</option> )}
 						</SelectCust>
-						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}} onChange={(e) => setDay(e.target.value)}>
-							{dayList.map((value, Index) => <>{setDayIndex(Index)}<option value={value}>{moment(value).format('M월 DD일')}</option></>)}
+						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}} onChange={onChangeDay}>
+							{dayList.map((value, Index) => <option value={value}>{moment(value).format('M월 DD일')}</option>)}
 						</SelectCust>
 					</div>
 				<hr style={{width: "100%", margin: "10px 0px"}}/>
@@ -320,7 +339,7 @@ function Index({match}){
 				<Box rowSpan="2" colSpan="2">
 					<BoxTitle>시간별 보기</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<LineChart studentData={studentData[1]} averageData={averageData[0]} studentName={studentName}/>
+					<LineChart studentData={studentData[studentIndex]} averageData={averageData[dayIndex]} studentName={studentName}/>
 				</Box>
 				</tr>
 				<tr>
@@ -350,7 +369,7 @@ function Index({match}){
 							<th style={{padding: "10px 0", width: "20%"}}>전날 대비</th>
 							<th style={{padding: "10px 0", width: "50%"}}>%학생</th></tr></thead>
 						<tbody>
-							{studentNameList.map((value, Index) => 
+							{studentNameList.map((value) => 
 							<tr>
 								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>{value}</td>
 								<td style={{padding: "5px 0", borderBottom: "1px solid #D5D5D5"}}>점수</td>
@@ -370,7 +389,7 @@ function Index({match}){
 							<option>이해가 됨</option>
 							<option>이해가 안됨</option>
 					</SelectCust>
-					<Bar data={barData} width={200} height={80} options={barOptions}/>
+					<BarChart dayList={dayList}/>
 				</Box>
 				</tr>
 				</tbody>
@@ -380,13 +399,13 @@ function Index({match}){
 	  }
 
 	  useEffect(() => {
-        getData();
-		console.log(studentData);
+        //getData();
+		console.log(studentData[0])
     },[])
 
 	return (
 		<Container>
-			{isLoading && display()}
+			{display()}
 		</Container>
 	)
 }
