@@ -138,7 +138,7 @@ function Index() {
                     {isStudent && <SubMenu href="/main/enterLecture">{'>'}강의 참여</SubMenu>}
                     <SubMenu href="/test/aaa">{'>'}zoom test</SubMenu>
                     <SubMenu href="/main/all/all/notice">{'>'}공지사항</SubMenu>
-                    <SubMenu href="/">{'>'}출결관리</SubMenu>
+                    <SubMenu href="/main/all/all/attendance">{'>'}출결관리</SubMenu>
                     <SubMenu href="/">{'>'}진도 관리</SubMenu>
                 </div>}
                 <Menu onClick={toggle2} style={{marginTop:"10px"}}>
@@ -155,7 +155,7 @@ function Index() {
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/lectureNote`}>{'>'}강의 노트</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/assignment`}>{'>'}과제</SubjectMenuCom></li>
                             <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/chart`}>{'>'}학습 분석 차트</SubjectMenuCom></li>
-                            <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/attendence`}>{'>'}출석</SubjectMenuCom></li>
+                            <li style={{marginBottom:"5px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/attendance`}>{'>'}출석</SubjectMenuCom></li>
                             <li><SubjectMenuCom href={`/main/${subject._id}/replay`}>{'>'}강의 다시 보기</SubjectMenuCom></li>
                         </SubjectMenu>
                     </SubMenu>)}

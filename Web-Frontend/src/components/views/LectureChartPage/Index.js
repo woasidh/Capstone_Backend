@@ -27,7 +27,7 @@ margin-top: 3px;
 `
 const BoxTitle = styled.div`
 display: inline-block;
-margin-right: 20px;
+margin-right: 10px;
 color : #233044;
 font-size : 16px;
 font-weight: 700;
@@ -66,7 +66,7 @@ display : inline;
 const DayBox = styled.div`
 background : #407AD6;
 color : white;
-display : inline-block;
+//display : inline-block;
 border-radius: 5px;
 padding: 5px;
 float: right;
@@ -186,6 +186,7 @@ function LineChart ({studentData, averageData, studentName}){
 }
 
 function BarChart ({dayList}){
+	let rankColor = ["#1890ff"];
 	const barOptions = {
 		legend: {
 			display: false, // label 숨기기
@@ -221,22 +222,36 @@ function BarChart ({dayList}){
 	return (<Bar data={barData} width={200} height={80} options={barOptions}/>);
 }
 
-let rankColor = ["#1890ff"]
-
-
 function Index({match}){
 	const user = JSON.parse(window.sessionStorage.userInfo);
     const subjectId = match.params.subject;
     const subjectName = match.params.name;
     
     const isProfessor = user.type === "professor" ? true : false;
-	const [isLoading, setisLoading] = useState(true);
+	const [isLoading, setisLoading] = useState(false);
+	const [isAll, setisAll] = useState(true);
     const [isEmpty, setisEmpty] = useState(false);
 
 	const [dayList, setDayList] = useState(["2021-03-11", "2021-03-12", "2021-03-13", "2021-03-14"]);
 	const [studentNameList, setStudentNameList] = useState(["학생1", "학생2", "학생3", "학생4"]);
-	const [understandingGood, setUnderstandingGood] = useState(0);
-	const [understandingBad, setUnderstandingBad] = useState(0);
+	const [studentUnderstandingGood, setStudentUnderstandingGood] = useState([[10, 20, 20, 67], [20, 20, 67, 43], [67, 43, 43, 57], [1, 2, 3, 4]]);
+	const [studentUnderstandingBad, setStudentUnderstandingBad] = useState([[10, 20, 20, 67], [20, 20, 67, 43], [67, 43, 43, 57], [1, 2, 3, 4]]);
+	const [understandingGood, setUnderstandingGood] = useState([]);
+	const [understandingBad, setUnderstandingBad] = useState([]);
+	const [studentData, setStudentData] = useState([
+		[10, 20, 20, 67, 43, 43, 57, 40, 55, 60],
+		[10, 40, 30, 40, 50, 50, 57, 30, 23, 60], 
+		[10, 30, 20, 67, 20, 50, 57, 40, 59, 55], 
+		[10, 20, 10, 80, 60, 70, 30, 60, 59, 60]
+	]);
+	const [averageData, setAverageData] = useState([
+		[10, 20, 20, 67, 43, 43, 57, 60, 59, 60],	
+		[10, 20, 30, 67, 43, 50, 57, 60, 23, 60], 	
+		[10, 20, 20, 67, 43, 50, 57, 40, 59, 70], 	
+		[10, 20, 20, 80, 60, 70, 57, 60, 59, 60]
+	]);
+	
+	
 	
 	const [day, setDay] = useState(dayList[0]);
 	const [dayIndex, setDayIndex] = useState(0);
@@ -244,38 +259,44 @@ function Index({match}){
 	const [studentIndex, setStudentIndex] = useState(0);
 	const [rate, setRate] = useState(50);
 	const [rate2, setRate2] = useState(-50);
-	const [studentData, setStudentData] = useState([
-			[10, 20, 20, 67, 43, 43, 57, 40, 55, 60],
-			[10, 40, 30, 40, 50, 50, 57, 30, 23, 60], 
-			[10, 30, 20, 67, 20, 50, 57, 40, 59, 55], 
-			[10, 20, 10, 80, 60, 70, 30, 60, 59, 60]
-		]
-	);
-	const [averageData, setAverageData] = useState([
-		[10, 20, 20, 67, 43, 43, 57, 60, 59, 60],
-		[10, 20, 30, 67, 43, 50, 57, 60, 23, 60], 
-		[10, 20, 20, 67, 43, 50, 57, 40, 59, 70], 
-		[10, 20, 20, 80, 60, 70, 57, 60, 59, 60]
-		]);
 
-		const onChangeDay = (e) => {
-			const change = e.target.value;
-			const i = dayList.indexOf(change);
-			setDay(change);
-			setDayIndex(i);
+	const onChangeDay = (e) => {
+		const change = e.target.value;
+		const i = dayList.indexOf(change);
+		setDay(change);
+		setDayIndex(i);
+	}
+
+	const onChangeStudent = (e) => {
+		const change = e.target.value;
+		change === "all" ? setisAll(true) : setisAll(false);
+		const i = studentNameList.indexOf(change);
+
+		setStudentName(change);
+		setStudentIndex(i);
+	}
+
+	const CalcTotalUnderstanding = () => {
+		for (let index = 0; index < studentUnderstandingBad.length; index++) {
+			let sum = 0;
+			studentUnderstandingGood.forEach(element => {
+				sum = element[index] + sum;
+			});
+			understandingGood[index] = sum;
 		}
-
-		const onChangeStudent = (e) => {
-			const change = e.target.value;
-			const i = studentNameList.indexOf(change);
-
-			setStudentName(change);
-			setStudentIndex(i);
+		
+		for (let index = 0; index < studentUnderstandingBad.length; index++) {
+			let sum = 0;
+			studentUnderstandingBad.forEach(element => {
+				sum = element[index] + sum;
+			});
+			understandingBad[index] = sum;
 		}
+		console.log(understandingGood);
+		console.log(understandingBad);
+		setisLoading(true);
+	}
 	
-
-
-
 	  const getData = () => {
         axios.get('/api/understanding/get/lecture/' + String(subjectId))
         .then((response)=>{
@@ -311,7 +332,7 @@ function Index({match}){
 				<SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 학습 분석 차트</SubTitle>
 					<div style={{display: "inline-block", float:"right"}}>
 						<SelectCust style={{border: "1px solid #e0e0e0", background: "#e0e0e0"}} onChange={onChangeStudent}>
-							{isProfessor ? <option>전체</option> : <option>{user.name}</option>}
+							{isProfessor ? <option value={"all"}>전체</option> : <option>{user.name}</option>}
 							{isProfessor && studentNameList.map((value, index) => <option>{value}</option> )}
 						</SelectCust>
 						<SelectCust style={{border: "1px solid #407AD6", background: "#407AD6", color: "white"}} onChange={onChangeDay}>
@@ -325,14 +346,14 @@ function Index({match}){
 				<Box style={{}}>
 					<BoxTitle>이해가 잘돼요</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<NumTitle>{understandingGood}</NumTitle>
+					<NumTitle>{isAll ? understandingGood[dayIndex] : studentUnderstandingGood[studentIndex][dayIndex]}</NumTitle>
 					{rate > 0 ? <RateBoxGreen>{rate}%</RateBoxGreen>:<RateBoxRed>{rate}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
 				<Box style={{}}>
 					<BoxTitle>이해가 안돼요</BoxTitle>
 					<DayBox>{moment(day).format('M월 DD일')}</DayBox>
-					<NumTitle>{understandingBad}</NumTitle>
+					<NumTitle>{isAll ? understandingBad[dayIndex] : studentUnderstandingBad[studentIndex][dayIndex]}</NumTitle>
 					{rate2 > 0 ? <RateBoxGreen>{rate2}%</RateBoxGreen>:<RateBoxRed>{rate2}%</RateBoxRed>}
 					<InfoBox>Since last class</InfoBox>
 				</Box>
@@ -399,13 +420,14 @@ function Index({match}){
 	  }
 
 	  useEffect(() => {
-        //getData();
-		console.log(studentData[0])
+		console.log("This is chart page");
+        getData();
+		CalcTotalUnderstanding();
     },[])
 
 	return (
 		<Container>
-			{display()}
+			{isLoading && display()}
 		</Container>
 	)
 }
