@@ -63,34 +63,82 @@ function Index(props) {
     const [inputRef, setinputRef] = useState(React.createRef());
     const [subContent, setsubContent] = useState("");
 
-    useEffect(() => {
-        inputRef.current.total = "";
-        socket.on('sendSubtitle', function (data) {
-            console.log(data);
-            addSub(data.content);
-            inputRef.current.total = inputRef.current.total.concat(" " + data.content);
-        })
-    }, [])
-
     function addSub(str) {
         console.log("added!");
         const box = document.createElement('div');
         const timeStamp = document.createElement('span');
         const content = document.createElement('span');
         box.setAttribute('class', 'subBox');
+        box.setAttribute('id', inputRef.current.num);
         timeStamp.innerHTML = '00:00';
         content.innerHTML = str;
+        content.setAttribute('class', "subContents");
+        content.setAttribute('id', inputRef.current.num++);
         box.appendChild(timeStamp);
         box.appendChild(content);
         console.log(flexRef.current);
         flexRef.current.appendChild(box);
     }
 
-    function findAnswer(){
-        console.log(inputRef.current.value);
-        console.log(inputRef.current.total);
-        axios.get(`http://3.37.36.54:5000/mrc/${inputRef.current.total}/${inputRef.current.value}`).then(response =>{
-            console.log(response);
+    useEffect(() => {
+        inputRef.current.num = 0;
+        inputRef.current.total = " 알고리즘은 a지롱 ㅎㅎ 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요 하이하이";
+        inputRef.current.arr = ["알고리즘은 a지롱 ㅎㅎ", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "안녕하세요", "하이하이"];
+        /*         inputRef.current.total = "";
+                inputRef.current.arr = []; */
+        socket.on('sendSubtitle', function (data) {
+            console.log(data);
+            addSub(data.content);
+            inputRef.current.total = inputRef.current.total.concat(" " + data.content);
+            inputRef.current.arr.push(" " + data.content);
+        })
+        addSub("알고리즘은 a지롱 ㅎㅎ");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("안녕하세요");
+        addSub("하이하이");
+    }, [])
+
+    function findAnswer() {
+        const payload = {
+            context: inputRef.current.total,
+            question: inputRef.current.value
+        }
+        axios.post(`http://3.37.36.54:5000/mrc_post`, payload).then(response => {
+            const arr = inputRef.current.arr;
+            const answer = response.data[0].answer;
+            const start = response.data[0].start;
+            const end = response.data[0].end;
+            arr.forEach((sentence, idx) => {
+                if (sentence.includes(answer)) {
+                    let start = sentence.indexOf(answer);
+                    const target = document.querySelectorAll(`.subContents`);
+                    const tmp = target[idx].innerHTML;
+                    target[idx].innerHTML = '';
+                    target[idx].append(sentence.substring(0, start));
+                    const newSpan = document.createElement('span');
+                    newSpan.style.backgroundColor = 'yellow';
+                    newSpan.innerHTML = answer;
+                    target[idx].append(newSpan);
+                    if (start + answer.length + 1 <= sentence.length)
+                        target[idx].append(sentence.substring(start + answer.length + 1, sentence.length));
+                    target[idx].scrollIntoView({
+                        behavior: 'smooth', block: 'nearest'
+                    });
+                    setTimeout(() => {
+                        while (target[idx].hasChildNodes()) {
+                            target[idx].removeChild(target[idx].firstChild);
+                        }
+                        target[idx].innerHTML = tmp;
+                    }, 30000);
+                }
+            })
         })
         inputRef.current.value = '';
     }
@@ -99,11 +147,12 @@ function Index(props) {
         <SubCnt>
             <SubContentCnt id="chatContentContainer">
                 <SubFlexBox ref={flexRef}>
+
                 </SubFlexBox>
             </SubContentCnt>
             <SubInputCnt>
-                <SubInput  ref = {inputRef} id="chatInput" type="TextArea" placeholder="질문을 입력해주세요!" />
-                <SubSubmitBtn onClick = {findAnswer}>내전송</SubSubmitBtn>
+                <SubInput ref={inputRef} id="chatInput" type="TextArea" placeholder="질문을 입력해주세요!" />
+                <SubSubmitBtn onClick={findAnswer}>내전송</SubSubmitBtn>
             </SubInputCnt>
         </SubCnt>
     )
