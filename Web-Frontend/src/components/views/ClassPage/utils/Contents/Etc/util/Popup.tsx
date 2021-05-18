@@ -59,7 +59,7 @@ function Index(props: PopProps) {
 
     return (
         <Modal
-            title="Surprise mofucker"
+            title="Pop 퀴즈"
             visible={isModalVisible}
             closable={false}
             onOk={handleOk}

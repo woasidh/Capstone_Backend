@@ -446,7 +446,7 @@ function Index(props: TestProps) {
     } */
 
   function setColor(total: number) {
-    const ref = document.querySelector('.content2.active#content1') as HTMLElement;
+    const ref = document.querySelector('.content2#content1') as HTMLElement;
     if (total > 0) {
       ref.style.backgroundColor = `rgb(38, 255, 0, 0.0${total})`;
     } else if (total < 0) {

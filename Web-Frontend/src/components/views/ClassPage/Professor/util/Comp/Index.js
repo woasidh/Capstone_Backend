@@ -142,7 +142,7 @@ function Index(props) {
         setInterval(() => {
             setcurrentTime(currentTime + 1);
             updateData();
-        }, 60000);
+        }, 3000);
     }, [])
 
     function upup() {

@@ -75,12 +75,13 @@ function Index(props) {
         rec.onend = () => {
             console.log('end');
             stopListen();
-            if (isListening) startListen();
+            /* if (isListening) startListen(); */
         };
         rec.onerror = event => {
             console.log('error', event);
         };
         rec.onresult = event => {
+            console.log('onresult');
             let text = event.results[event.results.length - 1][0].transcript;
             console.log(text);
             if (text.charAt(0) == ' ') text = text.substring(1, text.length);
