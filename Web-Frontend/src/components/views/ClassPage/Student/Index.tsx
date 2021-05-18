@@ -13,6 +13,9 @@ import Question from '../utils/Contents/Question/Index'
 import Etc from '../utils/Contents/Etc/Index'
 import Comp from '../utils/Contents/Comp/Index'
 import Sub from '../utils/Contents/Sub/Index.js'
+import My from '../../../../images/utils/myscreen.png'
+import Part from '../../../../images/utils/part.png'
+import Share from '../../../../images/utils/share.png'
 import './Index.css'
 
 const MainCnt = styled.div`
@@ -24,25 +27,33 @@ height : 100%;
 
 const LeftCnt = styled.div`
 flex-basis : 70%;
-display : flex;
 flex-direction : column;
 height : 100%;
 `
 
 const ScreenMenuCnt = styled.div`
-flex-basis : 5%;
+width : 100%;
+z-index : 99;
+height : 100px;
+position : absolute;
+padding  : 10px 0;
+top : 0;
 display : flex;
 justify-content : left;
 align-items : center;
-background-color : ${props => props.theme.color.background_gray};
+background-color : transparent;
+/* background-color : ${props => props.theme.color.background_gray}; */
+transition : all 0.1s linear;
+transform : translateY(-100px);
 `
 
 const ScreenMenu = styled.button`
-border : 1px solid black;
-height : 80%;
-width : 120px;
-margin : 0 10px;
-border-radius : 10px;
+background-size : contain;
+background-repeat : no-repeat;
+background-position : center center;
+height : 50px;
+width : 50px;
+margin : 10px;
 &.active{
   background-color : ${props => props.theme.color.blue};
   color : white;
@@ -51,8 +62,13 @@ border-radius : 10px;
 `
 
 const ZoomScreen = styled.div`
-flex-basis : 95%;
+height : 100%;
 position : relative;
+&:hover{
+  #mediaController, #screenMenuCnt{
+    transform : translateY(0);
+  }
+}
 `
 
 const RightCnt = styled.div`
@@ -160,6 +176,12 @@ color : ${props => props.theme.color.font_light_gray};
 }
 `
 
+const Fuck  = styled.div`
+display : flex;
+flex-direction : column;
+align-items : center;
+`
+
 const ParticipantsBtn = styled.button`
 ${constActiveBtnStyle}
 `
@@ -199,13 +221,13 @@ visibility : hidden;
 interface TestProps {
   match: {
     params: {
-      class_code : string,
+      class_code: string,
     }
   }
 }
 
 const socket = socketio('http://disboard13.kro.kr:3000/', {
-  transports : ['websocket']
+  transports: ['websocket']
 });
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
@@ -344,8 +366,13 @@ function Index(props: TestProps) {
   //render screen button handler
   const RenderMenuBtns = () => {
     const screens = ['내화면', '공유화면', '참가자들'];
+    const links = [My, Share, Part]
     const result = screens.map((value, index) => {
-      return (<ScreenMenu onClick={changeScrenBtn} id={index.toString()}>{value}</ScreenMenu>);
+      return (
+        <Fuck>
+          <ScreenMenu style={{ backgroundImage:   `url(${links[index]})` }} onClick={changeScrenBtn} id={index.toString()}></ScreenMenu>
+          <span style = {{color : 'white'}}>{value}</span>
+        </Fuck>);
     })
     return result;
   }
@@ -399,10 +426,10 @@ function Index(props: TestProps) {
   return (
     <MainCnt>
       <LeftCnt>
-        <ScreenMenuCnt>
-          {RenderMenuBtns()}
-        </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
+          <ScreenMenuCnt id="screenMenuCnt">
+            {RenderMenuBtns()}
+          </ScreenMenuCnt>
           {RenderCanvas()}
           <MediaController client={client} />
         </ZoomScreen>
@@ -422,9 +449,9 @@ function Index(props: TestProps) {
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <ContentWrapper className="content2 active" id="content1"><Comp socket = {socket}/></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub socket = {socket}/></ContentWrapper>
-            <ContentWrapper className="content2" id="content3"><Etc socket = {socket} /></ContentWrapper>
+            <ContentWrapper className="content2 active" id="content1"><Comp socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content2" id="content3"><Etc socket={socket} /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
             <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>

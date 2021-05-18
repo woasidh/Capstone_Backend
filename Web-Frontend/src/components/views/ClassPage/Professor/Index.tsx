@@ -14,6 +14,9 @@ import Etc from './util/Etc/Index'
 import Comp from './util/Comp/Index.js'
 import Sub from './util/Sub/Index'
 import Popup from './util/Popup/Index'
+import My from '../../../../images/utils/myscreen.png'
+import Part from '../../../../images/utils/part.png'
+import Share from '../../../../images/utils/share.png'
 import './Index.css'
 import { textSpanIsEmpty } from 'typescript'
 
@@ -26,25 +29,33 @@ height : 100%;
 
 const LeftCnt = styled.div`
 flex-basis : 70%;
-display : flex;
 flex-direction : column;
 height : 100%;
 `
 
 const ScreenMenuCnt = styled.div`
-flex-basis : 5%;
+width : 100%;
+z-index : 99;
+height : 100px;
+position : absolute;
+padding  : 10px 0;
+top : 0;
 display : flex;
 justify-content : left;
 align-items : center;
-background-color : ${props => props.theme.color.background_gray};
+background-color : transparent;
+/* background-color : ${props => props.theme.color.background_gray}; */
+transition : all 0.1s linear;
+transform : translateY(-100px);
 `
 
 const ScreenMenu = styled.button`
-border : 1px solid black;
-height : 80%;
-width : 120px;
-margin : 0 10px;
-border-radius : 10px;
+background-size : contain;
+background-repeat : no-repeat;
+background-position : center center;
+height : 50px;
+width : 50px;
+margin : 10px;
 &.active{
   background-color : ${props => props.theme.color.blue};
   color : white;
@@ -53,8 +64,13 @@ border-radius : 10px;
 `
 
 const ZoomScreen = styled.div`
-flex-basis : 95%;
+height : 100%;
 position : relative;
+&:hover{
+  #mediaController, #screenMenuCnt{
+    transform : translateY(0);
+  }
+}
 `
 
 const RightCnt = styled.div`
@@ -179,6 +195,12 @@ ${constActiveBtnStyle}
 
 const SubtitleBtn = styled.button`
 ${constActiveBtnStyle}
+`
+
+const Fuck  = styled.div`
+display : flex;
+flex-direction : column;
+align-items : center;
 `
 
 const EtcBtn = styled.button`
@@ -362,8 +384,13 @@ function Index(props: TestProps) {
   //render screen button handler
   const RenderMenuBtns = () => {
     const screens = ['내화면', '공유화면', '참가자들'];
+    const links = [My, Share, Part]
     const result = screens.map((value, index) => {
-      return (<ScreenMenu onClick={changeScrenBtn} id={index.toString()}>{value}</ScreenMenu>);
+      return (
+        <Fuck>
+          <ScreenMenu style={{ backgroundImage:   `url(${links[index]})` }} onClick={changeScrenBtn} id={index.toString()}></ScreenMenu>
+          <span style = {{color : 'white'}}>{value}</span>
+        </Fuck>);
     })
     return result;
   }
@@ -414,17 +441,17 @@ function Index(props: TestProps) {
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
-/*   function setOption(num: number) {
-    setsubType(num);
-  } */
+  /*   function setOption(num: number) {
+      setsubType(num);
+    } */
 
   function setColor(total: number) {
     const ref = document.querySelector('.content2.active#content1') as HTMLElement;
     if (total > 0) {
       ref.style.backgroundColor = `rgb(38, 255, 0, 0.0${total})`;
     } else if (total < 0) {
-      ref.style.backgroundColor = `rgb(255, 39, 0, 0.0${total*-1})`;
-    }else{
+      ref.style.backgroundColor = `rgb(255, 39, 0, 0.0${total * -1})`;
+    } else {
       ref.style.backgroundColor = 'transparent';
     }
   }
@@ -432,12 +459,12 @@ function Index(props: TestProps) {
   return (
     <MainCnt>
       <LeftCnt>
-        <ScreenMenuCnt>
-          {RenderMenuBtns()}
-        </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
+          <ScreenMenuCnt id = "screenMenuCnt">
+            {RenderMenuBtns()}
+          </ScreenMenuCnt>
           {RenderCanvas()}
-          <MediaController client={client}/>
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>

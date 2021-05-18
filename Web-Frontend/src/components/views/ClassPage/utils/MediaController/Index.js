@@ -17,6 +17,8 @@ bottom : 0;
 display : flex;
 justify-content : left;
 align-items :center;
+transition : all 0.1s linear;
+transform : translateY(100px);
 `
 
 const AudioController = styled.button`
@@ -231,7 +233,7 @@ function Index(props) {
     }, [isShareOn])
 
     return (
-        <MediaController>
+        <MediaController id = "mediaController">
             <AudioController onClick={audioToggleHandler}>
                 <AudioCnt id="audioCnt"></AudioCnt>
                 <span id="audioText" style={{ color: '#A8A8A8' }}>Mute</span>
