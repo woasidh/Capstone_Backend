@@ -28,11 +28,13 @@ align-items : center;
 `
 const ChatInput = styled.input`
 width: 80%;
+height : 75%;
 border: 1px solid #D4D4D4; 
 border-radius: 5px;
+padding: 0 0.5rem;
 `
 const ChatSubmitBtn = styled.button`
-font-size :8px;
+font-size :0.8rem;
 width : 20%;
 text-align : center;
 font-weight : bold;
@@ -43,21 +45,23 @@ function Index(props:any) {
     const socket = props.socket;
 
     const [qNum, setqNum] = useState<number>(0);
+    const [inputRef, setinputRef] = useState<any>(React.createRef());
 
     const [questions, setquestions] = useState<Array<any>>([]);
 
     function mySubmit() {
         console.log('button');
         const qInput = document.querySelector('#qInput') as HTMLInputElement;
-        console.log(qInput.value);
         if (qInput.value) {
             socket.emit('question', {
                 content : qInput.value,
                 qNum : qNum
             })
+            console.log(questions);
             setquestions(questions.concat([<Box qNum = {qNum}socket = {socket} msg={qInput.value}></Box>]));
         }
         setqNum(qNum+1);
+        inputRef.current.value = '';
     }
 
     useEffect(() => {
@@ -73,7 +77,7 @@ function Index(props:any) {
                 {questions}
             </ChatContentCnt>
             <ChatInputCnt>
-                <ChatInput id="qInput" type="TextArea" placeholder="채팅내용을 입력해주세요" />
+                <ChatInput ref = {inputRef} id="qInput" type="TextArea" placeholder="질문을 입력해주세요" />
                 <ChatSubmitBtn onClick={mySubmit}>내전송</ChatSubmitBtn>
             </ChatInputCnt>
         </QuestionContainer>

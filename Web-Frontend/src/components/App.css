@@ -1,0 +1,5 @@
+@import '~antd/dist/antd.css';
+
+.ant-btn.ant-btn-primary.ant-btn-sm{
+    display : block !important;
+}

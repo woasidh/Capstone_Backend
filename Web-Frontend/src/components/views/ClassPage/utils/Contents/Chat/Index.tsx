@@ -31,12 +31,14 @@ align-items : center;
 
 const ChatInput = styled.input`
 width: 80%;
+height : 75%;
 border: 1px solid #D4D4D4; 
 border-radius: 5px;
+padding : 0 0.5rem;
 `
 
 const ChatSubmitBtn = styled.button`
-font-size :8px;
+font-size :0.8rem;
 width : 20%;
 text-align : center;
 font-weight : bold;
@@ -44,6 +46,7 @@ color : #A6C5F3;
 `
 
 const ChatFlexBox = styled.div`
+font-size : 1.2rem;
 width : 100%;
 height : fit-content;
 display : flex;
@@ -63,27 +66,20 @@ function Index(props: any) {
     const [update, setupdate] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log('use effect!!');
-        console.log("socket : ", socket);
         socket.on('sendMsg', function (data: any) {
             console.log(data);
             setmsgs([<OtherChat msg={data.content}></OtherChat>].concat(msgs));
         });
-
-    }, [msgs])
-
-    useEffect(() => {
-        console.log(msgs.length);
     }, [msgs])
 
     function mySubmit() {
-        console.log('my submit');
         const chatInput = document.querySelector('#chatInput') as HTMLInputElement;
         if (chatInput.value) {
             socket.emit('msg', {
                 time: '19:20',
                 content: chatInput.value
             })
+            console.log('msg sent');
             setmsgs([<MyChat msg={chatInput.value}></MyChat>].concat(msgs));
         }
     }

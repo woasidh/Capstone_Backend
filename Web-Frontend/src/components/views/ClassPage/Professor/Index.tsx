@@ -6,12 +6,12 @@ import { RenderCanvas, ToggleCanvas, SetCanvasSize } from '../utils/SetCanvas/In
 import MediaController from '../utils/MediaController/Index'
 import Loading from '../utils/Loading/Index'
 import { generateInstantToken } from '../utils/Auth/Index'
-import ZoomInstant from "@zoomus/instantsdk"
+/* import ZoomInstant from "@zoomus/instantsdk" */
 import Chat from '../utils/Contents/Chat/Index';
 import Participant from '../utils/Contents/Participant/Index';
 import Question from '../utils/Contents/Question/Index'
-import Etc from '../utils/Contents/Etc/Index'
-import Comp from '../utils/Contents/Comp/Index'
+import Etc from './util/Etc/Index'
+import Comp from './util/Comp/Index.js'
 import Sub from './util/Sub/Index'
 import Popup from './util/Popup/Index'
 import './Index.css'
@@ -205,7 +205,7 @@ interface TestProps {
   }
 }
 
-const socket = socketio('http://13.125.234.161:3000', {
+const socket = socketio('http://disboard13.kro.kr:3000/', {
   transports: ['websocket']
 });
 
@@ -390,11 +390,11 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     socket.emit('user', {
-      name: props.match.params.class_code,
+      name: user? user.name : props.match.params.class_code,
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
-      console.log("data receivesd!!!!!!");
+      console.log(data);
     });
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
@@ -410,8 +410,8 @@ function Index(props: TestProps) {
           {/* {RenderMenuBtns()} */}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
-          {RenderCanvas()}
-          {/* <MediaController client={client} /> */}
+          {/* {RenderCanvas()} */}
+          {/* <MediaController client={client}/> */}
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -429,14 +429,14 @@ function Index(props: TestProps) {
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
+            <ContentWrapper className="content2 active" id="content1"><Comp socket = {socket}/></ContentWrapper>
             <ContentWrapper className="content2" id="content2"><Sub socket={socket} type = {subType} /></ContentWrapper>
-            <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
+            <ContentWrapper className="content2" id="content3"><Etc socket={socket}/></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
             <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>
             <SubtitleBtn className="Active2Btn" id="2" onClick={Active2BtnHandler}>자막</SubtitleBtn>
-            <EtcBtn className="Active2Btn" id="3" onClick={Active2BtnHandler}>작업</EtcBtn>
+            <EtcBtn className="Active2Btn" id="3" onClick={Active2BtnHandler}>퀴즈</EtcBtn>
           </Active2Menu>
         </Active2Cnt>
       </RightCnt>

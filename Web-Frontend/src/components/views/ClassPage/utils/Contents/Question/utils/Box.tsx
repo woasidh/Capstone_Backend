@@ -10,7 +10,7 @@ interface QuestionProps {
 const BoxContainer = styled.button`
 position : relative;
 background-color : #E5166835;
-padding : 5px;
+padding : 5px 10px;
 border-radius : 5px;
 color : white;
 width : fit-content;
@@ -25,7 +25,7 @@ const AnswerShort = styled.div`
 color : #4B9F1B;
 width : 100%;
 text-align :right;
-font-size : 7px;
+font-size : 0.6rem;
 `
 
 const AnswerBox = styled.div`
@@ -51,17 +51,19 @@ justify-content : space-between;
 align-items : center;
 `
 const ChatInput = styled.input`
+height : 70%;
 width: 80%;
-border: 1px solid #D4D4D4; 
+border: 1px solid #D4D4D4;
+padding : 0 5px; 
 border-radius: 5px;
 color : black;
 `
 const ChatSubmitBtn = styled.button`
-font-size :8px;
+font-size :0.8rem;
 width : 20%;
 text-align : center;
 font-weight : bold;
-color : #A6C5F3;
+color : #00000050;
 `
 
 function showAnswers() {
@@ -103,6 +105,8 @@ function Box(props: QuestionProps) {
             content: inputRef.current.value
         })
         setanswers(answers.concat([<Answer>{inputRef.current.value}</Answer>]));
+        inputRef.current.value = '';
+        console.log(inputRef.current);
     }
 
     function keyDown(e: any) {
@@ -119,7 +123,7 @@ function Box(props: QuestionProps) {
     return (
         <>
             <BoxContainer ref={boxRef}>
-                <div id="Boxcontainer" onClick={showAnswers}>
+                <div style ={{fontSize : '1rem'}} id="Boxcontainer" onClick={showAnswers}>
                     {props.msg}
                     {showAnswer && <AnswerBox>
                         {answers}

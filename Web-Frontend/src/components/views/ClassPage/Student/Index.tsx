@@ -6,7 +6,7 @@ import { RenderCanvas, ToggleCanvas, SetCanvasSize } from '../utils/SetCanvas/In
 import MediaController from '../utils/MediaController/Index'
 import Loading from '../utils/Loading/Index'
 import { generateInstantToken } from '../utils/Auth/Index'
-import ZoomInstant from "@zoomus/instantsdk"
+/* import ZoomInstant from "@zoomus/instantsdk" */
 import Chat from '../utils/Contents/Chat/Index';
 import Participant from '../utils/Contents/Participant/Index';
 import Question from '../utils/Contents/Question/Index'
@@ -151,6 +151,7 @@ justify-content : space-between;
 const constActiveBtnStyle = css`
 border-radius : 5px;
 flex-basis : 30%;
+font-size :1.05rem;
 background-color : ${props => props.theme.color.light_gray};
 color : ${props => props.theme.color.font_light_gray};
 &.active{
@@ -203,13 +204,13 @@ interface TestProps {
   }
 }
 
-const socket = socketio('http://13.125.234.161:3000', {
+const socket = socketio('http://disboard13.kro.kr:3000/', {
   transports : ['websocket']
 });
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [isLoading, setisLoading] = useState<boolean>(false);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -219,7 +220,7 @@ function Index(props: TestProps) {
   //------useeffect------
 
   //zoom init
-  useEffect(() => {
+  /* useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -307,7 +308,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading])
+  }, [isLoading]) */
 
   //for Active 1 
   useEffect(() => {
@@ -390,7 +391,7 @@ function Index(props: TestProps) {
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
-      console.log("data received!!!!!!");
+      console.log(data);
     });
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
@@ -399,11 +400,11 @@ function Index(props: TestProps) {
     <MainCnt>
       <LeftCnt>
         <ScreenMenuCnt>
-          {RenderMenuBtns()}
+          {/* {RenderMenuBtns()} */}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
-          {RenderCanvas()}
-          <MediaController client={client} />
+          {/* {RenderCanvas()} */}
+          {/* <MediaController client={client} /> */}
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -421,9 +422,9 @@ function Index(props: TestProps) {
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
+            <ContentWrapper className="content2 active" id="content1"><Comp socket = {socket}/></ContentWrapper>
             <ContentWrapper className="content2" id="content2"><Sub socket = {socket}/></ContentWrapper>
-            <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
+            <ContentWrapper className="content2" id="content3"><Etc socket = {socket} /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
             <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>

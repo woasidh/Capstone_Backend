@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, {css} from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const ListBoxCSS = css`
 #part_listbox::-webkit-scrollbar {
@@ -24,7 +24,7 @@ display :grid;
 grid-template-columns: repeat(4, 1fr);
 color : #818181;
 text-align : center;
-font-size :11px;
+font-size :1rem;
 margin-bottom : 1vh;
 height : 3vh;
 `
@@ -32,79 +32,33 @@ height : 3vh;
 function Index() {
 
     //render participants
-    function renderPtcs(){
-    
+    function renderPtcs(): any {
+        const names = ['김민건', '최민우', '노민도', '윤다연', '김수민'];
+        const interests = ['10', '60', '30', '90', '75'];
+        const scores = ['-', '-', '-', '-', '-'];
+        let ccc = false;
+        const result = names.map((value, index) =>
+        (
+            <Row style={{ color: 'black' }}>
+                <div>{value}</div>
+                <div>{interests[index]}</div>
+                <div>{scores[index]}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" checked disabled={ccc}/></div>
+            </Row>
+        ))
+        return result;
     }
 
     return (
         <>
-            <Row style = {{color :'black'}}>
+            <Row style={{ color: 'black' }}>
                 <div>name</div>
                 <div>interest</div>
                 <div>score</div>
                 <div>attendance</div>
             </Row>
-            <ListBox id = "part_listbox">
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
-                <Row>
-                    <div>최민우</div>
-                    <div>83%</div>
-                    <div>5</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><input type="checkbox" /></div>
-                </Row>
+            <ListBox id="part_listbox">
+                {renderPtcs()}
             </ListBox>
         </>
     )

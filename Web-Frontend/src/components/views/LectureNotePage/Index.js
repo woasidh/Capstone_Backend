@@ -168,7 +168,7 @@ function Index({match}) {
                         <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 강의 노트</SubTitle>
                         {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`}>작성하기</WriteBtn>}
                     </div>
-                    <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
+                    <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
                     <div>
                         {isLoading && display()}
                     </div>                    

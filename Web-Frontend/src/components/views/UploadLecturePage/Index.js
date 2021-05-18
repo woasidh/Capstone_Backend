@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import styled, { css } from 'styled-components'
 import theme from '../../../styles/Theme'
 import { DatePicker, TimePicker } from 'antd';
@@ -60,6 +60,13 @@ ${boxStyle}
 margin-bottom : 25px;
 `
 
+const Tmp = styled.div `
+width: 475px;
+display : flex;
+justify-content : center;
+align-items : center;
+`
+
 const NameInput = styled.input`
 border : none;
 height : 50px;
@@ -104,7 +111,7 @@ margin : 0 5px;
 `
 
 const SubmitBtn = styled.button`
-width : 40%;
+width : 250px;
 height : 40px;
 border : none;
 background-color: #407AD6;
@@ -130,7 +137,7 @@ function Index() {
     const [endTime, setEndTime] = useState([]);
     const [dayList, setDayList] = useState([]);
     const week = ["월", "화", "수", "목", "금", "토", "일"];
-    
+
     const header = new Headers();
     header.append('Access-Control-Allow-Origin', '*');
 
@@ -147,12 +154,12 @@ function Index() {
         const elm = e.target;
         console.log(elm);
         console.log(value);
-        if (elm.classList.value.includes('active')){
+        if (elm.classList.value.includes('active')) {
             elm.classList.remove('active');
             const i = dayList.indexOf(value);
-            setDayList(dayList.filter((e)=>(e !== value)));
-            startTime.splice(i,1);
-            endTime.splice(i,1);
+            setDayList(dayList.filter((e) => (e !== value)));
+            startTime.splice(i, 1);
+            endTime.splice(i, 1);
         }
         else {
             elm.classList.add('active');
@@ -161,13 +168,13 @@ function Index() {
                 value
             ]);
         }
-        
+
         /* if(e.target.classList.active) */
     }
 
     const onChangeTime = (i, dateString) => {
-        startTime[i]=dateString[0];
-        endTime[i]=dateString[1];
+        startTime[i] = dateString[0];
+        endTime[i] = dateString[1];
     }
 
     const submitHandler = () => {
@@ -177,24 +184,24 @@ function Index() {
         console.log(startTime);
         console.log(endTime);
         console.log(dayList);
-        axios.post('/api/subject/create', 
-        { 
-            name: name,
-            start_period: startPeriod,
-            end_period: endPeriod,
-            start_time: startTime,
-            end_time: endTime,
-            days: dayList
-         })
-         .then((response)=>{
-             console.log(response);
-             const code = response.data.code;
-             return window.location.href = '/main/uploadLecture/verify/'+code;
-         })
-         .catch((response)=>{
-             console.log('Error!');
-             console.log(response);
-         });
+        axios.post('/api/subject/create',
+            {
+                name: name,
+                start_period: startPeriod,
+                end_period: endPeriod,
+                start_time: startTime,
+                end_time: endTime,
+                days: dayList
+            })
+            .then((response) => {
+                console.log(response);
+                const code = response.data.code;
+                return window.location.href = '/main/uploadLecture/verify/' + code;
+            })
+            .catch((response) => {
+                console.log('Error!');
+                console.log(response);
+            });
     }
 
     return (
@@ -202,28 +209,28 @@ function Index() {
             <Switch>
                 <Route path="/main/uploadLecture/verify/:code" component={VerifyPage} />
                 <Route path="/">
-                    <div className = "sex" style={{marginLeft: "20px", marginTop: '10px'}}>
-                        
+                    <div className="sex" style={{ marginLeft: "20px", marginTop: '10px' }}>
+
                         <Container>
-                        <Title>Create Lecture</Title>
-                        <div style={{width: "100%", display: "block"}}>
-                            <SubTitle>강의 / 강의 개설</SubTitle>
-                        </div>
-                        <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
+                            <Title>Create Lecture</Title>
+                            <div style={{ width: "100%", display: "block" }}>
+                                <SubTitle>강의 / 강의 개설</SubTitle>
+                            </div>
+                            <hr style={{ width: "100%", margin: "30px 0px", marginTop: "50px", display: "block", borderColor: '#ffffff' }} />
                         </Container>
                         <NameBox>
                             <SubTitless>강의 이름</SubTitless>
-                            <NameInput type="text" name="name" placeholder="강의 이름을 입력해주세요" onChange={onChangeName}/>
+                            <NameInput type="text" name="name" placeholder="강의 이름을 입력해주세요" onChange={onChangeName} />
                         </NameBox>
                         <PeriodBox>
                             <SubTitless>강의 기간</SubTitless>
                             <SubTitles>강의 진행 기간을 입력해주세요</SubTitles>
-                            <RangePicker style={{marginLeft:'10px'}} size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange}/>
+                            <RangePicker style={{ marginLeft: '10px' }} size="large" name='date' format="YYYY-MM-DD" onChange={onChangeRange} />
                         </PeriodBox>
                         <TimeBox>
                             <SubTitless>강의 시간</SubTitless>
                             <SubTitles>강의 시간을 입력해주세요</SubTitles>
-                            <DayContainer style={{marginLeft:'10px'}}>
+                            <DayContainer style={{ marginLeft: '10px' }}>
                                 <button onClick={(e) => selectDayHandler(e, 1)}><Day>월</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 2)}><Day>화</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 3)}><Day>수</Day></button>
@@ -232,9 +239,11 @@ function Index() {
                                 <button onClick={(e) => selectDayHandler(e, 6)}><Day>토</Day></button>
                                 <button onClick={(e) => selectDayHandler(e, 7)}><Day>일</Day></button>
                             </DayContainer>
-                            {dayList.map((value, index) => <li>{week[value-1]} : <TimePicker.RangePicker format="HH:mm" onChange={(value, dateString) => onChangeTime(index, dateString)} /></li>)}
+                            {dayList.map((value, index) => <li>{week[value - 1]} : <TimePicker.RangePicker format="HH:mm" onChange={(value, dateString) => onChangeTime(index, dateString)} /></li>)}
                         </TimeBox>
-                        <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
+                        <Tmp>
+                            <SubmitBtn onClick={submitHandler}>제출</SubmitBtn>
+                        </Tmp>
                     </div>
                 </Route>
             </Switch>

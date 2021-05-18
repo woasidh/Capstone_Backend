@@ -83,7 +83,7 @@ function Index({match}){
                 {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
 
             </div>
-            <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
+            <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
             
                 <table style={{width: "100%", margin: "0 auto", borderSpacing: "1px", borderCollapse: "separate"}}>
                     <tbody>
