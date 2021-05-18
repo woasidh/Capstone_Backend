@@ -134,14 +134,14 @@ function SignUp(){
 						<label>학과</label><br/>
 						<select style={{ width: 200 }} name="major" value={major} required onChange={onChangeMajor}>
 							<optgroup label="정보통신대학">
-								<option value="major_it1">전자공학과</option>
-								<option value="major_it2">컴퓨터공학과</option>
-								<option value="major_it3">미디어학과</option>
+								<option value="전자공학과">전자공학과</option>
+								<option value="컴퓨터공학과">컴퓨터공학과</option>
+								<option value="미디어학과">미디어학과</option>
 							</optgroup>
 							<optgroup label="공과대학">
-								<option value="major_eng1">기계공학과</option>
-								<option value="major_eng2">산업공학과</option>
-								<option value="major_eng3">화학공학과</option>
+								<option value="기계공학과">기계공학과</option>
+								<option value="산업공학과">산업공학과</option>
+								<option value="화학공학과">화학공학과</option>
 							</optgroup>
 						</select>
 					</InfoBox>

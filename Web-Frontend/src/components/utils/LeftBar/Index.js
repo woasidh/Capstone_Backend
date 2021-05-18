@@ -161,7 +161,7 @@ function Index() {
                     {ShowMenu1 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={bottom_arrow} alt="bottom_arrow" />} 
                 </Menu>
                 
-                {ShowMenu1 && <div>
+                {ShowMenu1 && <div  style={{marginBottom:"10px"}}>
                     {isProfessor && <SubMenu href="/main/uploadLecture"><span># 강의 개설</span></SubMenu>}
                     {isStudent && <SubMenu href="/main/enterLecture">#  강의 참여</SubMenu>}
                     <SubMenu href="/test/aaa">#  zoom test</SubMenu>
@@ -169,13 +169,13 @@ function Index() {
                     <SubMenu href="/">#  출결관리</SubMenu>
                     <SubMenu href="/"># 진도 관리</SubMenu>
                 </div>}
-                <Menu onClick={toggle2} style={{marginTop:"10px"}}>  
+                <Menu onClick={toggle2}>  
                     <img style={{ height:"33px", paddingRight:'5px', paddingBottom:'3px'}} src={mylecture} alt="mylecture" />
                     내 강의
                     {!ShowMenu2 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={right_arrow} alt="right_arrow" />}
                     {ShowMenu2 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={bottom_arrow} alt="bottom_arrow" />} 
                 </Menu>
-                {ShowMenu2 && <div>
+                {ShowMenu2 && <div style={{marginBottom:"10px"}}>
                     {subjectList.map((subject) => 
                     <SubMenu>{'# '}{subject.name}
                         <SubjectMenu>
