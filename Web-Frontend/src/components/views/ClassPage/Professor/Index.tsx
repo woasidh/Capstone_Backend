@@ -15,6 +15,7 @@ import Comp from './util/Comp/Index.js'
 import Sub from './util/Sub/Index'
 import Popup from './util/Popup/Index'
 import './Index.css'
+import { textSpanIsEmpty } from 'typescript'
 
 const MainCnt = styled.div`
 background-color : ${props => props.theme.color.background_gray};
@@ -418,7 +419,6 @@ function Index(props: TestProps) {
   } */
 
   function setColor(total: number) {
-    console.log(total);
     const ref = document.querySelector('.content2.active#content1') as HTMLElement;
     if (total > 0) {
       ref.style.backgroundColor = `rgb(38, 255, 0, 0.0${total})`;
