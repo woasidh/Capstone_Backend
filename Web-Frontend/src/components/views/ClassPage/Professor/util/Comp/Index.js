@@ -21,8 +21,8 @@ const data = {
             label: '합계',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
-            radius : 2,
-            backgroundColor: 'rgb(0, 0, 0)',
+            radius : 1,
+            backgroundColor: 'rgb(0, 0, 0, 0.2)',
             borderColor: 'rgba(0, 0, 0, 0.4)'
         },
         {
@@ -53,7 +53,25 @@ function Index(props) {
         chartRef.current.data.labels.pop();
         chartRef.current.data.datasets[0].data.pop();
         chartRef.current.data.datasets[2].data.pop();
-        let newTime = `${(chartRef.current.data.num + 1) * 5}:00`
+        let num = chartRef.current.data.num + 1;
+        let newTime;
+        console.log(num);
+        if(num<60){
+            if(num<10){
+                newTime = `00:0${(chartRef.current.data.num + 1)}`
+            }else{
+                newTime = `00:${(chartRef.current.data.num + 1)}`
+            }
+        }else{
+            let hour = parseInt(num/60);
+            let minute = num%60;
+            console.log(hour, minute);
+            if(minute<10){
+                newTime = `${hour}:0${minute}`
+            }else{
+                newTime = `${hour}:${minute}`
+            }
+        }
         setcompData({
             ups : 0,
             downs : 0,
@@ -71,8 +89,8 @@ function Index(props) {
                     label: '합계',
                     data: [total].concat(chartRef.current.data.datasets[1].data),
                     fill: false,
-                    radius : 2,
-                    backgroundColor: 'rgb(0, 0, 0)',
+                    radius : 1,
+                    backgroundColor: 'rgb(0, 0, 0, 0.2)',
                     borderColor: 'rgba(0, 0, 0, 0.4)'
                 },
                 {
@@ -86,6 +104,7 @@ function Index(props) {
             ],
         })
         setrefresh(refresh + 1);
+        props.setColor(total);
     }
 
     const config = {
@@ -123,7 +142,7 @@ function Index(props) {
         setInterval(() => {
             setcurrentTime(currentTime + 1);
             updateData();
-        }, 2000);
+        }, 60000);
     }, [])
 
     function upup() {

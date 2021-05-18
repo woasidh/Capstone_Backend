@@ -6,7 +6,7 @@ import { RenderCanvas, ToggleCanvas, SetCanvasSize } from '../utils/SetCanvas/In
 import MediaController from '../utils/MediaController/Index'
 import Loading from '../utils/Loading/Index'
 import { generateInstantToken } from '../utils/Auth/Index'
-import ZoomInstant from "@zoomus/instantsdk"
+/* import ZoomInstant from "@zoomus/instantsdk" */
 import Chat from '../utils/Contents/Chat/Index';
 import Participant from '../utils/Contents/Participant/Index';
 import Question from '../utils/Contents/Question/Index'
@@ -196,6 +196,19 @@ visibility : hidden;
 }
 `
 
+const ContentWrapper2 = styled.div`
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+padding: 0.5rem;
+visibility : hidden;
+border-radius : 10px;
+&.active{
+  visibility : visible;
+}
+`
+
 interface TestProps {
   match: {
     params: {
@@ -212,18 +225,19 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [isLoading, setisLoading] = useState<boolean>(false);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
   const [Active2Num, setActive2Num] = useState<number>(1);
   const [ref, setref] = useState<any>(React.createRef());
   const [subType, setsubType] = useState<number>(1);
+  const [compRef, setcompRef] = useState(React.createRef());
 
   //------useeffect------
 
   //zoom init
-  useEffect(() => {
+  /* useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -311,7 +325,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading])
+  }, [isLoading]) */
 
   //for Active 1 
   useEffect(() => {
@@ -390,7 +404,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     socket.emit('user', {
-      name: user? user.name : props.match.params.class_code,
+      name: user ? user.name : props.match.params.class_code,
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
@@ -399,19 +413,30 @@ function Index(props: TestProps) {
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
-  function setOption(num : number){
+  function setOption(num: number) {
     setsubType(num);
+  }
+
+  function setColor(total: number) {
+    const ref = document.querySelector('.content2.active#content1') as HTMLElement;
+    if (total > 0) {
+      ref.style.backgroundColor = `rgb(38, 255, 0, 0.0${total})`;
+    } else if (total < 0) {
+      ref.style.backgroundColor = `rgb(255, 39, 0, 0.0${total*-1})`;
+    }else{
+      ref.style.backgroundColor = 'transparent';
+    }
   }
 
   return (
     <MainCnt>
       <LeftCnt>
         <ScreenMenuCnt>
-          {RenderMenuBtns()}
+          {/* {RenderMenuBtns()} */}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
-          {RenderCanvas()}
-          <MediaController client={client}/>
+          {/* {RenderCanvas()} */}
+          {/* <MediaController client={client}/> */}
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -429,9 +454,9 @@ function Index(props: TestProps) {
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <ContentWrapper className="content2 active" id="content1"><Comp socket = {socket}/></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub socket={socket} type = {subType} /></ContentWrapper>
-            <ContentWrapper className="content2" id="content3"><Etc socket={socket}/></ContentWrapper>
+            <ContentWrapper2 className="content2 active" id="content1"><Comp setColor={setColor} socket={socket} /></ContentWrapper2>
+            <ContentWrapper2 className="content2" id="content2"><Sub socket={socket} type={subType} /></ContentWrapper2>
+            <ContentWrapper2 className="content2" id="content3"><Etc socket={socket} /></ContentWrapper2>
           </Active2ContentCnt>
           <Active2Menu>
             <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>
@@ -440,7 +465,7 @@ function Index(props: TestProps) {
           </Active2Menu>
         </Active2Cnt>
       </RightCnt>
-      <Popup setOptions = {setOption} />
+      <Popup setOptions={setOption} />
     </MainCnt>
   )
 }
