@@ -10,21 +10,29 @@ import {
 import UpdatePage from './UpdateLectureInfo';
 
 const Container = styled.div`
-width: 100%;
-display: block;
-justify-content: center;
-align-items: center;
+width : 97%;
+height : 100%;
+display : inline-block;
+//overflow-y: auto;
+//align-items : center;
+//justify-content : center;
 `
 const Title = styled.div`
-font-size: 30px;
-font-style: italic;
-text-alignment: left;
+font-size : 30px;
+border-bottom : 1px solid #F7F9FC;
+height : 40px;
+line-height : 40px;
+font-style : italic;
 `
 const SubTitle = styled.div`
-font-size: 16px;
-display: inline-block;
-color: ${props => props.theme.color.font_dark_gray};
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
 `
+
 const WriteBtn = styled.a`
 display: inline-block;
 float: right;
@@ -68,13 +76,14 @@ function Index({match}){
 
     const display = () => {
         return(
-            <Container>
+            <Container  style={{marginLeft: "20px", marginTop: '10px'}}>
             <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
-                <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${subjectInfo.name}/home`}>{subjectInfo.name}</a> / 강의 정보</SubTitle>                
-                {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`}> 수정하기</WriteBtn>}
+                <SubTitle>내 강의 / {subjectInfo.name} / 강의 정보</SubTitle>                
+                {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
+
             </div>
-            <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
+            <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
             
                 <table style={{width: "100%", margin: "0 auto", borderSpacing: "1px", borderCollapse: "separate"}}>
                     <tbody>

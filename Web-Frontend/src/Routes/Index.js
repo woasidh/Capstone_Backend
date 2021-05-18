@@ -17,7 +17,6 @@ import JoinLecturePage from '../components/views/JoinLecturePage/Index'
 import NoticePage from '../components/views/NoticePage/Index'
 import LectureNotePage from '../components/views/LectureNotePage/Index'
 import SubjectHomePage from '../components/views/LectureHomePage/Index'
-import AttendancePage from '../components/views/AttendancePage/Index'
 
 
 const baseUrl = "/main/";
@@ -36,7 +35,7 @@ function Index() {
         <>
             {isLogined && <LeftBar />}
             {isLogined && <TopBar mode={true}/>}
-            <div className = "maincontainer" style={{height : "100%", marginLeft: '200px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
+            <div className = "maincontainer" style={{height : "100%", marginLeft: '260px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
                 {isLogined &&
                     <Router>
                         <Switch>
@@ -50,7 +49,6 @@ function Index() {
                             <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
                             <Route path= {baseUrl+":subject/:name/lectureNote"} component={LectureNotePage}/>
                             <Route path= {baseUrl+":subject/:name/chart"} component={LectureChartPage} />
-                            <Route path= {baseUrl+":subject/:name/attendance"} component={AttendancePage} />
                         </Switch>
                     </Router>
                 }

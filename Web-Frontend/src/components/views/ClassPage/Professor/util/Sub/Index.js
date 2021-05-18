@@ -85,7 +85,8 @@ function Index(props) {
             console.log(text);
             if (text.charAt(0) == ' ') text = text.substring(1, text.length);
             addSub(text);
-            socket.emit('understandingStu', {
+            socket.emit('subtitle', {
+                time : '11:11',
                 content : text
             })
         };

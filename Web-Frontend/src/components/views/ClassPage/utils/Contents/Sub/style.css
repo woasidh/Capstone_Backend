@@ -1,11 +1,11 @@
 .subBox{
-    font-size: 10px;
+    font-size: 0.9rem;
     color : gray;
 }
 
 .subBox>span:nth-child(1){
     color : #A6C5F3;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .subBox>span:nth-child(2){

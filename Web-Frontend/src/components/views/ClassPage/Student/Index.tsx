@@ -151,6 +151,7 @@ justify-content : space-between;
 const constActiveBtnStyle = css`
 border-radius : 5px;
 flex-basis : 30%;
+font-size :1.05rem;
 background-color : ${props => props.theme.color.light_gray};
 color : ${props => props.theme.color.font_light_gray};
 &.active{
@@ -203,7 +204,7 @@ interface TestProps {
   }
 }
 
-const socket = socketio('http://13.125.234.161:3000', {
+const socket = socketio('http://disboard13.kro.kr:3000/', {
   transports : ['websocket']
 });
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
@@ -390,7 +391,7 @@ function Index(props: TestProps) {
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
-      console.log("data received!!!!!!");
+      console.log(data);
     });
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
@@ -421,9 +422,9 @@ function Index(props: TestProps) {
         </Active1Cnt>
         <Active2Cnt>
           <Active2ContentCnt>
-            <ContentWrapper className="content2 active" id="content1"><Comp /></ContentWrapper>
+            <ContentWrapper className="content2 active" id="content1"><Comp socket = {socket}/></ContentWrapper>
             <ContentWrapper className="content2" id="content2"><Sub socket = {socket}/></ContentWrapper>
-            <ContentWrapper className="content2" id="content3"><Etc /></ContentWrapper>
+            <ContentWrapper className="content2" id="content3"><Etc socket = {socket} /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>
             <UnderstoodsBtn className="Active2Btn active" id="1" onClick={Active2BtnHandler}>이해도</UnderstoodsBtn>

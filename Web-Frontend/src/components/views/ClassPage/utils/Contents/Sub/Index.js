@@ -2,19 +2,56 @@ import { Socket } from 'dgram';
 import { REFUSED } from 'dns';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 import './style.css'
 
-const SubContainer = styled.div`
-height : 36vh;
+const SubCnt = styled.div`
+width : 100%;
+height : 100%;
+display : flex;
+flex-direction : column;
+align-items : center;
+`
+
+const SubContentCnt = styled.div`
+width : 100%;
+height : 30vh;
 overflow-y : scroll;
 ::-webkit-scrollbar {
     display: none;
 }
 `
 
+const SubInputCnt = styled.div`
+width : 100%;
+height : 5vh;
+display : flex;
+justify-content : space-between;
+align-items : center;
+`
+
+const SubInput = styled.input`
+padding: 0 0.5rem;
+height : 80%;
+width: 80%;
+border: 1px solid #D4D4D4; 
+border-radius: 5px;
+`
+
+const SubSubmitBtn = styled.button`
+font-size: 0.8rem;
+width : 20%;
+text-align : center;
+font-weight : bold;
+color : #A6C5F3;
+`
+
 const SubFlexBox = styled.div`
+width : 100%;
+height : fit-content;
 display : flex;
 flex-direction : column;
+min-height : 30vh;
 `
 
 const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -23,54 +60,20 @@ function Index(props) {
     const socket = props.socket;
 
     const [flexRef, setflexRef] = useState(React.createRef());
-    const [isListening, setisListening] = useState(false);
+    const [inputRef, setinputRef] = useState(React.createRef());
+    const [subContent, setsubContent] = useState("");
 
     useEffect(() => {
-        console.log("fuck");
-        socket.on('sendIsUnderstood', function(data){
+        inputRef.current.total = "";
+        socket.on('sendSubtitle', function (data) {
+            console.log(data);
             addSub(data.content);
+            inputRef.current.total = inputRef.current.total.concat(" " + data.content);
         })
     }, [])
 
-    useEffect(() => {
-        rec.lang = 'ko-KR';
-        rec.continuous = true;
-        rec.interimResults = false;
-        rec.maxAlternative = 1;
-
-        rec.onspeechend = () => {
-            console.log('stopped');
-        };
-        rec.onnomatch = event => {
-            console.log('no match');
-        };
-        rec.onstart = () => {
-            console.log('started');
-        };
-        rec.onend = () => {
-            console.log('end');
-            stopListen();
-            startListen();
-        };
-        rec.onerror = event => {
-            console.log('error', event);
-        };
-        rec.onresult = event => {
-            let text = event.results[event.results.length-1][0].transcript;
-            if(text.charAt(0)==' ') text = text.substring(1, text.length);
-            addSub(text);
-        };
-    }, [])
-
-    function startListen() {
-        rec.start();
-    }
-
-    function stopListen() {
-        rec.stop();
-    }
-
-    function addSub(str){
+    function addSub(str) {
+        console.log("added!");
         const box = document.createElement('div');
         const timeStamp = document.createElement('span');
         const content = document.createElement('span');
@@ -79,15 +82,30 @@ function Index(props) {
         content.innerHTML = str;
         box.appendChild(timeStamp);
         box.appendChild(content);
+        console.log(flexRef.current);
         flexRef.current.appendChild(box);
     }
 
+    function findAnswer(){
+        console.log(inputRef.current.value);
+        console.log(inputRef.current.total);
+        axios.get(`http://3.37.36.54:5000/mrc/${inputRef.current.total}/${inputRef.current.value}`).then(response =>{
+            console.log(response);
+        })
+        inputRef.current.value = '';
+    }
+
     return (
-        <SubContainer>
-            <SubFlexBox ref = {flexRef}>
-            </SubFlexBox>
-            <button style ={{width : '200px', height : '50px', backgroundClip : 'black'}} onClick = {startListen}></button>
-        </SubContainer>
+        <SubCnt>
+            <SubContentCnt id="chatContentContainer">
+                <SubFlexBox ref={flexRef}>
+                </SubFlexBox>
+            </SubContentCnt>
+            <SubInputCnt>
+                <SubInput  ref = {inputRef} id="chatInput" type="TextArea" placeholder="질문을 입력해주세요!" />
+                <SubSubmitBtn onClick = {findAnswer}>내전송</SubSubmitBtn>
+            </SubInputCnt>
+        </SubCnt>
     )
 }
 

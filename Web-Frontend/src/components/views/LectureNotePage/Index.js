@@ -12,20 +12,27 @@ import UpdatePage from './UpdateNotePage';
 import ShowResponse from "../../utils/Comment/Index"
 
 const Container = styled.div`
-width: 100%;
-display: block;
-justify-content: center;
-align-items: center;
+width : 97%;
+height : 100%;
+display : inline-block;
+//overflow-y: auto;
+//align-items : center;
+//justify-content : center;
 `
 const Title = styled.div`
-font-size: 30px;
-font-style: italic;
-text-alignment: left;
+font-size : 30px;
+border-bottom : 1px solid #F7F9FC;
+height : 40px;
+line-height : 40px;
+font-style : italic;
 `
 const SubTitle = styled.div`
-font-size: 16px;
-display: inline-block;
-color: ${props => props.theme.color.font_dark_gray};
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
 `
 const Box = styled.div`
 display: block;
@@ -155,13 +162,13 @@ function Index({match}) {
                 <Route path="/main/:subject/:name/lectureNote/write" component={WritePage}/>
                 <Route path="/main/:subject/:name/lectureNote/update/:id" component={UpdatePage}/>
                 <Route path="/">
-                    <Container>
+                    <Container style={{marginLeft: "20px", marginTop: '10px'}}>
                     <Title>Lecture Note</Title>
                     <div style={{width: "100%", display: "block"}}>
                         <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a> / 강의 노트</SubTitle>
                         {isProfessor && <WriteBtn href={`/main/${subjectId}/${subjectName}/lectureNote/write`}>작성하기</WriteBtn>}
                     </div>
-                    <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>
+                    <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
                     <div>
                         {isLoading && display()}
                     </div>                    

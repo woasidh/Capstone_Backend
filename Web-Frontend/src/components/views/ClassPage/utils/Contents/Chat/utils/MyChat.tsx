@@ -15,7 +15,7 @@ margin-bottom : 5px;
 
 
 const Msg = styled.div`
-font-size : 13px;
+font-size : 1rem;
 padding : 2px 3px;
 border-radius : 5px;
 margin-right : 5px;
