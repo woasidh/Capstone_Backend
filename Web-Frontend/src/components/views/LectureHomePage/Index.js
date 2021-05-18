@@ -4,19 +4,27 @@ import axios from 'axios';
 import moment from 'moment';
 
 const Container = styled.div`
-width: 100%;
-display: block;
-justify-content: center;
-align-items: center;
+width : 97%;
+height : 100%;
+display : inline-block;
+//overflow-y: auto;
+//align-items : center;
+//justify-content : center;
 `
 const Title = styled.div`
-font-size: 30px;
-text-alignment: left;
+font-size : 30px;
+border-bottom : 1px solid #F7F9FC;
+height : 40px;
+line-height : 40px;
+font-style : italic;
 `
 const SubTitle = styled.div`
-font-size: 16px;
-display: block;
-color: ${props => props.theme.color.font_dark_gray};
+float: left;
+margin-top: 3px;
+margin-right: 20px;
+color : #8b8b8b;
+font-size : 13px;
+font-weight: 400;
 `
 const MenuTitle = styled.div`
 position: absolute;
@@ -126,8 +134,10 @@ function Index({match}){
     return(
         <Container>
             <Title>{subjectName}</Title>
-            <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a></SubTitle>
-            <hr style={{width: "100%", margin: "10px 0", display:"block"}}/>
+            <div style={{width: "100%", display: "block"}}>
+                <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectName}/home`}>{subjectName}</a></SubTitle>
+            </div>
+            <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
             <table style={{width: "100%", borderSpacing: "10px", borderCollapse: "separate", margin: "0px auto"}}>
                 <tbody><tr>
                     <NoticeBox rowSpan="2" colSpan="2">

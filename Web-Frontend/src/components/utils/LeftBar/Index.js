@@ -13,6 +13,12 @@ import axios from 'axios'
 const Container = styled.div`
 width : ${props => props.theme.margin.leftBar};
 height : 100%;
+overflow-y: scroll;
+-ms-overflow-style: none;
+scrollbar-width: none;
+&::-webkit-scrollbar{
+    display: none;
+};
 background-color: ${props => props.theme.color.main};
 position : absolute;
 left : 0;
@@ -20,7 +26,7 @@ left : 0;
 `
 
 const Content = styled.div`
-margin: 0;
+margin-bottom: 65px;
 `
 
 const SubjectMenu = styled.ul`
@@ -28,7 +34,7 @@ display : none;
 padding-left : 30px;
 padding-bottom : 10px;
 padding-top : 10px;
-background-color: ${props => props.theme.color.main};
+background-color : #1E2A38;
 color : white;
 font-size : 15px;
 list-style-type : none;
@@ -57,11 +63,15 @@ padding-top : 7px;
 display : block;
 font-size : 15px;
 &:hover{
+    background-color : #1E2A38;
     ${SubjectMenu}{
         display: block;
         padding-bottom : 7px;
         padding-top : 10px;
     }
+}
+&:active{
+    background-color : #1E2A38;
 }
 /* &.active{
 
@@ -152,7 +162,7 @@ function Index() {
                 </Menu>
                 
                 {ShowMenu1 && <div>
-                    {isProfessor && <SubMenu style={{backgroundColor : '#1E2A38'}} href="/main/uploadLecture"><span># 강의 개설</span></SubMenu>}
+                    {isProfessor && <SubMenu href="/main/uploadLecture"><span># 강의 개설</span></SubMenu>}
                     {isStudent && <SubMenu href="/main/enterLecture">#  강의 참여</SubMenu>}
                     <SubMenu href="/test/aaa">#  zoom test</SubMenu>
                     <SubMenu href="/main/all/all/notice">#  공지사항</SubMenu>
