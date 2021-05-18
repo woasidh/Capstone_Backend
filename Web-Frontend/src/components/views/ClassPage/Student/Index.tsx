@@ -210,7 +210,7 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -220,7 +220,7 @@ function Index(props: TestProps) {
   //------useeffect------
 
   //zoom init
-  /* useEffect(() => {
+  useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -308,7 +308,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -400,11 +400,11 @@ function Index(props: TestProps) {
     <MainCnt>
       <LeftCnt>
         <ScreenMenuCnt>
-          {/* {RenderMenuBtns()} */}
+          {RenderMenuBtns()}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
-          {/* {RenderCanvas()} */}
-          {/* <MediaController client={client} /> */}
+          {RenderCanvas()}
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>

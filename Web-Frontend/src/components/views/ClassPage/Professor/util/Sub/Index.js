@@ -51,14 +51,14 @@ function Index(props) {
     const type = props.type;
 
     const [flexRef, setflexRef] = useState(React.createRef());
-    const [isListening, setisListening] = useState(false);
+    const [isListening, setisListening] = useState(true);
 
     useEffect(() => {
         console.log(props);
     }, [])
 
     useEffect(() => {
-        rec.lang =  type==1 ? 'ko-KR' : 'en-US';
+        rec.lang = 'ko-KR'
         rec.continuous = true;
         rec.interimResults = false;
         rec.maxAlternative = 1;
@@ -92,13 +92,15 @@ function Index(props) {
         };
     }, [])
 
-    function startListen() {
+    useEffect(() => {
         rec.start();
-        setisListening(true);
+    }, [])
+
+    function startListen(){
+        rec.start();
     }
 
     function stopListen() {
-        setisListening(false);
         rec.stop();
     }
 

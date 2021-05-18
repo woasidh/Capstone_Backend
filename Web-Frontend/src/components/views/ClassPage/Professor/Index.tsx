@@ -6,7 +6,7 @@ import { RenderCanvas, ToggleCanvas, SetCanvasSize } from '../utils/SetCanvas/In
 import MediaController from '../utils/MediaController/Index'
 import Loading from '../utils/Loading/Index'
 import { generateInstantToken } from '../utils/Auth/Index'
-/* import ZoomInstant from "@zoomus/instantsdk" */
+import ZoomInstant from "@zoomus/instantsdk"
 import Chat from '../utils/Contents/Chat/Index';
 import Participant from '../utils/Contents/Participant/Index';
 import Question from '../utils/Contents/Question/Index'
@@ -225,7 +225,7 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -237,7 +237,7 @@ function Index(props: TestProps) {
   //------useeffect------
 
   //zoom init
-  /* useEffect(() => {
+  useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -325,7 +325,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -413,11 +413,12 @@ function Index(props: TestProps) {
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
-  function setOption(num: number) {
+/*   function setOption(num: number) {
     setsubType(num);
-  }
+  } */
 
   function setColor(total: number) {
+    console.log(total);
     const ref = document.querySelector('.content2.active#content1') as HTMLElement;
     if (total > 0) {
       ref.style.backgroundColor = `rgb(38, 255, 0, 0.0${total})`;
@@ -432,11 +433,11 @@ function Index(props: TestProps) {
     <MainCnt>
       <LeftCnt>
         <ScreenMenuCnt>
-          {/* {RenderMenuBtns()} */}
+          {RenderMenuBtns()}
         </ScreenMenuCnt>
         <ZoomScreen id="zoomScreen">
-          {/* {RenderCanvas()} */}
-          {/* <MediaController client={client}/> */}
+          {RenderCanvas()}
+          <MediaController client={client}/>
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -465,7 +466,7 @@ function Index(props: TestProps) {
           </Active2Menu>
         </Active2Cnt>
       </RightCnt>
-      <Popup setOptions={setOption} />
+      {/* <Popup setOptions={setOption} /> */}
     </MainCnt>
   )
 }

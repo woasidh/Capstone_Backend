@@ -12,11 +12,11 @@ const data = {
         {
             label: '이해 O',
             num: 1,
-            data: [5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
             radius : 0,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgba(255, 99, 132, 0.2)'
+            backgroundColor: 'rgb(67, 222, 108)',
+            borderColor: 'rgba(67, 222, 108, 0.2)'
         },{
             label: '합계',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -27,11 +27,11 @@ const data = {
         },
         {
             label: '이해 X',
-            data: [-5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
             radius : 0,
-            backgroundColor: 'rgb(54, 162, 235)',
-            borderColor: 'rgba(54, 162, 235, 0.2)'
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgba(255, 99, 132, 0.2)'
         },
     ],
 };
@@ -49,7 +49,7 @@ function Index(props) {
     function updateData() {
         let ups = chartRef.current.data.ups;
         let downs = -1*chartRef.current.data.downs;
-        let total = (ups + downs)/2;
+        let total = (ups + downs);
         chartRef.current.data.labels.pop();
         chartRef.current.data.datasets[0].data.pop();
         chartRef.current.data.datasets[2].data.pop();
@@ -82,9 +82,9 @@ function Index(props) {
                     label: '이해 O',
                     data: [ups].concat(chartRef.current.data.datasets[0].data),
                     fill: false,
-                    backgroundColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgb(67, 222, 108)',
                     radius : 0,
-                    borderColor: 'rgba(255, 99, 132, 0.2)'
+                    borderColor: 'rgba(67, 222, 108, 0.2)'
                 },{
                     label: '합계',
                     data: [total].concat(chartRef.current.data.datasets[1].data),
@@ -96,10 +96,10 @@ function Index(props) {
                 {
                     label: '이해 X',
                     data: [downs].concat(chartRef.current.data.datasets[2].data),
-                    fill: false,
+                    fill: false,    
+                    backgroundColor: 'rgb(255, 99, 132)',
                     radius : 0,
-                    backgroundColor: 'rgb(54, 162, 235)',
-                    borderColor: 'rgba(54, 162, 235, 0.2)'
+                    borderColor: 'rgba(255, 99, 132, 0.2)'
                 },
             ],
         })
