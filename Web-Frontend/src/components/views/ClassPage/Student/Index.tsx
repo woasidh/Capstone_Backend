@@ -314,7 +314,7 @@ function Index(props: TestProps) {
       console.log("event_passively_stop_share");
     });
 
-    //resize canvas when window resizes
+    //resize canvas when window resizess
     window.addEventListener('resize', () => {
       const canvas = document.getElementById("canvas0") as HTMLCanvasElement;;
       const parent = canvas.parentElement as HTMLElement;
