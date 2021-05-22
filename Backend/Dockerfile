@@ -1,6 +1,6 @@
 FROM node:12.16.3-alpine
 
-WORKDIR /root/Capstone/Project/Backend
+WORKDIR /var/jenkins_home/workspace/13-teamZoom-sc21/Backend
 COPY package*.json ./
 
 RUN npm install -g npm@7.6.3
