@@ -55,7 +55,13 @@ router.get('/get/all', auth, (req, res)=>{
 
         let doSyncTask = user.subjects.map((subject)=>{
             return new Promise((resolve)=>{
-                Notice.find({ subject: subject._id }).populate('subject').sort({ date: -1 }).limit(3).exec((err, notices) => {
+                Notice.find({ subject: subject._id }).populate('subject').sort({ date: -1 }).populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'user',
+                        model: 'user'
+                    }
+                }).limit(3).exec((err, notices) => {
                     if (err) return res.status(500).json(err);
     
                     noticeArray.push({

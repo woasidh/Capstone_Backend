@@ -100,7 +100,9 @@ router.post('/signup', (req, res) => {
                         userExist: true
                     });
                 }
-                else res.status(400).json(err);
+                else res.status(400).json({
+                    success: false,
+                })
             });
         }
         else res.status(201).json({ success: true });
