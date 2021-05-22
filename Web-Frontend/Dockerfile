@@ -5,11 +5,13 @@ COPY package*.json ./
 
 RUN npm install -g npm@7.6.3
 RUN npm install
+
+COPY . .
+
+
 RUN npm link my_modules/zoomus/instantsdk
 
 ENV NODE_ENV production
-
-COPY . .
 
 RUN npm run build
 
