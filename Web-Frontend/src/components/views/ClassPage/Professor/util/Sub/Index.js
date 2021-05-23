@@ -1,6 +1,7 @@
 import { REFUSED } from 'dns';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 import './style.css'
 
 const SubContainer = styled.div`
@@ -45,7 +46,7 @@ line-height : 5vh;
 
 
 const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = new Recognition();
+let rec = Recognition && new Recognition();
 function Index(props) {
     const socket = props.socket;
     const type = props.type;
@@ -86,26 +87,22 @@ function Index(props) {
             console.log(text);
             if (text.charAt(0) == ' ') text = text.substring(1, text.length);
             addSub(text);
+            axios.put('/api/subtitle/add', {
+                lectureId: props.lectureId,
+                content: text,
+                time: "00:00",
+                subtitleOpt: true
+            }).then(res => {
+                console.log(res);
+            })
             socket.emit('subtitle', {
-                time : '11:11',
-                content : text
+                time: '11:11',
+                content: text
             })
         };
     }, [])
 
-    useEffect(() => {
-        rec.start();
-    }, [])
-
-    function startListen(){
-        rec.start();
-    }
-
-    function stopListen() {
-        rec.stop();
-    }
-
-    function addSub(str) {
+    const addSub = (str) => {
         const box = document.createElement('div');
         const timeStamp = document.createElement('span');
         const content = document.createElement('span');
@@ -115,7 +112,36 @@ function Index(props) {
         box.appendChild(timeStamp);
         box.appendChild(content);
         flexRef.current.appendChild(box);
+        box.scrollIntoView({behavior : 'smooth'})
     }
+
+    useEffect(() => {
+        rec.start();
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+        addSub("a");
+    }, [])
+
+    function startListen() {
+        rec.start();
+    }
+
+    function stopListen() {
+        rec.stop();
+    }
+
 
     return (
         <>

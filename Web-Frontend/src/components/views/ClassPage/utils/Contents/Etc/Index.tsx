@@ -5,34 +5,36 @@ interface quizProp {
     socket: any
 }
 
-interface QuestionType{
-    qs : Array<String>,
-    as : Array<String>
+interface QuestionType {
+    type: number
+    deadline: number
 }
 
 function Index(props: quizProp) {
 
     const [didGet, setdidGet] = useState(false);
     const [questions, setquestions] = useState<QuestionType>({
-        qs : [],
-        as: []
+        type: 0,
+        deadline: 0
     });
 
-    function backTo(){
+    function backTo() {
         setdidGet(false);
     }
 
     const socket = props.socket;
     useEffect(() => {
         socket.on('sendQuiz', (data: any) => {
-            setquestions(data);
-            setdidGet(true);
+            if (data.purpose == 'survey') {
+                setquestions(data);
+                setdidGet(true);
+            }
         })
     }, [])
     return (
         <div>
             {didGet &&
-                <Popup data = {questions} setOptions = {backTo}></Popup>
+                <Popup socket = {socket} data={questions} setOptions={backTo}></Popup>
             }
         </div>
     )
