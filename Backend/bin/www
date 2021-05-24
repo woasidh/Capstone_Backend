@@ -51,7 +51,7 @@ io.on('connection', (socket)=>{
     io.to(socket.code).emit('newUser', {
       type: 'connect', 
       name: 'SERVER', 
-      message: socket.name
+      message: data
     });
   });
 
