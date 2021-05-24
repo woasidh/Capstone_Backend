@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components';
 
 interface QuestionProps {
+    data?: any
     msg: string
     socket: any
     qNum: number
@@ -87,8 +89,17 @@ function Box(props: QuestionProps) {
         }
     }, [showAnswer])
 
+    useEffect(() => {
+        let arr:Array<any> = [];
+        props.data && props.data.answers.forEach((answer: any, idx: any) => {
+            console.log(answer);
+            arr = arr.concat([<Answer>{answer.content}</Answer>]);
+        })
+        setanswers(answers.concat(arr));
+    }, [])
+
     function showAnswers(e: any) {
-        console.log(e);
+        console.log(answers);
         e.stopPropagation();
         if (showAnswer) setshowAnswer(false);
         else setshowAnswer(true);
@@ -105,8 +116,13 @@ function Box(props: QuestionProps) {
             content: inputRef.current.value
         })
         setanswers(answers.concat([<Answer>{inputRef.current.value}</Answer>]));
+        axios.put('/api/question/reply',{
+            questionId : props.qNum,
+            respondent: "",
+            content: inputRef.current.value
+        })
+        console.log(props.qNum);
         inputRef.current.value = '';
-        console.log(inputRef.current);
     }
 
     function keyDown(e: any) {
@@ -115,6 +131,7 @@ function Box(props: QuestionProps) {
 
     useEffect(() => {
         socket.on('sendA', (data: any) => {
+            console.log(data);
             if (props.qNum == data.qNum) {
                 setanswers(answers.concat([<Answer>{data.content}</Answer>]));
             }
@@ -123,7 +140,7 @@ function Box(props: QuestionProps) {
     return (
         <>
             <BoxContainer ref={boxRef}>
-                <div style ={{fontSize : '1rem'}} id="Boxcontainer" onClick={showAnswers}>
+                <div style={{ fontSize: '1rem' }} id="Boxcontainer" onClick={showAnswers}>
                     {props.msg}
                     {showAnswer && <AnswerBox>
                         {answers}

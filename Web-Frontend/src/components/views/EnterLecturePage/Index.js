@@ -94,36 +94,36 @@ function Index() {
     }
 
     const submitHandler = () => {
-        axios.put('/api/subject/join', 
-        { 
-            code : code
-         })
-         .then((response)=>{
-             const result = response.data;
-             console.log(result);
-             alert(result.subject.name + "에 성공적으로 참여하였습니다.");
-             return window.location.href = '/main';
-         })
-         .catch((response)=>{
-             console.log('Error!');
-             console.log(response);
-         });
+        axios.put('/api/subject/join',
+            {
+                code: code
+            })
+            .then((response) => {
+                const result = response.data;
+                console.log(result);
+                alert(result.subject.name + "에 성공적으로 참여하였습니다.");
+                return window.location.href = '/main';
+            })
+            .catch((response) => {
+                console.log('Error!');
+                console.log(response);
+            });
     }
 
 
     return (
-        <Container style={{marginLeft: "20px", marginTop: '10px'}}>
+        <Container style={{ marginLeft: "20px", marginTop: '10px' }}>
             <Containers>
                 <Title>Enter Lecture</Title>
-                <div style={{width: "100%", display: "block"}}>
+                <div style={{ width: "100%", display: "block" }}>
                     <SubTitle>강의 / 강의 참가</SubTitle>
                 </div>
-                <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
+                <hr style={{ width: "100%", margin: "30px 0px", marginTop: "50px", display: "block", borderColor: '#ffffff' }} />
             </Containers>
             <Box>
                 <LinkBox>
                     <SubTitless>강의 링크</SubTitless>
-                    <Input placeholder = "강의 링크를 입력하세요" onChange={onChangeCode}/>
+                    <Input placeholder="강의 링크를 입력하세요" onChange={onChangeCode} />
                 </LinkBox>
                 <SubmitBtn onClick={submitHandler}>강의 참여</SubmitBtn>
             </Box>

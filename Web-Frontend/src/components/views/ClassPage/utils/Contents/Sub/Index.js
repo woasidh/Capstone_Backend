@@ -54,8 +54,6 @@ flex-direction : column;
 min-height : 30vh;
 `
 
-const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = new Recognition();
 function Index(props) {
     const socket = props.socket;
 
@@ -92,13 +90,9 @@ function Index(props) {
             inputRef.current.total = inputRef.current.total.concat(" " + data.content);
             inputRef.current.arr.push(" " + data.content);
         })
-        addSub("다음은 이해 여부 전달 및 확인 시나리오입니다.")
-        addSub("먼저 학생들이 현재 자신의 이해 여부에 대해 익명으로 교수님께 전달할 수 있습니다.")
-        addSub("그러면 교수님은 학생들의 이해 정도를 그래프와 색으로 파악할 수 있습니다. ")
-        addSub("그래프를 보시면 x축은 시간을 나타내고 y축은 이해도를 나타냅니다. ")
-        addSub("또한, 초록색 선이 이해가 잘돼요, 빨간색 선이 이해가 안돼요를 나타내고, 회색 선이 평균값을 나타냅니다.")
-        addSub("교수는 이 그래프를 통해서 1초마다 학생들의 이해 정도를 파악할 수 있고 총 1분동안의 정보를 알 수 있습니다.")
-        addSub("또한, 총 1분동안의 이해 정도가 높으면 이해도 창의 색깔을 초록색으로, 낮으면 빨간색으로 변경하여 교수가 학생들의 이해 정도를 한 눈에 파악할 수 있도록 하였습니다")
+        axios.put(`/api/lecture/join/${props.lecture_id}`).then(res => {
+            console.log(res);
+        })
     }, [])
 
     function findAnswer() {
