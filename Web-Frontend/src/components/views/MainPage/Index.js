@@ -53,21 +53,21 @@ function Index() {
                     </div>
                     <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
             
-                    <div style={{width: "42%", float: "left", marginTop: "60px", marginLeft: "30px"}}>
+                    <div style={{width: "45%", float: "left", marginTop: "60px", marginLeft: "30px"}}>
                         <div style={{width: "500px"}}> 
-                            <img style = {{float: "left", width: "60px"}} src= {logo} alt="logo"/>
-                            <img style = {{float: "left", maxWidth: "100%", height: "55px", marginLeft: "10px", marginTop: "5px"}} src= {logoT} alt="logoT"/>
+                            <img style = {{float: "left", width: "58px"}} src= {logo} alt="logo"/>
+                            <img style = {{float: "left", maxWidth: "100%", height: "52px", marginLeft: "10px", marginTop: "5px"}} src= {logoT} alt="logoT"/>
                         </div>
-                        <div style = {{marginTop: "150px", color: "#444444", fontSize: "37px", fontWeight: "bold", fontFamily: "Verdana"}}>ONLINE</div>         
-                        <div style = {{marginBottom: "50px", color: "#444444", fontSize: "37px", fontWeight: "bold", fontFamily: "Verdana"}}>COURSES SERVICE</div>                  
-                        <div style = {{fontSize: "23px", color: "#b5b5b5", fontFamily: "Verdana", lineHeight: '45px', fontWeight: "bold",}}>Experience a new class with real-time lecture
+                        <div style = {{marginTop: "130px", color: "#444444", fontSize: "36px", fontWeight: "bold", fontFamily: "Verdana"}}>ONLINE</div>         
+                        <div style = {{marginBottom: "30px", color: "#444444", fontSize: "36px", fontWeight: "bold", fontFamily: "Verdana"}}>COURSES SERVICE</div>                  
+                        <div style = {{fontSize: "25px", color: "#b5b5b5", fontFamily: "Verdana", lineHeight: '45px', fontWeight: "bold",}}>Experience a new class with real-time lecture
                             service disboard! Instructors and students can 
                             have even more amazing experiences in class.
                             Also, there are many out-of-class services as well.</div>
                         <Btn onClick = {{}}>LEARN MORE</Btn>
                     </div>     
-                    <div style={{float: "left", width: "870px", height: "690px"}}>  
-                        <img style = {{marginTop: "20px", maxWidth: "100%", height: "100%"}} src= {back} alt="back"/>
+                    <div style={{float: "left", width: "800px", height: "600px"}}>  
+                        <img style = {{marginTop: "70px", maxWidth: "100%", height: "100%"}} src= {back} alt="back"/>
                     </div>
                     </Container>
         </div>
