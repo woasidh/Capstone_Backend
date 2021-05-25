@@ -3,10 +3,15 @@ import styled from 'styled-components'
 import Popup from './util/Popup'
 import axios from 'axios'
 import './style.css'
+import ResPop from './util/ResultPopup.js'
 
 const QuizContainer = styled.div`
 height : 36vh;
 width : 100%;
+overflow-y: scroll;
+::-webkit-scrollbar {
+    display: none;
+}
 `
 
 const FlexContainer = styled.div`
@@ -15,6 +20,7 @@ display : flex;
 flex-direction : column;
 justify-content : center;
 align-items : center;
+margin-bottom: 15px;
 `
 
 const QuizBox = styled.div`
@@ -53,6 +59,18 @@ border-radius : 4px;
 }
 `
 
+const ResultBox = styled.div`
+width : 95%;
+height : fit-content;
+`
+const ResultContent = styled.button`
+width : 50%;
+margin-bottom: 5px;
+border : 1px solid #70707090;
+border-radius : 4px;
+`
+
+
 interface QuizProps {
     socket: any
 }
@@ -65,7 +83,12 @@ function Index(props: QuizProps) {
     const [isListening, setisListening] = useState(false);
     const [listeningTime, setlisteningTime] = useState(0);
     const [quizType, setquizType] = useState(0);
+    const [resultRef, setresultRef] = useState(React.createRef());
     const [backRef, setBackRef] = useState(React.createRef());
+    const [results, setresults] = useState<Array<any>>([]);
+    const [currentResNum, setcurrentResNum] = useState(-1);
+    const [showRes, setshowRes] = useState(false);
+    const [currentType, setcurrentType] = useState(-1)
 
     function submitQuiz(e: any) {
         if (isListening) {
@@ -80,20 +103,28 @@ function Index(props: QuizProps) {
         const names = ['주관식 퀴즈', '객관식 퀴즈', 'OX 퀴즈'];
         return names.map((name, idx) => (
             <QuizBox className="quizTypes" id={(idx + 1).toString()}>
-                <span style={{ zIndex: 99 }}>주관식 퀴즈</span>
-                <SubmitBtn onClick={submitQuiz}>제출</SubmitBtn>
+                <span style={{ zIndex: 99 }}>{names[idx]}</span>
+                <SubmitBtn id="quizSubmit" onClick={submitQuiz}>제출</SubmitBtn>
                 <Background id="quizBackground"></Background>
             </QuizBox>
         ))
     }
 
-    function set(time: number) {
+    function openPop(e:any){
+        setcurrentResNum(e.target.id);
+        setcurrentType(e.target.dataset.type);
+        setshowRes(true);
+    }
+
+    function set(time: number, obj: any) {
+        console.log(obj);
         setpopup(false);
         setisListening(true);
         setTimeout(() => {
             setisListening(false);
-        }, time * 60000);
-        setlisteningTime(time * 60);
+            setresults(results.concat([<ResultContent data-type = {obj.type} id={obj.id} onClick = {openPop} >퀴즈{results.length + 1}</ResultContent>]));
+        }, time * 1000);
+        setlisteningTime(time * 10000);
         const quizBackground = document.querySelectorAll('#quizBackground')[quizType - 1] as HTMLElement;
         quizBackground.style.animationName = 'slidein';
         quizBackground.style.animationDuration = `${time * 60}s`;
@@ -101,12 +132,17 @@ function Index(props: QuizProps) {
 
     return (
         <QuizContainer>
-            <FlexContainer>
+            <FlexContainer id="quizFlexCnt">
                 {renderQuizTypes()}
+                <ResultBox id="quizResultBox">
+                    결과 :
+                    {results}
+                </ResultBox>
             </FlexContainer>
-            {popup && <Popup type={quizType} socket={props.socket} setOptions={(time: number) => {
-                set(time);
+            {popup && <Popup type={quizType} socket={props.socket} setOptions={(time: number, obj: any) => {
+                set(time, obj);
             }} />}
+            {showRes && <ResPop type = {currentType} quiz_id = {currentResNum}></ResPop>}
         </QuizContainer>
     )
 }

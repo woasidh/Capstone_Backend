@@ -48,57 +48,57 @@ line-height : 5vh;
 const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = Recognition && new Recognition();
 function Index(props) {
+
     const socket = props.socket;
     const type = props.type;
 
     const [flexRef, setflexRef] = useState(React.createRef());
     const [isListening, setisListening] = useState(true);
+    const [Sentence, setSentence] = useState("");
 
     useEffect(() => {
-        console.log(props);
-    }, [])
+        rec.interimResults = true;
+        rec.lang = 'ko-KR';
 
-    useEffect(() => {
-        rec.lang = 'ko-KR'
-        rec.continuous = true;
-        rec.interimResults = false;
-        rec.maxAlternative = 1;
-
-        rec.onspeechend = () => {
-            console.log('stopped');
-        };
-        rec.onnomatch = event => {
-            console.log('no match');
-        };
         rec.onstart = () => {
             console.log('started');
+            console.log(flexRef.current.text);
+            if (flexRef.current.text) {
+                if (flexRef.current.text.length > 0) {
+                    console.log(flexRef.current.text);
+                    addSub(flexRef.current.text);
+                    socket.emit('subtitle', {
+                        time: '11:11',
+                        content: flexRef.current.text
+                    })
+                }
+            }
         };
         rec.onend = () => {
             console.log('end');
-            stopListen();
-            /* if (isListening) startListen(); */
-        };
-        rec.onerror = event => {
-            console.log('error', event);
+            startListen();
         };
         rec.onresult = event => {
-            console.log('onresult');
-            let text = event.results[event.results.length - 1][0].transcript;
-            console.log(text);
-            if (text.charAt(0) == ' ') text = text.substring(1, text.length);
-            addSub(text);
-            axios.put('/api/subtitle/add', {
-                lectureId: props.lectureId,
-                content: text,
-                time: "00:00",
-                subtitleOpt: true
-            }).then(res => {
-                console.log(res);
-            })
-            socket.emit('subtitle', {
-                time: '11:11',
-                content: text
-            })
+            /*             console.log('onresult');
+                        let text = event.results[event.results.length - 1][0].transcript;
+                        console.log(text);
+                        if (text.charAt(0) == ' ') text = text.substring(1, text.length);
+                        addSub(text);
+                        axios.put('/api/subtitle/add', {
+                            lectureId: props.lectureId,
+                            content: text,
+                            time: "00:00",
+                            subtitleOpt: true
+                        }).then(res => {
+                            console.log(res);
+                        }) */
+            let texts = Array.from(event.results)
+                .map(results => results[0].transcript).join("");
+
+            texts.replace(/느낌표|강조|뿅/gi, '❗️')
+            flexRef.current.text = texts;
+            /* setSentence(texts); */
+            console.log(texts);
         };
     }, [])
 
@@ -112,26 +112,13 @@ function Index(props) {
         box.appendChild(timeStamp);
         box.appendChild(content);
         flexRef.current.appendChild(box);
-        box.scrollIntoView({behavior : 'smooth'})
+        box.scrollIntoView({
+            behavior: 'smooth', block: 'nearest'
+        });
     }
 
     useEffect(() => {
         rec.start();
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
-        addSub("a");
     }, [])
 
     function startListen() {
@@ -150,13 +137,9 @@ function Index(props) {
                 </SubFlexBox>
             </SubContainer>
             <ControlBox>
-                {!isListening && <PlayBtn onClick={startListen}>녹음</PlayBtn>}
-                {isListening &&
-                    <>
-                        <Listen>녹음중...</Listen>
-                        <StopBtn onClick={stopListen}>중지</StopBtn>
-                    </>
-                }
+                <Listen>녹음중.sss..</Listen>
+                <StopBtn onClick={startListen}>시작</StopBtn>
+                <StopBtn onClick={stopListen}>중지</StopBtn>
             </ControlBox>
         </>
     )

@@ -6,16 +6,20 @@ interface quizProp {
 }
 
 interface QuestionType {
+    purpose : String
     type: number
     deadline: number
+    id : number
 }
 
 function Index(props: quizProp) {
 
     const [didGet, setdidGet] = useState(false);
     const [questions, setquestions] = useState<QuestionType>({
+        purpose : "",
         type: 0,
-        deadline: 0
+        deadline: 0,
+        id : -1
     });
 
     function backTo() {

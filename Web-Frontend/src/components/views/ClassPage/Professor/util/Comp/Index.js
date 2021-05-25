@@ -77,7 +77,7 @@ function Index(props) {
             labels: [newTime].concat(chartRef.current.data.labels),
             datasets: [
                 {
-                    label: '+',
+                    label: '이해O',
                     data: [ups].concat(chartRef.current.data.datasets[0].data),
                     fill: false,
                     backgroundColor: 'rgb(67, 222, 108)',
@@ -92,7 +92,7 @@ function Index(props) {
                     borderColor: 'rgba(0, 0, 0, 0.4)'
                 },
                 {
-                    label: '-',
+                    label: '이해X',
                     data: [downs].concat(chartRef.current.data.datasets[2].data),
                     fill: false,    
                     backgroundColor: 'rgb(255, 99, 132)',

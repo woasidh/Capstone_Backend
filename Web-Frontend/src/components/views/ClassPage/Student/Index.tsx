@@ -232,7 +232,7 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -330,16 +330,19 @@ function Index(props: TestProps) {
 
   //수업중인 lecture 받아오기
   useEffect(() => {
-    /* const payload:ccc = {
+    const payload:ccc = {
       subjectId: "2"
     }
-    axios.get(`/api/lecture/get/inProgress/subject/${props.match.params.subject_id}`).then(res=>{
+/*     axios.get(`/api/lecture/get/inProgress/subject/2`).then(res=>{
       console.log(res);
-    }) */  
+    })   */
+    axios.put(`/api/lecture/join/28`).then(res=>{
+      console.log(res);
+    })  
   }, [])
 
   //zoom init
-  /* useEffect(() => {
+  useEffect(() => {
     zoomInit();
   }, [])
 
@@ -349,7 +352,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -434,11 +437,12 @@ function Index(props: TestProps) {
   useEffect(() => {
     socket.emit('user', {
       name: user ? user.name : "default",
-      code: '1234'
+      code: '1234',
+      email : user ? user.email : "default"
     });
-    socket.on('newUser', (data: any) => {
+/*     socket.on('newUser', (data: any) => {
       console.log(data);
-    });
+    }); */
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
@@ -447,17 +451,17 @@ function Index(props: TestProps) {
       <LeftCnt>
         <ZoomScreen id="zoomScreen">
           <ScreenMenuCnt id="screenMenuCnt">
-            {/* {RenderMenuBtns()} */}
+            {RenderMenuBtns()}
           </ScreenMenuCnt>
-          {/* {RenderCanvas()} */}
-          {/* <MediaController client={client} /> */}
+          {RenderCanvas()}
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
         <Active1Cnt>
           <Active1ContentCnt>
-            <ContentWrapper className="content1 active" id="content1"><Participant /></ContentWrapper>
-            <ContentWrapper className="content1" id="content2"><Chat socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content1 active" id="content1"><Participant socket = {socket} /></ContentWrapper>
+            <ContentWrapper className="content1" id="content2"><Chat socket={socket} user = {user.name} /></ContentWrapper>
             <ContentWrapper className="content1" id="content3"><Question lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
           </Active1ContentCnt>
           <Active1Menu>

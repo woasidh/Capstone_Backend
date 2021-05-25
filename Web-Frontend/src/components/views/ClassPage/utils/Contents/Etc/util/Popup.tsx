@@ -3,14 +3,17 @@ import { Modal, Button, Radio } from 'antd';
 import styled from 'styled-components'
 import './Style.css'
 import { Socket } from 'dgram';
+import axios from 'axios';
 
 interface QuestionType {
+    purpose : String
     type: number
     deadline: number
+    id : number
 }
 
 interface PopProps {
-    socket : any,
+    socket: any,
     data: QuestionType,
     setOptions: Function
 }
@@ -53,30 +56,40 @@ function Index(props: PopProps) {
         setIsModalVisible(true);
     };
 
+    function sendAnswer(num:any){
+        axios.put('/api/quiz/submit', {
+            quizId: props.data.id,
+            response: [
+                {
+                    answer: num
+                }
+            ]
+        }).then(res=>{console.log(res)});
+    }
+
     const handleOk = () => {
         setIsModalVisible(false);
         let data;
-        if(props.data.type==1){
-            data = {
-                purpose : 'submit',
-                content : strVal
-            }
-        }else if(props.data.type==2){
-            data = {
-                purpose : 'submit',
-                content : multipleVal
-            }
-        }else{
-            data = {
-                purpose : 'submit',
-                content : tfVal
-            }
+        if (props.data.type == 1) {
+            data = strVal;
+        } else if (props.data.type == 2) {
+            data = multipleVal;
+            sendAnswer(data);
+            sendAnswer(1);
+            sendAnswer(2);
+            sendAnswer(3);
+            sendAnswer(4);
+            sendAnswer(5);
+        } else {
+            data = tfVal;
+            sendAnswer(tfVal);
+            sendAnswer(1);
+            sendAnswer(2);
         }
-        socket.emit('quiz', data);
         props.setOptions();
     };
 
-    const strOnchange = (e:any)=>{
+    const strOnchange = (e: any) => {
         setstrVal(e.target.value);
     }
 
@@ -131,8 +144,8 @@ function Index(props: PopProps) {
             return (
                 <>
                     <Questions>정답 : </Questions>
-                    <AnswerInput onChange = {strOnchange} rows={2} placeholder="정답을 적어주세요" />
-                </> 
+                    <AnswerInput onChange={strOnchange} rows={2} placeholder="정답을 적어주세요" />
+                </>
             )
         } else if (props.data.type == 2) {
             return (

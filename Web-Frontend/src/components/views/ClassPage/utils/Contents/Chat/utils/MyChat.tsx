@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 interface chatProps {
     msg: string
+    name : string
 }
 
 const Container = styled.div`
@@ -11,6 +12,13 @@ display : flex;
 justify-content : flex-end;
 align-items : center;
 margin-bottom : 5px;
+`
+
+const Container1 = styled.div`
+width : 100%;
+display : flex;
+justify-content : flex-end;
+align-items : center;
 `
 
 
@@ -23,14 +31,32 @@ background-color : #C0EFFB;
 word-break:break-all;
 `
 
+const Partcipant = styled.div`
+font-size : 0.6rem;
+padding : 2px 3px;
+margin-right : 5px;
+word-break:break-all;
+`
+
+const Cont = styled.div`
+&:hover{
+    display : none;
+}
+`
+
 function MyChat(props: chatProps) {
 
     const [cntRef, setcntRef] = useState<any>(React.createRef());
 
     return (
-            <Container ref={cntRef} id="msgCnt" style={{ width: '100%'}}>
+        <Cont>
+            <Container1>
+                <Partcipant>{props.name} <span style={{ display: 'none' }} id="chatSpan">03:13PM</span></Partcipant>
+            </Container1>
+            <Container ref={cntRef} id="msgCnt" style={{ width: '100%' }}>
                 <Msg>{props.msg}</Msg>
             </Container>
+        </Cont>
     )
 }
 

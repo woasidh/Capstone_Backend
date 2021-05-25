@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios'
 import { Modal, Button, Radio } from 'antd';
 import './Popup.css'
 import Set from './Set'
@@ -7,7 +8,7 @@ import { InputNumber } from 'antd';
 interface PopProps {
     setOptions: Function
     socket: any
-    type : number
+    type: number
 }
 
 function Popup(props: PopProps) {
@@ -24,13 +25,26 @@ function Popup(props: PopProps) {
 
     const handleOk = () => {
         setIsModalVisible(false);
-        const obj = {
-            purpose : 'survey',
-            type : props.type,
-            deadline : time
-        }
-        socket.emit('quiz', obj);
-        props.setOptions(time);
+        axios.post('/api/quiz/create', {
+            name: "quiz",
+            subjectId: 2,
+            answerSheets: [
+                {
+                    question: "",
+                    answer: ""
+                }
+            ],
+            type: props.type
+        }).then(res => {
+            const obj = {
+                purpose: 'survey',
+                type: props.type,
+                deadline: time,
+                id : res.data.quiz._id
+            }
+            props.setOptions(time, obj);
+            socket.emit('quiz', obj);
+        })
     };
 
     const handleCancel = () => {
@@ -47,7 +61,7 @@ function Popup(props: PopProps) {
         <Modal
             title="퀴즈 출제"
             visible={isModalVisible}
-            onCancel = {handleCancel}
+            onCancel={handleCancel}
             onOk={handleOk}
             okText="확인"
             wrapClassName={"quiz"}
