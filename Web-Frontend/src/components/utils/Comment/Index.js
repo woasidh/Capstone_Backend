@@ -21,19 +21,19 @@ margin: 5px;
 `
 const CommentBtn = styled.button`
 display: inline-block;
-background-color: ${props => props.theme.color.blue};
-color: white;
+background-color: #BFBFBF;
+color: #3E3E3E;
 position: absolute;
-width: 10%;
-height: 66px;
+width: 5%;
+height: 40px;
 border: solid 1px #ababab;
 cursor: pointer;
 border-radius: 0 5px 5px 0;
 `
 const CommentInputBox = styled.textarea`
 display: inline-block;
-width : 87.5%;
-height: 66px;
+width : 74%;
+height: 40px;
 padding : 10px;
 resize: none;
 border : 1px solid ${props => props.theme.color.gray4};
@@ -100,9 +100,10 @@ function ShowComment ({value, index, postId, subjectId, subjectName, userId, typ
                 <CommentInputBox onChange={(e) => setComment(e.target.value)} style={{resize : "none"}} placeholder={value.content}/>
                 <CommentBtn onClick={(e) => editComment(e, index)}>수정</CommentBtn>
             </div>:
-            <div>
-                <div style={{display: "inline-block", height: "40px"}}><Profile style={{backgroundImage: `url(${value.user.photourl})`}}/>{value.user.name} : {value.content}</div>
-                {value.user._id == userId && <div style={{float:"right"}}>
+            <div style={{width: "80%", height: "40px", position: "relative"}}>
+                <div style={{display: "inline-block", height: "40px"}}><Profile style={{backgroundImage: `url(${value.user.photourl})`}}/>
+                <div style={{position: "absolute", left: "40px", top: "10px"}}>{value.user.name} : {value.content}</div></div>
+                {value.user._id == userId && <div style={{float:"right", marginRight: "5px"}}>
                     <SmallBtn onClick={(e) => {setisEditing(!isEditing); setComment(value.content)}}>수정</SmallBtn>
                     <SmallBtn onClick={(e) => deleteComment(e, index)}>삭제</SmallBtn></div>}                               
             </div>}
@@ -194,20 +195,20 @@ function Index({commentList, emotionList, postId, subjectId, subjectName, userId
     return(
     <>
         <ReactBtn onClick={(e) => setisShowing(!isShowing)}>
-            <CommentImg width="15px" height="15px"/>댓글({commentList.length})</ReactBtn>
+            <CommentImg width="14px" height="14px"/> 댓글({commentList.length})</ReactBtn>
         <ReactBtn onClick={(e)=> (isRed ? deleteEmotion() : addEmotion())}>
             <LikeImg width="12px" height="12px" fill={isRed ? "red":"gray"}/> 좋아요({emotionsLength})</ReactBtn>
-        <div style={{width: "100%", marginBottom: "20px", display:"block"}}>
+        <div style={{width: "100%", display:"block"}}>
             {isShowing && commentList.map((value, index) => 
             <div style={{display: "block", width: "100%", margin: "10px auto"}}>
                 <ShowComment value={value} index ={index} postId={postId} subjectId={subjectId} subjectName={subjectName} userId={userId} type={type}/>
             </div>)
             }
         </div>
-        <div style={{width: "100%", display:"block", margin: "0 auto", position: "relative"}}>
+        {isShowing && <div style={{width: "100%", display:"block", margin: "0 auto", position: "relative"}}>
             <CommentInputBox onChange={(e) => setComment(e.target.value)} rows={2} style={{resize : "none"}}/>
             <CommentBtn onClick={(e) => submitComment()}>등록</CommentBtn>
-        </div>
+        </div>}
 
     </>
                         

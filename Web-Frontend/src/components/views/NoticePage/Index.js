@@ -11,6 +11,7 @@ import ReactHtmlParser from 'react-html-parser';
 import WritePage from "./WriteNoticePage";
 import UpdatePage from "./UpdateNoticePage";
 import ShowResponse from "../../utils/Comment/Index"
+import { resolve } from 'dns';
 
 const Container = styled.div`
 width : 97%;
@@ -36,13 +37,14 @@ font-size : 13px;
 font-weight: 400;
 `
 const Box = styled.div`
-display: block;
 width: 100%;
+display: block;
 margin : 0px 5px 10px 0px;
-background : white;
+padding : 10px;
+background: white;
 border-radius: 5px;
-padding: 10px;
-box-shadow: 5px 5px #e0e0e0;
+box-shadow: 0px 5px 5px 2px #e0e0e0;
+position: relative;
 `
 const WriteBtn = styled.a`
 display: inline-block;
@@ -54,69 +56,65 @@ color: white;
 border-radius: 5px;
 `
 const SmallBtn = styled.button`
-display: inline-block;
 font-size: 12px;
 padding: 5px;
 margin: 1px;
-background-color: ${props => props.theme.color.blue};
-color: white;
+background-color: #ECECEC;
+color: #3E3E3E;
 border-radius: 5px;
-`
-const NoticeBox = styled.div`
-//position: absolute;
-//margin-top: -50px;
-display: inline-block;
-padding: 5px;
-border-right: 1px solid black; 
-width: 80%;
+&:hover{
+    background-color : #BFBFBF;
+}
 `
 const NoticeTitle = styled.div`
 display: block;
-padding: 5px;
-margin-right: 20px;
+margin: 10px 0px 10px 10px;
 color : #233044;
 font-size : 16px;
 font-weight: 700;
 `
 const NoticeContent = styled.div`
-padding: 5px;
+width : 78%;
 display: block;
 font-size : 14px;
+margin: 10px 0px 10px 10px;
+border-bottom : 1px solid #BFBFBF;
+`
+const NoticeMenuButton = styled.button`
+position: absolute;
+height: 30px;
+width: 30px;
+top: 10px;
+right: 10px;
+border-radius:75px;
+&:hover{
+    background-color : #f3f3f3;
+}
 `
 const NoticeMenuBox = styled.div`
-//position: absolute;
-//margin-right: 50px;
-display: inline-block;
-width : 20%;
-padding : 5px;
+position: absolute;
+top: 40px;
+right: 10px;
 `
+const Line = styled.div`
+position: absolute;
+height: 100%;
+width: 1px;
+top: 0px;
+right: 20%;
+background-color : #BFBFBF;
+`
+function ShowAll({noticeList, user}) {
+    return(
+        <div>
+            {noticeList.map((all) => <>{all.notices.length != 0 && <DisplayNotices noticeList={all.notices} subjectName={all.subject.name} subjectId={all.subject._id} user={user}/>}</>)}
+        </div> 
+    )
+}
 
-function Index({match}) {
-    const user = JSON.parse(window.sessionStorage.userInfo);
+function DisplayNotices({subjectId, subjectName, noticeList, user}) {
+    const [isShowing, setisShowing] = useState(false);
     const isProfessor = (user.type === "professor");
-    const subjectId = match.params.subject;
-    const subjectName = match.params.name;
-
-    const [isLoading, setIsLoading] = useState(false);
-    const isAll = String(subjectId) == "all" ? true : false;
-    const [isEmpty, setisEmpty] = useState(false);
-    const [noticeList, setNoticeList] = useState([]);
-    
-    const getData = () => {
-        const url = isAll ? '/api/notice/get/all' : '/api/notice/get/subject/' + String(subjectId);
-        axios.get(url)
-        .then((response)=>{
-            const result = response.data.notices;
-            setisEmpty(result.length == 0 ? true : false);
-            setNoticeList(result);
-            setIsLoading(true);
-            console.log(result);
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
-    }
-
     const deleteNotice = (e, noticeID) => {
         const url = '/api/notice/delete/' + noticeID;
         axios.delete(url)
@@ -135,45 +133,57 @@ function Index({match}) {
         return (window.location.href = `/main/${subjectId}/${subjectName}/notice/update/${noticeID}`);
     }
 
-    const displayAll = (list) => {
-        return (
-            <div>
-                {list.map((all, index) => <>{all.notices.length != 0 && display(all.notices, all.subject.name)}</>)}                
-             </div>
-        );
+    return(
+        <div>
+            {noticeList.length === 0 ? "등록된 공지 사항이 없습니다." : noticeList.map((value, index) =>
+                <Box>
+                    <NoticeTitle>{value.title}</NoticeTitle>
+                    <NoticeContent>
+                        {ReactHtmlParser(value.content)}     
+                    </NoticeContent> 
+                    <div style={{fontSize:"11px", margin: "0px 10px", position: "absolute", top: "10px", left: "80%"}}>
+                        {subjectName}<br/>게시 날짜: {moment(value.date).format('YYYY년 M월 D일 HH:mm')}
+                    </div>
+                    {isProfessor && <NoticeMenuButton type="button" onClick={()=>setisShowing(!isShowing)}><img style={{maxHeight: "15px", maxWidth: "15px"}} src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIiBjbGFzcz0iIj48Zz48Y2lyY2xlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9IiM3NTc1NzUiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvY2lyY2xlPjxjaXJjbGUgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjeD0iMTIiIGN5PSIzIiByPSIzIiBmaWxsPSIjNzU3NTc1IiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIj48L2NpcmNsZT48Y2lyY2xlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY3g9IjEyIiBjeT0iMjEiIHI9IjMiIGZpbGw9IiM3NTc1NzUiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvY2lyY2xlPjwvZz48L3N2Zz4=" /></NoticeMenuButton>}
+                    {isShowing && <NoticeMenuBox>
+                        <SmallBtn onClick={(e) => updateNotice(e, value._id)}>수정하기</SmallBtn>
+                        <SmallBtn onClick={(e) => deleteNotice(e, value._id)}>삭제하기</SmallBtn>
+                    </NoticeMenuBox>}
+                    <Line/>
+                    <div><ShowResponse commentList={value.comments} emotionList={value.emotions} postId={value._id} subjectId={subjectId} subjectName={subjectName} userId={user._id} type={"notice"}/></div>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+function Index({match}) {
+    const user = JSON.parse(window.sessionStorage.userInfo);
+    const isProfessor = (user.type === "professor");
+
+    const subjectId = match.params.subject;
+    const subjectName = match.params.name;
+    const isAll = String(subjectId) == "all" ? true : false;
+    const url = isAll ? '/api/notice/get/all' : '/api/notice/get/subject/' + String(subjectId);
+    const [noticeList, setNoticeList] = useState([]);
+    const [isLoading, setisLoading] = useState(true);
+    
+    const getData = () => {
+        axios.get(url)
+        .then((response)=>{
+            const result = response.data.notices;
+            console.log(result);
+            setisLoading(false);
+            setNoticeList(result);
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
     }
 
-    const display = (noticeList, subject) => {
-        return(
-            <div>
-                {isEmpty ? "등록된 공지 사항이 없습니다." : noticeList.map((value, index) =>
-                    <Box>
-                        <div style={{display: "inline-block", width: "100%", position: "relative"}}>
-                            <NoticeBox>
-                                <NoticeTitle>{value.title}</NoticeTitle>
-                                <NoticeContent>
-                                    {ReactHtmlParser(value.content)}
-                                </NoticeContent> 
-                            </NoticeBox>
-                            <NoticeMenuBox>
-                                {isProfessor && <div style={{display: "inline-block", top: "0px"}}>
-                                    <SmallBtn onClick={(e) => updateNotice(e, value._id)}>수정</SmallBtn>
-                                    <SmallBtn onClick={(e) => deleteNotice(e, value._id)}>삭제</SmallBtn></div>}
-                                {isAll && <div style={{display: "block", margin: "5px 0"}}>{subject}</div>}
-                                <div style={{margin: "5px 0"}}>{moment(value.date).format('YYYY/MM/DD HH:mm')}</div>                                    
-                            </NoticeMenuBox>
-                        </div>
-                        <hr style={{width: "100%", margin: "10px 0px", display:"block"}}/>
-                        <ShowResponse commentList={value.comments} emotionList={value.emotions} postId={value._id} subjectId={subjectId} subjectName={subjectName} userId={user._id} type={"notice"}/>
-                    </Box>
-                )}
-            </div>
-        );
-    }
-
-    useEffect(() => {
-        getData();
+    useEffect(()=>{
         
+        console.log(getData())
     },[])
 
     return(
@@ -190,10 +200,9 @@ function Index({match}) {
                         {isProfessor && !isAll && <WriteBtn href={`/main/${subjectId}/${subjectName}/notice/write`} style={{display: "inline-block", float:"right"}}>작성하기</WriteBtn>}
                     </div>
                     <hr style={{width: "100%", margin: "30px 0px", marginTop: "50px",display:"block", borderColor: '#ffffff'}}/>
-
-                    <div>
-                        {isLoading && <> {isAll ? displayAll(noticeList) : display(noticeList)}</>}
-                    </div>                    
+                    {!isLoading &&
+                    <>{isAll ? <ShowAll noticeList={noticeList} user={user}/> : 
+                    <DisplayNotices noticeList={noticeList} subjectName={subjectName} subjectId={subjectId} user={user}/>}</>}
                     </Container>
                 </Route>
             </Switch>

@@ -175,11 +175,12 @@ function Index({match}) {
 
     const [dayList, setDayList] = useState(["2021-03-04", "2021-03-08", "2021-03-11", "2021-03-15", "2021-03-18"]);
 
-    const [studentIndex, setStudentIndex] = useState(0);
-
+    
     const [subjectList, setSubjectList] = useState([]);
     const [lectureList, setLectureList] = useState([]);
     const [studentList, setStudentList] = useState([]);
+    
+    const [studentIndex, setStudentIndex] = useState(0);
 
     const [currentWeek, setCurrentWeek] = useState(5);
     const [allWeek, setAllWeek] = useState(17);
