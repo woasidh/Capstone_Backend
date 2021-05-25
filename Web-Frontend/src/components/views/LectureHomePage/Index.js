@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import styled, {css} from 'styled-components';
+import React, {useEffect, useState } from 'react';
+import styled from 'styled-components';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -7,6 +7,8 @@ const Container = styled.div`
 width : 97%;
 height : 100%;
 display : inline-block;
+margin-left : 20px;
+margin-top : 10px;
 //overflow-y: auto;
 //align-items : center;
 //justify-content : center;

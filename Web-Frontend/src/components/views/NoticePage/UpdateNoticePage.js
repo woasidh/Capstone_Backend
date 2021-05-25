@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -95,7 +95,7 @@ function Index({match}){
             <Container>
                 <Title>Notice</Title>
                     <div style={{width: "100%", display: "block"}}>
-                        <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subject.id}/${subject.name}/home`}>{subject.name}</a> / 공지 사항 수정</SubTitle>
+                        <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subject.id}/${subject.name}/home`}>{subject.name}</a> / <a style={{color: "inherit"}} href={`/main/${subject.id}/${subject.name}/notice`}>공지사항</a> / 공지 사항 수정</SubTitle>
                         <SubmitBtn onClick={submitBtn} style={{display: "inline-block", float:"right"}}>저장하기</SubmitBtn>
                     </div>
                     <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>

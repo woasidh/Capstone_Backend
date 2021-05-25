@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-
+import Avater from '../../../images/avatar/avater.jpeg'
 import {ReactComponent as LikeImg} from '../../../images/utils/heart.svg';
 import {ReactComponent as CommentImg} from '../../../images/utils/comment.svg';
 
@@ -37,6 +37,16 @@ height: 66px;
 padding : 10px;
 resize: none;
 border : 1px solid ${props => props.theme.color.gray4};
+`
+const Profile = styled.div`
+width: 30px;
+height: 30px;
+background-image: url(${Avater});
+border-radius: 50%;
+background-position: center center;
+background-size: cover;
+display : inline-block;
+margin : 5px;
 `
 function ShowComment ({value, index, postId, subjectId, subjectName, userId, type}){
     const [isEditing, setisEditing] = useState(false);
@@ -91,7 +101,7 @@ function ShowComment ({value, index, postId, subjectId, subjectName, userId, typ
                 <CommentBtn onClick={(e) => editComment(e, index)}>수정</CommentBtn>
             </div>:
             <div>
-                <div style={{display: "inline-block"}}>{value.user.name} : {value.content}</div>
+                <div style={{display: "inline-block", height: "40px"}}><Profile style={{backgroundImage: `url(${value.user.photourl})`}}/>{value.user.name} : {value.content}</div>
                 {value.user._id == userId && <div style={{float:"right"}}>
                     <SmallBtn onClick={(e) => {setisEditing(!isEditing); setComment(value.content)}}>수정</SmallBtn>
                     <SmallBtn onClick={(e) => deleteComment(e, index)}>삭제</SmallBtn></div>}                               

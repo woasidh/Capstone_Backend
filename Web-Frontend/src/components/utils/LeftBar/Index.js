@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import logo_mark from '../../../images/logo/logo_mark.png'
 import logo_word from '../../../images/logo/logo_word.png'
@@ -22,13 +22,10 @@ scrollbar-width: none;
 background-color: ${props => props.theme.color.main};
 position : absolute;
 left : 0;
-
 `
-
 const Content = styled.div`
 margin-bottom: 65px;
 `
-
 const SubjectMenu = styled.ul`
 display : none;
 padding-left : 30px;
@@ -39,11 +36,9 @@ color : white;
 font-size : 15px;
 list-style-type : none;
 `
-
 const SubjectMenuCom = styled.a`
 color : white;
 `
-
 const Menu = styled.button`
 width : 90%;
 padding-bottom : 7px;
@@ -87,7 +82,6 @@ height : 60px;
 display : flex;
 align-items : center;
 `
-
 const FooterAvater = styled.div`
 width: 50px;
 height: 50px;
@@ -97,13 +91,11 @@ background-position: center center;
 background-size: cover;
 display : inline-block;
 `
-
 const FooterRight = styled.div`
 color : white;
 display : inline-block;
 margin-left: 10px;
 `
-
 
 function Index() {
 
@@ -146,6 +138,40 @@ function Index() {
         else setShowMenu3(false);
     }
 
+    const onLogout = useCallback((e)=>{
+        axios.get('/api/auth/logout')
+        .then((response)=>{
+            const result = response.data.success;
+            console.log(result);
+            sessionStorage.removeItem("userInfo");
+            alert("로그아웃 되었습니다.");
+            return window.location.href = '/';
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+    });
+
+    const onSignout = useCallback((e)=>{
+        axios.delete('/api/user/delete')
+        .then((response)=>{
+            const result = response.data.success;
+            console.log(result);
+            sessionStorage.removeItem("userInfo");
+            alert("회원 탈퇴가 완료되었습니다.");
+            return window.location.href = '/';
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+    });
+
+    const confirmSignout = () => {
+        if(window.confirm("정말로 회원 탈퇴하시겠습니까?")){
+            onSignout();
+        }
+    }
+
 
     return (
         <Container>
@@ -166,7 +192,7 @@ function Index() {
                     {isStudent && <SubMenu href="/main/enterLecture">#  강의 참여</SubMenu>}
                     <SubMenu href="/test/aaa">#  zoom test</SubMenu>
                     <SubMenu href="/main/all/all/notice">#  공지사항</SubMenu>
-                    <SubMenu href="/">#  출결관리</SubMenu>
+                    <SubMenu href="/main/all/all/attendence">#  출결관리</SubMenu>
                     <SubMenu href="/"># 진도 관리</SubMenu>
                 </div>}
                 <Menu onClick={toggle2}>  
@@ -177,28 +203,33 @@ function Index() {
                 </Menu>
                 {ShowMenu2 && <div style={{marginBottom:"10px"}}>
                     {subjectList.map((subject) => 
-                    <SubMenu>{'# '}{subject.name}
+                    <SubMenu href={`/main/${subject._id}/${subject.name}/home`}>{'# '}{subject.name}
                         <SubjectMenu>
-                            {isStudent && <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/class/st/${subject._id}`}>실시간 강의 참여</SubjectMenuCom></li>}
-                            {isProfessor && <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/class/pf/${subject._id}`}>실시간 강의 시작</SubjectMenuCom></li>}
+                            {isStudent && <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/class/st/${subject.code}`}>실시간 강의 참여</SubjectMenuCom></li>}
+                            {isProfessor && <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/class/pf/${subject.code}`}>실시간 강의 시작</SubjectMenuCom></li>}
                             <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/info`}>강의 정보</SubjectMenuCom></li>
                             <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/notice`}>공지 사항</SubjectMenuCom></li>
                             <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/lectureNote`}>강의 노트</SubjectMenuCom></li>
                             <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/assignment`}>과제</SubjectMenuCom></li>
                             <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/chart`}>학습 분석 차트</SubjectMenuCom></li>
-                            <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/attendence`}>출석</SubjectMenuCom></li>
+                            <li style={{marginBottom:"12px"}}><SubjectMenuCom href={`/main/${subject._id}/${subject.name}/attendence`}>출석</SubjectMenuCom></li>
                             <li><SubjectMenuCom href={`/main/${subject._id}/replay`}>강의 다시 보기</SubjectMenuCom></li>
                         </SubjectMenu>
                     </SubMenu>)}
                 </div>
                 }
                 
-                <Menu onClick={toggle3}>  
-                        <img style={{ height:"26px", paddingLeft:'5px', paddingRight:'10px', paddingBottom:'3px'}} src={account} alt="account" />
-                        계정
-                        {!ShowMenu3 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={right_arrow} alt="right_arrow" />}
-                        {ShowMenu3 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={bottom_arrow} alt="bottom_arrow" />} 
+                <Menu onClick={toggle3}>
+                    <img style={{ height:"26px", paddingLeft:'5px', paddingRight:'10px', paddingBottom:'3px'}} src={account} alt="account" />
+                    계정
+                    {!ShowMenu3 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={right_arrow} alt="right_arrow" />}
+                    {ShowMenu3 && <img style={{ height:"15px", marginTop:'7px', float: 'right'}} src={bottom_arrow} alt="bottom_arrow" />} 
                 </Menu>
+                {ShowMenu3 && <div  style={{marginBottom:"10px"}}>
+                    <SubMenu href="/main/account/mypage">#  내 정보</SubMenu>
+                    <SubMenu href="#" onClick={onLogout}>#  로그아웃</SubMenu>
+                    <SubMenu href="#" onClick={confirmSignout}>#  회원탈퇴</SubMenu>
+                </div>}
             </Content>
             <Footer>
                 <FooterAvater style={{backgroundImage: `url(${user.photourl})`}}/>

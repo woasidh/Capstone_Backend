@@ -41,7 +41,7 @@ function SignUp(){
 	const [photourl,setPhote] = useState(userInfo.imgUrl);
 	const [studentID, setStudentID] = useState('');
 	const [school, setSchool] = useState('');
-	const [major,setMajor] = useState("major_it1");
+	const [major,setMajor] = useState("전자공학과");
 	const [grade,setGrade] = useState(1);
 	
 	const onChangeName = e => {

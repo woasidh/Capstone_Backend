@@ -26,7 +26,7 @@ height : 100%;
 `
 
 const LeftCnt = styled.div`
-flex-basis : 75%;
+flex-basis : 70%;
 flex-direction : column;
 height : 100%;
 `
@@ -72,7 +72,7 @@ position : relative;
 `
 
 const RightCnt = styled.div`
-flex-basis : 25%;
+flex-basis : 30%;
 height : 100%;
 display : flex;
 flex-direction : column;
@@ -221,7 +221,7 @@ visibility : hidden;
 interface TestProps {
   match: {
     params: {
-      subject_id: string,
+      class_code: string,
     }
   }
 }
@@ -232,17 +232,17 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
   const [Active2Num, setActive2Num] = useState<number>(1);
   const [ref, setref] = useState<any>(React.createRef());
-  const [lecture_id, setlecture_id] = useState<number>(28);
 
   //------useeffect------
 
-  function zoomInit(){
+  //zoom init
+  useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -322,25 +322,6 @@ function Index(props: TestProps) {
       stream.updateVideoCanvasDimension(canvas, parent.offsetWidth, parent.offsetHeight);
       //stream.adjustRenderedVideoPosition(canvas, client.getCurrentUserInfo().userId, canvas.width, canvas.height, 0, 0);
     });
-  }
-
-  interface ccc{
-    subjectId : String
-  }
-
-  //수업중인 lecture 받아오기
-  useEffect(() => {
-    /* const payload:ccc = {
-      subjectId: "2"
-    }
-    axios.get(`/api/lecture/get/inProgress/subject/${props.match.params.subject_id}`).then(res=>{
-      console.log(res);
-    }) */  
-  }, [])
-
-  //zoom init
-  /* useEffect(() => {
-    zoomInit();
   }, [])
 
   useEffect(() => {
@@ -349,7 +330,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -433,7 +414,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     socket.emit('user', {
-      name: user ? user.name : "default",
+      name: props.match.params.class_code,
       code: '1234'
     });
     socket.on('newUser', (data: any) => {
@@ -447,10 +428,10 @@ function Index(props: TestProps) {
       <LeftCnt>
         <ZoomScreen id="zoomScreen">
           <ScreenMenuCnt id="screenMenuCnt">
-            {/* {RenderMenuBtns()} */}
+            {RenderMenuBtns()}
           </ScreenMenuCnt>
-          {/* {RenderCanvas()} */}
-          {/* <MediaController client={client} /> */}
+          {RenderCanvas()}
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -458,7 +439,7 @@ function Index(props: TestProps) {
           <Active1ContentCnt>
             <ContentWrapper className="content1 active" id="content1"><Participant /></ContentWrapper>
             <ContentWrapper className="content1" id="content2"><Chat socket={socket} /></ContentWrapper>
-            <ContentWrapper className="content1" id="content3"><Question lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content1" id="content3"><Question socket={socket} /></ContentWrapper>
           </Active1ContentCnt>
           <Active1Menu>
             <ParticipantsBtn className="Active1Btn active" id="1" onClick={Active1BtnHandler}>참가자</ParticipantsBtn>
@@ -469,7 +450,7 @@ function Index(props: TestProps) {
         <Active2Cnt>
           <Active2ContentCnt>
             <ContentWrapper className="content2 active" id="content1"><Comp socket={socket} /></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub socket={socket} /></ContentWrapper>
             <ContentWrapper className="content2" id="content3"><Etc socket={socket} /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>

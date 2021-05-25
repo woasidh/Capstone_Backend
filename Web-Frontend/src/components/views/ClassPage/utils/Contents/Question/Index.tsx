@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Box from './utils/Box'
 import styled from 'styled-components'
 import socketio from 'socket.io-client'
-import axios from 'axios'
 
 const QuestionContainer = styled.div`
 width : 100%;
@@ -42,7 +41,7 @@ font-weight : bold;
 color : #A6C5F3;
 `
 
-function Index(props: any) {
+function Index(props:any) {
     const socket = props.socket;
 
     const [qNum, setqNum] = useState<number>(0);
@@ -53,41 +52,22 @@ function Index(props: any) {
     function mySubmit() {
         console.log('button');
         const qInput = document.querySelector('#qInput') as HTMLInputElement;
-        let val = qInput.value;
         if (qInput.value) {
-            setqNum(qNum + 1);
-            axios.post('/api/question/create', {
-                lectureId: props.lecture_id,
-                name: "",
-                questionContent: qInput.value
-            }).then(res => {
-                socket.emit('question', {
-                    content: val,
-                    qNum: res.data.question._id
-                })
-                setquestions(questions.concat([<Box qNum={res.data.question._id} socket={socket} msg={val}></Box>]));
+            socket.emit('question', {
+                content : qInput.value,
+                qNum : qNum
             })
+            console.log(questions);
+            setquestions(questions.concat([<Box qNum = {qNum}socket = {socket} msg={qInput.value}></Box>]));
         }
+        setqNum(qNum+1);
         inputRef.current.value = '';
     }
 
     useEffect(() => {
-        axios.put(`/api/lecture/join/${props.lecture_id}`).then(res => {
-            let arr: Array<any> = [];
-            res.data.lecture.questions.forEach((q: any, idx: any) => {
-                console.log(q);
-                arr = arr.concat([<Box data={q} qNum={q._id} socket={socket} msg={q.questionContent}></Box>]);
-            })
-            setquestions(questions.concat(arr));
-            setqNum(qNum + arr.length);
-        })
-    }, [])
-
-    useEffect(() => {
-        socket.on('sendQ', (data: any) => {
-            console.log(data);
-            setquestions(questions.concat([<Box qNum={data.qNum} socket={socket} msg={data.content}></Box>]));
-            setqNum(qNum + 1);
+        socket.on('sendQ', (data:any)=>{
+            setquestions(questions.concat([<Box qNum = {data.qNum} socket = {socket} msg={data.content}></Box>]));
+            setqNum(qNum+1);
         })
     }, [questions])
 
@@ -97,7 +77,7 @@ function Index(props: any) {
                 {questions}
             </ChatContentCnt>
             <ChatInputCnt>
-                <ChatInput ref={inputRef} id="qInput" type="TextArea" placeholder="질문을 입력해주세요" />
+                <ChatInput ref = {inputRef} id="qInput" type="TextArea" placeholder="질문을 입력해주세요" />
                 <ChatSubmitBtn onClick={mySubmit}>내전송</ChatSubmitBtn>
             </ChatInputCnt>
         </QuestionContainer>

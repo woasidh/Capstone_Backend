@@ -20,16 +20,6 @@ import Share from '../../../../images/utils/share.png'
 import './Index.css'
 import { textSpanIsEmpty } from 'typescript'
 
-interface aaa {
-  subjectId: number
-  options: {
-    subtitle: boolean
-    record: boolean
-    attendance: boolean
-    limit: number
-  }
-}
-
 const MainCnt = styled.div`
 background-color : ${props => props.theme.color.background_gray};
 padding : 0.5vh;
@@ -38,7 +28,7 @@ height : 100%;
 `
 
 const LeftCnt = styled.div`
-flex-basis : 75%;
+flex-basis : 70%;
 flex-direction : column;
 height : 100%;
 `
@@ -84,7 +74,7 @@ position : relative;
 `
 
 const RightCnt = styled.div`
-flex-basis : 25%;
+flex-basis : 30%;
 height : 100%;
 display : flex;
 flex-direction : column;
@@ -207,7 +197,7 @@ const SubtitleBtn = styled.button`
 ${constActiveBtnStyle}
 `
 
-const Fuck = styled.div`
+const Fuck  = styled.div`
 display : flex;
 flex-direction : column;
 align-items : center;
@@ -245,7 +235,8 @@ border-radius : 10px;
 interface TestProps {
   match: {
     params: {
-      subject_id: string
+      class_code: string,
+      id: string
     }
   }
 }
@@ -257,7 +248,7 @@ const socket = socketio('http://disboard13.kro.kr:3000/', {
 const user = sessionStorage.userInfo && JSON.parse(window.sessionStorage.userInfo);
 function Index(props: TestProps) {
   //------states------
-  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   const [screenNum, setscreenNum] = useState<number>(0);
   const [client, setclient] = useState<any>();
   const [Active1Num, setActive1Num] = useState<number>(1);
@@ -265,12 +256,11 @@ function Index(props: TestProps) {
   const [ref, setref] = useState<any>(React.createRef());
   const [subType, setsubType] = useState<number>(1);
   const [compRef, setcompRef] = useState(React.createRef());
-  const [lecture_id, setlecture_id] = useState<number>(28);
 
   //------useeffect------
 
-
-  function zoomInit() {
+  //zoom init
+  useEffect(() => {
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -350,11 +340,6 @@ function Index(props: TestProps) {
       stream.updateVideoCanvasDimension(canvas, parent.offsetWidth, parent.offsetHeight);
       //stream.adjustRenderedVideoPosition(canvas, client.getCurrentUserInfo().userId, canvas.width, canvas.height, 0, 0);
     });
-  }
-
-  //zoom init
-  /* useEffect(() => {
-    zoomInit();
   }, [])
 
   useEffect(() => {
@@ -363,7 +348,7 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     !isLoading && SetCanvasSize();
-  }, [isLoading]) */
+  }, [isLoading])
 
   //for Active 1 
   useEffect(() => {
@@ -403,8 +388,8 @@ function Index(props: TestProps) {
     const result = screens.map((value, index) => {
       return (
         <Fuck>
-          <ScreenMenu style={{ backgroundImage: `url(${links[index]})` }} onClick={changeScrenBtn} id={index.toString()}></ScreenMenu>
-          <span style={{ color: 'white' }}>{value}</span>
+          <ScreenMenu style={{ backgroundImage:   `url(${links[index]})` }} onClick={changeScrenBtn} id={index.toString()}></ScreenMenu>
+          <span style = {{color : 'white'}}>{value}</span>
         </Fuck>);
     })
     return result;
@@ -442,29 +427,18 @@ function Index(props: TestProps) {
   }, [Active2Num])
 
   useEffect(() => {
-    /* const payload: aaa =
-    {
-      subjectId: parseInt(props.match.params.subject_id),
-      options: {
-        subtitle: false,
-        record: false,
-        attendance: false,
-        limit: 5
-      }
-    }
-    axios.post('/api/lecture/start', payload).then(res => {
-      setlecture_id(res.data.lecture._id);
-      console.log(res.data.lecture._id);
-    }) */
+
+  }, [])
+
+  useEffect(() => {
     socket.emit('user', {
-      name: user ? user.name : "default",
-      code: "1234"
+      name: user ? user.name : props.match.params.class_code,
+      code: '1234'
     });
     socket.on('newUser', (data: any) => {
       console.log(data);
     });
   }, [])
-
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
   /*   function setOption(num: number) {
@@ -486,11 +460,11 @@ function Index(props: TestProps) {
     <MainCnt>
       <LeftCnt>
         <ZoomScreen id="zoomScreen">
-          <ScreenMenuCnt id="screenMenuCnt">
-            {/* {RenderMenuBtns()} */}
+          <ScreenMenuCnt id = "screenMenuCnt">
+            {RenderMenuBtns()}
           </ScreenMenuCnt>
-          {/* {RenderCanvas()} */}
-          {/* <MediaController client={client} /> */}
+          {RenderCanvas()}
+          <MediaController client={client} />
         </ZoomScreen>
       </LeftCnt>
       <RightCnt>
@@ -498,7 +472,7 @@ function Index(props: TestProps) {
           <Active1ContentCnt>
             <ContentWrapper className="content1 active" id="content1"><Participant /></ContentWrapper>
             <ContentWrapper className="content1" id="content2"><Chat socket={socket} /></ContentWrapper>
-            <ContentWrapper className="content1" id="content3"><Question lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content1" id="content3"><Question socket={socket} /></ContentWrapper>
           </Active1ContentCnt>
           <Active1Menu>
             <ParticipantsBtn className="Active1Btn active" id="1" onClick={Active1BtnHandler}>참가자</ParticipantsBtn>

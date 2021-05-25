@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Moment from 'moment';
@@ -66,6 +66,7 @@ function Index({match}){
         axios.get(url)
         .then((response)=>{
             const result = response.data.subject;
+            console.log(result)
             setSubjectInfo(result);
             setIsLoading(true);
         })
@@ -79,7 +80,7 @@ function Index({match}){
             <Container  style={{marginLeft: "20px", marginTop: '10px'}}>
             <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
-                <SubTitle>내 강의 / {subjectInfo.name} / 강의 정보</SubTitle>                
+                <SubTitle>내 강의 / <a style={{color: "black"}} href={`/main/${subjectId}/${subjectInfo.name}/home`}>{subjectInfo.name}</a> / 강의 정보</SubTitle>                
                 {isProfessor && <WriteBtn href={`/main/${subjectId}/info/update`} style={{display: "inline-block", float:"right"}}> 수정하기</WriteBtn>}
 
             </div>
@@ -103,6 +104,12 @@ function Index({match}){
                         <GrayBox>강의 시간</GrayBox>
                         <WhiteBox>
                             {subjectInfo.days.map((value, index) => <li style={{listStyleType: "none"}}>{week[value-1]} {subjectInfo.start_time[index]} ~ {subjectInfo.end_time[index]}</li>)} 
+                        </WhiteBox>
+                    </tr>
+                    <tr>
+                        <GrayBox>강의 계획서</GrayBox>
+                        <WhiteBox>
+                            {subjectInfo.introURL}
                         </WhiteBox>
                     </tr>
                     </tbody>
