@@ -1,10 +1,17 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Popup from './util/Popup'
+import axios from 'axios'
+import './style.css'
+import ResPop from './util/ResultPopup.js'
 
 const QuizContainer = styled.div`
 height : 36vh;
 width : 100%;
+overflow-y: scroll;
+::-webkit-scrollbar {
+    display: none;
+}
 `
 
 const FlexContainer = styled.div`
@@ -13,9 +20,11 @@ display : flex;
 flex-direction : column;
 justify-content : center;
 align-items : center;
+margin-bottom: 15px;
 `
 
 const QuizBox = styled.div`
+position : relative;
 width : 95%;
 margin-bottom : 1vh;
 height : 6vh;
@@ -34,41 +43,106 @@ width : 20%;
 border : 1px solid #70707090;
 border-radius : 4px;
 height : 90%;
+z-index : 99;
 `
 
+const Background = styled.div`
+z-index : 98;
+height : 100%;
+position: absolute;
+background-color: #ddfab1;
+left : 0;
+border-radius : 4px;
+&.active{
+    animation-name: slidein;
+    animation-duration: 5s;
+}
+`
+
+const ResultBox = styled.div`
+width : 95%;
+height : fit-content;
+`
+const ResultContent = styled.button`
+width : 50%;
+margin-bottom: 5px;
+border : 1px solid #70707090;
+border-radius : 4px;
+`
+
+
 interface QuizProps {
-    socket : any
+    socket: any
 }
 
-function Index(props :QuizProps) {
+function Index(props: QuizProps) {
 
-    const [popup1, setpopup1] = useState(false);
-    const [popup2, setpopup2] = useState(false);
-    const [popup3, setpopup3] = useState(false);
+    const socket = props.socket;
 
-    function submitQuiz(){
-        setpopup1(false);
+    const [popup, setpopup] = useState(false);
+    const [isListening, setisListening] = useState(false);
+    const [listeningTime, setlisteningTime] = useState(0);
+    const [quizType, setquizType] = useState(0);
+    const [resultRef, setresultRef] = useState(React.createRef());
+    const [backRef, setBackRef] = useState(React.createRef());
+    const [results, setresults] = useState<Array<any>>([]);
+    const [currentResNum, setcurrentResNum] = useState(-1);
+    const [showRes, setshowRes] = useState(false);
+    const [currentType, setcurrentType] = useState(-1)
+
+    function submitQuiz(e: any) {
+        if (isListening) {
+            alert('퀴즈가 진행중입니다!');
+            return;
+        }
+        setquizType(e.target.parentNode.id);
+        setpopup(true);
+    }
+
+    function renderQuizTypes() {
+        const names = ['주관식 퀴즈', '객관식 퀴즈', 'OX 퀴즈'];
+        return names.map((name, idx) => (
+            <QuizBox className="quizTypes" id={(idx + 1).toString()}>
+                <span style={{ zIndex: 99 }}>{names[idx]}</span>
+                <SubmitBtn id="quizSubmit" onClick={submitQuiz}>제출</SubmitBtn>
+                <Background id="quizBackground"></Background>
+            </QuizBox>
+        ))
+    }
+
+    function openPop(e:any){
+        setcurrentResNum(e.target.id);
+        setcurrentType(e.target.dataset.type);
+        setshowRes(true);
+    }
+
+    function set(time: number, obj: any) {
+        console.log(obj);
+        setpopup(false);
+        setisListening(true);
+        setTimeout(() => {
+            setisListening(false);
+            setresults(results.concat([<ResultContent data-type = {obj.type} id={obj.id} onClick = {openPop} >퀴즈{results.length + 1}</ResultContent>]));
+        }, time * 1000);
+        setlisteningTime(time * 10000);
+        const quizBackground = document.querySelectorAll('#quizBackground')[quizType - 1] as HTMLElement;
+        quizBackground.style.animationName = 'slidein';
+        quizBackground.style.animationDuration = `${time * 60}s`;
     }
 
     return (
         <QuizContainer>
-            <FlexContainer>
-                <QuizBox>
-                    <span>주관식 퀴즈</span>
-                    <SubmitBtn onClick = {()=>{setpopup1(true)}}>제출</SubmitBtn>
-                </QuizBox>
-                <QuizBox>
-                    <span>객관식 퀴즈</span>
-                    <SubmitBtn onClick = {()=>{setpopup2(true)}}>제출</SubmitBtn>
-                </QuizBox>
-                <QuizBox>
-                    <span>O/X 퀴즈</span>
-                    <SubmitBtn onClick = {()=>{setpopup3(true)}}>제출</SubmitBtn>
-                </QuizBox>
+            <FlexContainer id="quizFlexCnt">
+                {renderQuizTypes()}
+                <ResultBox id="quizResultBox">
+                    결과 :
+                    {results}
+                </ResultBox>
             </FlexContainer>
-            {popup1 && <Popup socket = {props.socket} setOptions = {submitQuiz}/>}
-            {popup2 && <Popup socket = {props.socket} setOptions = {submitQuiz}/>}
-            {popup3 && <Popup socket = {props.socket} setOptions = {submitQuiz}/>}
+            {popup && <Popup type={quizType} socket={props.socket} setOptions={(time: number, obj: any) => {
+                set(time, obj);
+            }} />}
+            {showRes && <ResPop type = {currentType} quiz_id = {currentResNum}></ResPop>}
         </QuizContainer>
     )
 }

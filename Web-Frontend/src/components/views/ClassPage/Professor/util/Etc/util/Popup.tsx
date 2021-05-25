@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios'
 import { Modal, Button, Radio } from 'antd';
 import './Popup.css'
 import Set from './Set'
-import { Socket } from 'net';
+import { InputNumber } from 'antd';
 
 interface PopProps {
     setOptions: Function
-    socket : any
+    socket: any
+    type: number
 }
 
 function Popup(props: PopProps) {
@@ -15,6 +17,7 @@ function Popup(props: PopProps) {
     const [value, setValue] = React.useState(1);
     const [html_, sethtml_] = useState<Array<any>>([]);
     const [cnt, setcnt] = useState<number>(1);
+    const [time, settime] = useState(1);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -22,51 +25,55 @@ function Popup(props: PopProps) {
 
     const handleOk = () => {
         setIsModalVisible(false);
-        const qs = document.querySelectorAll('#qQ')as NodeListOf<HTMLInputElement>;
-        const as = document.querySelectorAll('#aQ')as NodeListOf<HTMLInputElement>;
-        let questions:any = [];
-        qs.forEach((value, idx)=>{
-            questions.push(value.value);
+        axios.post('/api/quiz/create', {
+            name: "quiz",
+            subjectId: 2,
+            answerSheets: [
+                {
+                    question: "",
+                    answer: ""
+                }
+            ],
+            type: props.type
+        }).then(res => {
+            const obj = {
+                purpose: 'survey',
+                type: props.type,
+                deadline: time,
+                id : res.data.quiz._id
+            }
+            props.setOptions(time, obj);
+            socket.emit('quiz', obj);
         })
-        let answers:any = [];
-        as.forEach((value, idx)=>{
-            answers.push(value.value);
-        })
-        const obj = {
-            qs : questions,
-            as : answers
-        }
-        socket.emit('quiz', obj);
-        props.setOptions(false);
     };
 
     const handleCancel = () => {
         setIsModalVisible(false);
-    };
-
-    const onChange = (event: any) => {
-        setValue(event.target.value);
+        props.setOptions();
     };
 
     function addQ() {
-        sethtml_(html_.concat(<Set cnt = {cnt}></Set>));
-        setcnt(cnt+1);
+        sethtml_(html_.concat(<Set cnt={cnt}></Set>));
+        setcnt(cnt + 1);
     }
 
     return (
         <Modal
-            title="주관식 퀴즈"
+            title="퀴즈 출제"
             visible={isModalVisible}
-            closable={false}
+            onCancel={handleCancel}
             onOk={handleOk}
             okText="확인"
             wrapClassName={"quiz"}
         >
-            <div className="addContainer">
-                <button onClick={addQ} className="addQ">추가</button>
-            </div>
-            <div className="qContainer">
-                {html_}
+            <div className="deadContainer">
+                <div>제한시간을 입력해주세요!</div>
+                <div className="timeContainer">
+                    <InputNumber style={{ display: 'block' }} min={1} max={60} defaultValue={1} onChange={(value: any) => {
+                        settime(value);
+                    }} />
+                    <span>분</span>
+                </div>
             </div>
         </Modal>
     )

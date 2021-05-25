@@ -7,27 +7,27 @@ const data = {
     ups : 0,
     downs : 0,
     num: 0,
-    labels: ['00:00', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+    labels: ['0초', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
     datasets: [
         {
-            label: '이해 O',
+            label: '이해O',
             num: 1,
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
             radius : 0,
             backgroundColor: 'rgb(67, 222, 108)',
             borderColor: 'rgba(67, 222, 108, 0.2)'
         },{
             label: '합계',
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
             radius : 1,
             backgroundColor: 'rgb(0, 0, 0, 0.2)',
             borderColor: 'rgba(0, 0, 0, 0.4)'
         },
         {
-            label: '이해 X',
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            label: '이해X',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             fill: false,
             radius : 0,
             backgroundColor: 'rgb(255, 99, 132)',
@@ -53,23 +53,21 @@ function Index(props) {
         chartRef.current.data.labels.pop();
         chartRef.current.data.datasets[0].data.pop();
         chartRef.current.data.datasets[2].data.pop();
-        let num = chartRef.current.data.num + 1;
+        let num = (chartRef.current.data.num + 1)*3;
         let newTime;
-        console.log(num);
         if(num<60){
             if(num<10){
-                newTime = `00:0${(chartRef.current.data.num + 1)}`
+                newTime = `${(chartRef.current.data.num + 1)*3}초`
             }else{
-                newTime = `00:${(chartRef.current.data.num + 1)}`
+                newTime = `${(chartRef.current.data.num + 1)*3}초`
             }
         }else{
             let hour = parseInt(num/60);
             let minute = num%60;
-            console.log(hour, minute);
             if(minute<10){
-                newTime = `${hour}:0${minute}`
+                newTime = `${hour}분 ${minute}초`
             }else{
-                newTime = `${hour}:${minute}`
+                newTime = `${hour}초 ${minute}초`
             }
         }
         setcompData({
@@ -79,7 +77,7 @@ function Index(props) {
             labels: [newTime].concat(chartRef.current.data.labels),
             datasets: [
                 {
-                    label: '이해 O',
+                    label: '이해O',
                     data: [ups].concat(chartRef.current.data.datasets[0].data),
                     fill: false,
                     backgroundColor: 'rgb(67, 222, 108)',
@@ -94,7 +92,7 @@ function Index(props) {
                     borderColor: 'rgba(0, 0, 0, 0.4)'
                 },
                 {
-                    label: '이해 X',
+                    label: '이해X',
                     data: [downs].concat(chartRef.current.data.datasets[2].data),
                     fill: false,    
                     backgroundColor: 'rgb(255, 99, 132)',
@@ -115,16 +113,16 @@ function Index(props) {
                 max: 10
             }
         },
-        /* plugins: {
+        plugins: {
             legend: {
                 labels: {
                     // This more specific font property overrides the global property
                     font: {
-                        size: 1
+                        size: 8
                     }
                 }
             }
-        } */
+        }
     }
 
     useEffect(() => {

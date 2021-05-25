@@ -26,7 +26,7 @@ height : 100%;
 `
 
 const LeftCnt = styled.div`
-flex-basis : 70%;
+flex-basis : 75%;
 flex-direction : column;
 height : 100%;
 `
@@ -72,7 +72,7 @@ position : relative;
 `
 
 const RightCnt = styled.div`
-flex-basis : 30%;
+flex-basis : 25%;
 height : 100%;
 display : flex;
 flex-direction : column;
@@ -221,7 +221,7 @@ visibility : hidden;
 interface TestProps {
   match: {
     params: {
-      class_code: string,
+      subject_id: string,
     }
   }
 }
@@ -238,11 +238,11 @@ function Index(props: TestProps) {
   const [Active1Num, setActive1Num] = useState<number>(1);
   const [Active2Num, setActive2Num] = useState<number>(1);
   const [ref, setref] = useState<any>(React.createRef());
+  const [lecture_id, setlecture_id] = useState<number>(28);
 
   //------useeffect------
 
-  //zoom init
-  useEffect(() => {
+  function zoomInit(){
     setisLoading(true);
     const client = ZoomInstant.createClient();
     client.init("en-US", `${window.location.origin}/lib`);
@@ -322,6 +322,28 @@ function Index(props: TestProps) {
       stream.updateVideoCanvasDimension(canvas, parent.offsetWidth, parent.offsetHeight);
       //stream.adjustRenderedVideoPosition(canvas, client.getCurrentUserInfo().userId, canvas.width, canvas.height, 0, 0);
     });
+  }
+
+  interface ccc{
+    subjectId : String
+  }
+
+  //수업중인 lecture 받아오기
+  useEffect(() => {
+    const payload:ccc = {
+      subjectId: "2"
+    }
+/*     axios.get(`/api/lecture/get/inProgress/subject/2`).then(res=>{
+      console.log(res);
+    })   */
+    axios.put(`/api/lecture/join/28`).then(res=>{
+      console.log(res);
+    })  
+  }, [])
+
+  //zoom init
+  useEffect(() => {
+    zoomInit();
   }, [])
 
   useEffect(() => {
@@ -414,12 +436,13 @@ function Index(props: TestProps) {
 
   useEffect(() => {
     socket.emit('user', {
-      name: props.match.params.class_code,
-      code: '1234'
+      name: user ? user.name : "default",
+      code: '1234',
+      email : user ? user.email : "default"
     });
-    socket.on('newUser', (data: any) => {
+/*     socket.on('newUser', (data: any) => {
       console.log(data);
-    });
+    }); */
   }, [])
   if (isLoading) return <Loading type="spin" color='orange'></Loading>
 
@@ -437,9 +460,9 @@ function Index(props: TestProps) {
       <RightCnt>
         <Active1Cnt>
           <Active1ContentCnt>
-            <ContentWrapper className="content1 active" id="content1"><Participant /></ContentWrapper>
-            <ContentWrapper className="content1" id="content2"><Chat socket={socket} /></ContentWrapper>
-            <ContentWrapper className="content1" id="content3"><Question socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content1 active" id="content1"><Participant socket = {socket} /></ContentWrapper>
+            <ContentWrapper className="content1" id="content2"><Chat socket={socket} user = {user.name} /></ContentWrapper>
+            <ContentWrapper className="content1" id="content3"><Question lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
           </Active1ContentCnt>
           <Active1Menu>
             <ParticipantsBtn className="Active1Btn active" id="1" onClick={Active1BtnHandler}>참가자</ParticipantsBtn>
@@ -450,7 +473,7 @@ function Index(props: TestProps) {
         <Active2Cnt>
           <Active2ContentCnt>
             <ContentWrapper className="content2 active" id="content1"><Comp socket={socket} /></ContentWrapper>
-            <ContentWrapper className="content2" id="content2"><Sub socket={socket} /></ContentWrapper>
+            <ContentWrapper className="content2" id="content2"><Sub lecture_id = {lecture_id} socket={socket} /></ContentWrapper>
             <ContentWrapper className="content2" id="content3"><Etc socket={socket} /></ContentWrapper>
           </Active2ContentCnt>
           <Active2Menu>

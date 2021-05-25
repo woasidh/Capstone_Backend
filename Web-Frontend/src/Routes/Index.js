@@ -17,9 +17,8 @@ import JoinLecturePage from '../components/views/JoinLecturePage/Index'
 import NoticePage from '../components/views/NoticePage/Index'
 import LectureNotePage from '../components/views/LectureNotePage/Index'
 import SubjectHomePage from '../components/views/LectureHomePage/Index'
-import AttendancePage from '../components/views/AttendancePage/Index'
-import LectureAssignmentPage from '../components/views/LectureAssignmentPage/Index'
-import Mypage from '../components/views/MyPage/Index'
+import CalendarPage from '../components/views/CalendarPage/Index.js'
+
 
 const baseUrl = "/main/";
 
@@ -37,7 +36,7 @@ function Index() {
         <>
             {isLogined && <LeftBar />}
             {isLogined && <TopBar mode={true}/>}
-            <div className = "maincontainer" style={{height : "100%", marginLeft: '260px', overflowY : "auto", padding : "1rem", paddingBottom : "4rem", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
+            <div className = "maincontainer" style={{height : "100%", marginLeft: '260px', overflowY : "auto", padding : "1vh", paddingBottom : "1vh", backgroundColor : "#F7F9FC", marginBottom : "10px"}}>
                 {isLogined &&
                     <Router>
                         <Switch>
@@ -51,9 +50,7 @@ function Index() {
                             <Route path= {baseUrl+":subject/:name/notice"} component={NoticePage}/>
                             <Route path= {baseUrl+":subject/:name/lectureNote"} component={LectureNotePage}/>
                             <Route path= {baseUrl+":subject/:name/chart"} component={LectureChartPage} />
-                            <Route path= {baseUrl+":subject/:name/attendence"} component={AttendancePage} />
-                            <Route path= {baseUrl+":subject/:name/assignment"} component={LectureAssignmentPage}/>
-                            <Route path= {baseUrl+"account/mypage"} component={Mypage}/>
+                            <Route exact path= {"/main/calendar"} component={CalendarPage} />
                         </Switch>
                     </Router>
                 }

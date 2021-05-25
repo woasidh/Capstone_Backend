@@ -68,7 +68,7 @@ function Index(props: any) {
     useEffect(() => {
         socket.on('sendMsg', function (data: any) {
             console.log(data);
-            setmsgs([<OtherChat msg={data.content}></OtherChat>].concat(msgs));
+            setmsgs([<OtherChat name = {data.user} msg={data.content}></OtherChat>].concat(msgs));
         });
     }, [msgs])
 
@@ -77,10 +77,12 @@ function Index(props: any) {
         if (chatInput.value) {
             socket.emit('msg', {
                 time: '19:20',
-                content: chatInput.value
+                content: chatInput.value,
+                user : props.user
             })
             console.log('msg sent');
-            setmsgs([<MyChat msg={chatInput.value}></MyChat>].concat(msgs));
+            setmsgs([<MyChat name = {props.user} msg={chatInput.value}></MyChat>].concat(msgs));
+            chatInput.value = '';
         }
     }
     

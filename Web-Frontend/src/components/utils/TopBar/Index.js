@@ -11,7 +11,7 @@ import { Alert } from 'antd';
 const Container = styled.div`
 background-color : white;
 margin-left : ${props => props.theme.margin.leftBar};
-height : 60px;
+height : 6vh;
 display : flex;
 justify-content : space-between;
 align-items : center;
