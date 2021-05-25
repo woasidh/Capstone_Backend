@@ -8,20 +8,9 @@
     padding : 0;
 }
 
-.deadContainer{
+.addContainer{
     display : flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.deadContainer>div{
-    margin-bottom: 15px;
-}
-
-.timeContainer{
-    display : flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 

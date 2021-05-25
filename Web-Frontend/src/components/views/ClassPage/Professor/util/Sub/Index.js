@@ -137,9 +137,7 @@ function Index(props) {
                 </SubFlexBox>
             </SubContainer>
             <ControlBox>
-                <Listen>녹음중.sss..</Listen>
-                <StopBtn onClick={startListen}>시작</StopBtn>
-                <StopBtn onClick={stopListen}>중지</StopBtn>
+                <Listen>녹음중..</Listen>
             </ControlBox>
         </>
     )

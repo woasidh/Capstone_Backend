@@ -182,7 +182,7 @@ function Index({match}){
             <Container>
             <Title>Lecture Info</Title>
             <div style={{width: "100%", display: "block"}}>
-                <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${defaultName}/home`}>{defaultName}</a> / 강의 정보 수정</SubTitle>                
+                <SubTitle>내 강의 / <a style={{color: "inherit"}} href={`/main/${subjectId}/${defaultName}/home`}>{defaultName}</a> / <a style={{color: "inherit"}} href={`/main/${subjectId}/info`}>강의 정보</a> / 강의 정보 수정</SubTitle>                
                 <SubmitBtn onClick={submitHandler} style={{display: "inline-block", float:"right"}}>저장하기</SubmitBtn>
             </div>
             <hr style={{width: "100%", margin: "5px auto", marginTop: "15px", display: "block"}}/>

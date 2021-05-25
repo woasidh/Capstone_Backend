@@ -1,3 +1,4 @@
+import React from 'react'
 export function RenderCanvas() {
     const arr = [0, 1, 2, 3];
     const result = arr.map((value, index) => {

@@ -52,22 +52,24 @@ router.put('/add', professorAuth, (req, res)=>{
             isSubtitleAvailable: false
         })
 
+        let subtitleObj = {};
         const subtitleForm = {
             content: req.body.content,
             time: req.body.time
         }
         
         if (subtitle === null) {
-            subtitle = new Subtitle({
+            subtitleObj = new Subtitle({
                 lecture: req.body.lectureId,
                 contents: subtitleForm
             });
         }
         else {
-            subtitle.contents.push(subtitleForm);
+            subtitleObj = JSON.stringify(subtitle);
+            subtitleObj.contents.push(subtitleForm);
         }
 
-        subtitle.save((err, doc)=>{
+        subtitleObj.save((err, doc)=>{
             if (err) return res.status(500).json(err);
 
             const promise = ()=>{
@@ -80,17 +82,18 @@ router.put('/add', professorAuth, (req, res)=>{
                             lecture.save((err)=>{
                                 if (err) reject(err);
 
-                                resolve();
+                                resolve(doc);
                             })
                         })
                     }
-                    else resolve();
+                    else resolve(doc);
                 })
             }
 
-            promise().then(()=>{
+            promise().then((doc)=>{
                 res.status(200).json({
-                    success: true
+                    success: true,
+                    subtitle: doc
                 })
             }).catch((err)=>{
                 res.status(500).json(err);
